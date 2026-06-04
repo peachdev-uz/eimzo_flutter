@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NFC" />
@@ -15,7 +16,16 @@
         android:name="android.hardware.usb.host"
         android:required="false" />
 
-    <application>
+    <!--
+        Exclude the SDK's Room DB (eimzo_keys.db) and encrypted prefs from
+        device-transfer / cloud backup. Consumer apps can keep their own
+        `allowBackup="true"` for their own data — these rules-XML files
+        explicitly remove only the SDK's storage paths.
+    -->
+    <application
+        android:fullBackupContent="@xml/eimzo_backup_rules"
+        android:dataExtractionRules="@xml/eimzo_data_extraction_rules"
+        tools:replace="android:fullBackupContent,android:dataExtractionRules">
         <activity
             android:name="uz.eimzo.sdk.license.BlockedAppActivity"
             android:exported="false"

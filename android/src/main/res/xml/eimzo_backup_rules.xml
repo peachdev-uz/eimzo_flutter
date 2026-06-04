@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Pre-Android 12 auto-backup rules (referenced from the SDK's
+    `android:fullBackupContent`). Excludes the SDK's Room DB + encrypted
+    SharedPreferences from device-transfer / Google Drive backup so a
+    user's signing keys + saved passwords cannot be exfiltrated by an
+    attacker who restores their backup onto a different device.
+-->
+<full-backup-content>
+    <exclude domain="database" path="eimzo_keys.db" />
+    <exclude domain="database" path="eimzo_keys.db-journal" />
+    <exclude domain="database" path="eimzo_keys.db-wal" />
+    <exclude domain="database" path="eimzo_keys.db-shm" />
+    <exclude domain="sharedpref" path="uz.eimzo.sdk.secure.xml" />
+</full-backup-content>

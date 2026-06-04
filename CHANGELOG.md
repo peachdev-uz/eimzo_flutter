@@ -1,3 +1,20 @@
+## 1.0.5
+
+* 🔐 **Security hardening (both platforms).**
+  * **Android:** saved passwords are now AES-256-GCM encrypted with an
+    AndroidKeyStore-bound key before being written to Room. Plain SQLite
+    reads on rooted devices yield ciphertext only; the key is bound to
+    the application UID and is invalidated on `Clear data`. Bundled
+    SDK bumped to `eimzo-sdk-1.0.2`.
+  * **Android:** the SDK's Room DB and encrypted prefs are now excluded
+    from `adb backup` / Google Drive cloud backup via
+    `android:fullBackupContent` + `android:dataExtractionRules`. Your
+    own app data is untouched — only `eimzo_keys.db` is filtered.
+  * **iOS:** `keys.json` written with
+    `NSFileProtectionCompleteUntilFirstUserAuthentication`. Pre-first-
+    unlock the file is OS-encrypted; backup / jailbreak extraction
+    yields opaque ciphertext.
+
 ## 1.0.4
 
 * 📝 Android setup section rewritten: clearer build.gradle requirements
