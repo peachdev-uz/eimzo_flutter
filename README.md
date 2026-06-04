@@ -17,13 +17,17 @@ dependencies:
   eimzo_flutter: ^1.0.0
 ```
 
-### 2. Android `app/build.gradle`
+### 2. Android — `android/app/build.gradle`
+
+The bundled native SDK requires **Java 17**, **Kotlin JVM target 17**,
+and **core library desugaring** for `java.time` APIs used inside the
+crypto layer.
 
 ```groovy
 android {
     compileSdk 34
     defaultConfig {
-        minSdk 24
+        minSdk 24          // EImzoActivity uses APIs from API 24
         targetSdk 34
     }
     compileOptions {
@@ -39,7 +43,15 @@ dependencies {
 }
 ```
 
-### 3. `AndroidManifest.xml` — declare the deep-link intent-filter
+> ⚠️ If you skip desugaring you'll see `NoClassDefFoundError: java/time/...`
+> at runtime when the SDK builds PKCS#7 signed attributes.
+
+### 3. Android — `AndroidManifest.xml` (deep-link intent-filter)
+
+Only the `<intent-filter>` is your job. Permissions (`INTERNET`, `NFC`,
+`CAMERA`, `READ_EXTERNAL_STORAGE` ≤ API 32) and `<uses-feature>` entries
+for NFC / USB host are merged in from the plugin's manifest
+automatically — don't re-declare them.
 
 ```xml
 <activity
@@ -52,6 +64,7 @@ dependencies {
         <category android:name="android.intent.category.LAUNCHER" />
     </intent-filter>
 
+    <!-- Receive eimzo://sign?qc=... from external apps / scanners -->
     <intent-filter>
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
@@ -61,11 +74,14 @@ dependencies {
 </activity>
 ```
 
-Permissions (`INTERNET`, `NFC`, `CAMERA`, `READ_EXTERNAL_STORAGE` ≤ API 32) and the NFC / USB-host `<uses-feature>` declarations are merged in from the plugin manifest automatically.
+`android:launchMode="singleTop"` matters — without it Android creates
+a fresh activity instance each time an `eimzo://` link arrives and the
+Dart side never sees `onNewDeeplink()`.
 
-### 4. Theme — must inherit Material Components
+### 4. Android — theme must inherit MaterialComponents
 
-The SDK's blocked-app screen requires a Material theme:
+The SDK's blocked-app screen and password dialogs use Material widgets.
+Make sure your launch / normal themes are Material descendants:
 
 ```xml
 <style name="LaunchTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -75,6 +91,9 @@ The SDK's blocked-app screen requires a Material theme:
     <item name="android:windowBackground">?android:colorBackground</item>
 </style>
 ```
+
+If you use `Theme.AppCompat` (non-Material) parent, the blocked screen
+will throw a `ThemeNotFound` exception on first launch.
 
 ### 5. iOS — minimum deployment target
 

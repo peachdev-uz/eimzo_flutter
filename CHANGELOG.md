@@ -1,3 +1,10 @@
+## 1.0.4
+
+* 📝 Android setup section rewritten: clearer build.gradle requirements
+  (Java 17 + desugaring + minSdk 24), explanations of why each piece
+  is needed, note on `launchMode="singleTop"` and Material theme
+  pitfalls.
+
 ## 1.0.3
 
 * 📝 README usage and API sections rewritten — old `init` / `getInitialDeeplink`
