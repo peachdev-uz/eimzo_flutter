@@ -1,3 +1,15 @@
+## 1.0.6
+
+* 📚 New `CONTRIBUTING.md` — how to report bugs, suggest features,
+  set up the dev environment, and submit PRs. Helps pub.dev's
+  "package score" community signals and gives external contributors
+  a clear on-ramp.
+* 🌐 Opened public GitHub issues calling for help with desktop and
+  web platform support: [macOS #1](https://github.com/peachdev-uz/eimzo_flutter/issues/1),
+  [Windows #2](https://github.com/peachdev-uz/eimzo_flutter/issues/2),
+  [Linux #3](https://github.com/peachdev-uz/eimzo_flutter/issues/3),
+  [Web #4](https://github.com/peachdev-uz/eimzo_flutter/issues/4).
+
 ## 1.0.5
 
 * 🔐 **Security hardening (both platforms).**
