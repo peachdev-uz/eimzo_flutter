@@ -107,7 +107,7 @@ tasdiqlaysiz.
 ## Bog'lanish
 
 - **GitHub Issues** — bug va xususiyatlar uchun
-- **Email** — `info@peachdev.uz` — biznes va license savollari uchun
+- **Email** — `info@yt.uz` — biznes va license savollari uchun
 - **License** uchun bundle ID'ni ro'yxatdan o'tkazish — `info@yt.uz`
 
 Rahmat va xush kelibsiz! 🌸
