@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/eimzo_ui_bg_bottom_sheet"
+    android:paddingTop="12dp"
+    android:paddingBottom="36dp"
+    android:paddingHorizontal="20dp">
+
+    <View
+        android:layout_width="48dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp"
+        android:background="#D0D5DC" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:paddingHorizontal="8dp">
+
+        <!-- Faylni tanlang -->
+        <LinearLayout
+            android:id="@+id/optionFile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/eimzo_ui_circle_primary"
+                android:padding="18dp"
+                android:src="@drawable/eimzo_ui_ic_folder" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Faylni tanlang"
+                android:textColor="#1C1B1F"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- QR orqali qo'shish -->
+        <LinearLayout
+            android:id="@+id/optionQr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/eimzo_ui_circle_primary"
+                android:padding="18dp"
+                android:src="@drawable/eimzo_ui_ic_qr_scan" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="QR orqali qo\'shish"
+                android:textColor="#1C1B1F"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- NFC orqali -->
+        <LinearLayout
+            android:id="@+id/optionNfc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/eimzo_ui_circle_primary"
+                android:padding="18dp"
+                android:src="@drawable/eimzo_ui_ic_nfc" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="NFC orqali"
+                android:textColor="#1C1B1F"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

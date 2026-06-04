@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcodeScanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_viewfinder_laser_visibility="false"
+        app:zxing_viewfinder_mask="@android:color/transparent"
+        app:zxing_use_texture_view="true">
+    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
+
+    <uz.eimzo.sdk.fullui.scanner.ScannerOverlayView
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="start|top"
+        android:src="@drawable/eimzo_ui_ic_back"
+        android:background="@drawable/eimzo_ui_bg_scanner_button"
+        app:tint="#FFFFFF"
+        android:contentDescription="@string/eimzo_ui_cancel" />
+
+    <ImageButton
+        android:id="@+id/btnFlash"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="80dp"
+        android:src="@drawable/eimzo_ui_ic_flash"
+        android:background="@drawable/eimzo_ui_bg_scanner_button"
+        android:contentDescription="Flash" />
+</FrameLayout>

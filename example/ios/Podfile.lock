@@ -1,0 +1,22 @@
+PODS:
+  - eimzo_flutter (1.0.2):
+    - Flutter
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - eimzo_flutter (from `.symlinks/plugins/eimzo_flutter/ios`)
+  - Flutter (from `Flutter`)
+
+EXTERNAL SOURCES:
+  eimzo_flutter:
+    :path: ".symlinks/plugins/eimzo_flutter/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  eimzo_flutter: 4274b2eeb3035c47e1bd92ef254d266dfb856419
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+
+PODFILE CHECKSUM: efffe91c750e8d1af4cf088c4ffc269932692411
+
+COCOAPODS: 1.16.2

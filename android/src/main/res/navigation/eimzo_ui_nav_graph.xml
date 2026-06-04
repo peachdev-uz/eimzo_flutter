@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="uz.eimzo.sdk.fullui.home.HomeFragment"
+        android:label="@string/eimzo_ui_home">
+        <argument
+            android:name="deepLink"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_home_to_keys"
+            app:destination="@id/keysFragment" />
+        <action
+            android:id="@+id/action_home_to_addKey"
+            app:destination="@id/addKeyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/keysFragment"
+        android:name="uz.eimzo.sdk.fullui.keys.KeysFragment"
+        android:label="@string/eimzo_ui_my_keys">
+        <action
+            android:id="@+id/action_keys_to_addKey"
+            app:destination="@id/addKeyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addKeyFragment"
+        android:name="uz.eimzo.sdk.fullui.addkey.AddKeyFragment"
+        android:label="@string/eimzo_ui_add_key" />
+
+</navigation>

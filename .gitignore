@@ -1,0 +1,17 @@
+.dart_tool/
+.packages
+pubspec.lock
+build/
+*.iml
+.idea/
+*.log
+android/.gradle/
+android/build/
+example/.dart_tool/
+example/.packages
+example/pubspec.lock
+example/build/
+example/android/.gradle/
+example/android/build/
+example/android/local.properties
+example/android/app/google-services.json

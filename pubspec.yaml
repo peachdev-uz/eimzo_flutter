@@ -1,0 +1,35 @@
+name: eimzo_flutter
+description: >-
+  Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
+  electronic signatures. Supports PFX/QR/NFC ID-card/USB token signing
+  and eimzo:// deep links.
+version: 1.0.3
+homepage: https://github.com/peachdev-uz/eimzo_flutter
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+topics:
+  - e-imzo
+  - electronic-signature
+  - uzbekistan
+  - deep-link
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: uz.peachdev.eimzo_flutter
+        pluginClass: EimzoFlutterPlugin
+      ios:
+        pluginClass: EimzoFlutterPlugin
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

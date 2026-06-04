@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/eimzo_bg_bottom_sheet"
+    android:paddingTop="12dp"
+    android:paddingBottom="36dp"
+    android:paddingHorizontal="20dp">
+
+    <View
+        android:layout_width="48dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:background="#D0D5DC" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieNfc"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        app:lottie_rawRes="@raw/eimzo_nfc_state_1"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
+
+    <TextView
+        android:id="@+id/tvNfcHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="#1C1B1F"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="ID kartani qurilmangiz yaqin tuting" />
+</LinearLayout>

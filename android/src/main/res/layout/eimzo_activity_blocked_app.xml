@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/eimzoBlockedToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#FFFFFF"
+        app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+        app:titleTextColor="#1C1B1F" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp">
+
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@android:drawable/ic_lock_lock"
+                app:tint="#E53935"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Ruxsat berilmagan"
+                android:textColor="#1C1B1F"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Ushbu ilova E-IMZO modulidan foydalanishga ruxsat etilmagan.\n\nIntegrator sifatida ro'yxatdan o'tish uchun biz bilan bog'laning."
+                android:textColor="#424242"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp"
+                android:gravity="center" />
+
+            <!-- Package Name card -->
+            <include
+                android:id="@+id/cardPackage"
+                layout="@layout/eimzo_blocked_info_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp" />
+
+            <!-- Error card (visible only if error message is present) -->
+            <include
+                android:id="@+id/cardError"
+                layout="@layout/eimzo_blocked_info_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" />
+
+            <!-- Request access button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRequestAccess"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:text="Ruxsat so'rash"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#00C68E" />
+
+            <!-- Contact email (fallback) -->
+            <TextView
+                android:id="@+id/tvContactEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:text="info@yt.uz"
+                android:textColor="#1976D2"
+                android:textSize="14sp"
+                android:background="@drawable/eimzo_blocked_email_border" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
