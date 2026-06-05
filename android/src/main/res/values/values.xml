@@ -52,4 +52,5 @@
     <string name="eimzo_ui_signed">IMZOLANDI</string>
     <string name="eimzo_ui_signing">IMZOLANYABDI…</string>
     <string name="eimzo_ui_usb_token_hint">USB tokenni qurilmaga ulang va imzolash tugmasini bosing</string>
+    <string name="eimzo_ui_usb_token_not_connected">USB tokenni ulang</string>
 </resources>
