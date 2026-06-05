@@ -31,6 +31,22 @@ class EimzoException implements Exception {
   String toString() => 'EimzoException($code): $message';
 }
 
+/// Result of a high-level sign operation — mirrors the SDK's
+/// `SignResult.Success` / `SignResult.Failure` shape.
+class EimzoSignResult {
+  /// Backend state (e.g. `"signature.valid"`, `"signature.invalid"`).
+  final String state;
+
+  /// Human-readable message from the backend.
+  final String message;
+
+  bool get isSuccess =>
+      !state.toLowerCase().contains('invalid') &&
+      !state.toLowerCase().contains('error');
+
+  const EimzoSignResult({required this.state, required this.message});
+}
+
 /// Thin wrapper around the bundled E-IMZO Mobile SDK.
 ///
 /// The native SDK owns all signing / key-management UI — this plugin just
@@ -95,6 +111,49 @@ class EimzoFlutter {
       await _channel.invokeMethod<void>('openSignUi', {
         if (deepLink != null) 'deepLink': deepLink,
       });
+    } on PlatformException catch (e) {
+      throw EimzoException(e.code, e.message ?? '');
+    }
+  }
+
+  /// Sign a document with a USB token (Feitian FT-1280 / e-imzo card reader).
+  ///
+  /// High-level flow — native SDK takes care of everything:
+  ///   1. Parse the `eimzo://sign?qc=...` deeplink
+  ///   2. Fetch site info from `m.e-imzo.uz`
+  ///   3. Build OzDST 1106 signed-attributes hash
+  ///   4. Open the FT-reader USB session, wait for token + card insert
+  ///   5. Validate the [pin] on the card
+  ///   6. Sign the hash with OzDST 1092
+  ///   7. Send the PKCS#7 envelope back to `m.e-imzo.uz`
+  ///   8. Return the backend's verdict
+  ///
+  /// USB tokens are **sign-only** — nothing is persisted as a saved key.
+  /// Each call opens a fresh FT-reader session and tears it down.
+  ///
+  /// **Android only.** iOS throws `EimzoException("UNSUPPORTED", ...)` —
+  /// Apple does not expose USB CCID via public iOS API.
+  ///
+  /// Throws [EimzoException] with `code = "401"` on wrong PIN.
+  Future<EimzoSignResult> signWithUsbToken({
+    required String pin,
+    required String deepLink,
+  }) async {
+    try {
+      final res = await _channel.invokeMethod<Map<dynamic, dynamic>>(
+        'signWithUsbToken',
+        {
+          'pin': pin,
+          'deepLink': deepLink,
+        },
+      );
+      if (res == null) {
+        throw const EimzoException('NULL', 'Native returned null');
+      }
+      return EimzoSignResult(
+        state: res['state'] as String? ?? '',
+        message: res['message'] as String? ?? '',
+      );
     } on PlatformException catch (e) {
       throw EimzoException(e.code, e.message ?? '');
     }

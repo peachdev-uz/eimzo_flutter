@@ -1,3 +1,52 @@
+## 1.0.9
+
+* 🧹 **Android: `EimzoFlutterPlugin.kt` tozalandi.** Foydalanuvchi
+  uchun ko'rinmas, lekin loyiha sog'lig'i uchun foydali optimizatsiya:
+  * Keraksiz `Handler/Looper` boqimda olib tashlandi — `EImzoSDK`
+    callbacklari allaqachon `Dispatchers.Main` da chaqiriladi,
+    qo'shimcha `mainHandler.post { }` qatlami foydasiz edi.
+  * `requireActivity(result)` helper'i ajratildi — 4 ta handler'da
+    takrorlangan `activity ?: result.error("NO_ACTIVITY", ...)`
+    patterni bitta funksiyaga yig'ildi.
+  * `onDetachedFromEngine` da `eventChannel.setStreamHandler(null)`
+    va `eventSink = null` qo'shildi — yengil memory leak xavfini
+    yopadi.
+  * Kanal nomlari va deep-link sxemasi `companion object` ichida
+    konstantalar sifatida ajratildi.
+  * Kotlin compile warning'lar: 3 → 0.
+
+## 1.0.8
+
+* 🔌 **Android: USB ulaganda ilova endi avtomatik ochilmaydi.** Avvalgi
+  versiyada `USB_DEVICE_ATTACHED` intent-filter qo'shilgan edi —
+  natijada FEITIAN token ulanishi bilan OS native UI'ni majburan
+  ochib yuborardi. Bu noqulay edi, shuning uchun intent-filter
+  va `eimzo_usb_device_filter.xml` olib tashlandi. USB token
+  aniqlash hali ham ishlaydi — faqat foydalanuvchi native UI'ga
+  o'tganida BroadcastReceiver yoqiladi va tugma faollashadi.
+* Bundled native SDK bumped to `eimzo-sdk-1.2.2`.
+
+## 1.0.7
+
+* 🔌 **Android: USB token avtomatik aniqlash.** "USB Token orqali
+  imzolash" tugmasi endi faqat FEITIAN / CCID smart-card reader
+  telefonga ulanganda faollashadi. SDK `USB_DEVICE_ATTACHED` /
+  `DETACHED` broadcastlarini kuzatib, tugmani real vaqtda
+  yoqadi / o'chiradi. Ulanmagan paytda tugma matni "USB tokenni
+  ulang" ga o'zgaradi.
+* 🪪 **Android: device-filter + intent-filter.** FEITIAN VID (0x096E)
+  uchun `res/xml/eimzo_usb_device_filter.xml` + `EImzoActivity`
+  manifestida `USB_DEVICE_ATTACHED` intent-filter. Token ulanganda
+  OS ilovani avtomatik ochishni taklif qiladi va USB ruxsatini
+  beradi.
+* 🧹 **Android: SDK ommaviy API tozalandi.** Barcha ichki klasslar
+  (`UsbTokenManager`, `NfcManager`, `EImzoApiClient`, Room DAO/DB,
+  `LicenseGuard`, `QrCryptoManager`, ViewModel'lar, va h.k.)
+  `internal` deb belgilandi. Endi consumer'da faqat zarur APIlar
+  ko'rinadi. Past darajali `signUsbHash` primitiv olib tashlandi —
+  USB sign uchun yagona API `signWithUsbToken(pin, deepLink, callback)`.
+* Bundled native SDK bumped to `eimzo-sdk-1.2.1`.
+
 ## 1.0.6
 
 * 📚 New `CONTRIBUTING.md` — how to report bugs, suggest features,

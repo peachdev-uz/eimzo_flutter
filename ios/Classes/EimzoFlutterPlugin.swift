@@ -104,6 +104,15 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             handleLaunchDeeplink(call: call, result: result)
         case "openSignUi":
             handleOpenSignUi(call: call, result: result)
+        case "signWithUsbToken":
+            // iOS has no public USB CCID API (CryptoTokenKit is macOS-only).
+            // The Android side calls the FT-reader USB token directly via
+            // FTReaderAPI; on iOS no equivalent exists.
+            result(FlutterError(
+                code: "UNSUPPORTED",
+                message: "USB token signing is not supported on iOS",
+                details: nil
+            ))
         default:
             result(FlutterMethodNotImplemented)
         }

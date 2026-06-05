@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="uz.eimzo.sdk" >
+
+    <uses-sdk android:minSdkVersion="24" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NFC" />
@@ -12,32 +15,44 @@
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
-    <uses-feature
-        android:name="android.hardware.usb.host"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.usb.host" />
 
     <!--
         Exclude the SDK's Room DB (eimzo_keys.db) and encrypted prefs from
         device-transfer / cloud backup. Consumer apps can keep their own
-        `allowBackup="true"` for their own data — these rules-XML files
-        explicitly remove only the SDK's storage paths.
+        `allowBackup="true"` for their own data — our backup-rules XML
+        files explicitly remove only the SDK's storage paths.
     -->
     <application
-        android:fullBackupContent="@xml/eimzo_backup_rules"
         android:dataExtractionRules="@xml/eimzo_data_extraction_rules"
-        tools:replace="android:fullBackupContent,android:dataExtractionRules">
+        android:fullBackupContent="@xml/eimzo_backup_rules"
+        tools:replace="android:fullBackupContent,android:dataExtractionRules" >
         <activity
             android:name="uz.eimzo.sdk.license.BlockedAppActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
-
         <activity
             android:name="uz.eimzo.sdk.fullui.EImzoActivity"
-            android:exported="false"
+            android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" >
 
+            <!--
+                 Receives external eimzo://sign?qc=... deeplinks (when integrator
+                 doesn't declare its own MainActivity with this intent filter).
+            -->
+            <intent-filter android:autoVerify="true" >
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="sign"
+                    android:scheme="eimzo" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="uz.eimzo.sdk.fullui.scanner.QrScannerActivity"
             android:exported="false"
