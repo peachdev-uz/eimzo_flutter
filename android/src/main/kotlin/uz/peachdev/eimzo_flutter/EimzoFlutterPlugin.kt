@@ -15,7 +15,9 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 import uz.eimzo.sdk.EImzoConfig
 import uz.eimzo.sdk.EImzoSDK
+import uz.eimzo.sdk.SignCallback
 import uz.eimzo.sdk.fullui.EImzoActivity
+import uz.eimzo.sdk.models.SignResult
 
 class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware,
     PluginRegistry.NewIntentListener {
@@ -55,8 +57,46 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
             }
             "launchDeeplink" -> handleLaunchDeeplink(call, result)
             "openSignUi" -> handleOpenSignUi(call, result)
+            "signWithUsbToken" -> handleSignWithUsbToken(call, result)
             else -> result.notImplemented()
         }
+    }
+
+    /**
+     * Direct-API USB token sign — bypasses the SDK UI. Called from Dart via
+     * [EimzoFlutter.signWithUsbToken]. The native SDK runs the full FT-reader
+     * + applet flow (token wait → PIN verify → hash sign → server roundtrip)
+     * and we forward the [SignResult] back as a `{state, message}` map.
+     *
+     * Errors are surfaced as PlatformException:
+     *  - code `401` for wrong PIN
+     *  - code `USB_SIGN` for everything else
+     */
+    private fun handleSignWithUsbToken(call: MethodCall, result: MethodChannel.Result) {
+        val pin = call.argument<String>("pin")
+            ?: return result.error("ARG", "pin is required", null)
+        val deepLink = call.argument<String>("deepLink")
+            ?: return result.error("ARG", "deepLink is required", null)
+
+        EImzoSDK.get().signWithUsbToken(pin, deepLink, object : SignCallback {
+            override fun onSuccess(success: SignResult.Success) {
+                mainHandler.post {
+                    result.success(
+                        mapOf(
+                            "state" to success.state,
+                            "message" to success.message
+                        )
+                    )
+                }
+            }
+
+            override fun onError(error: SignResult.Failure) {
+                mainHandler.post {
+                    val code = error.code ?: "USB_SIGN"
+                    result.error(code, error.error, null)
+                }
+            }
+        })
     }
 
     /**

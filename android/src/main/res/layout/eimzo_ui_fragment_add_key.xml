@@ -34,6 +34,11 @@
         app:icon="@drawable/eimzo_ui_ic_nfc"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
+    <!-- USB token "add" button kept in the binding for ABI compatibility,
+         but hidden — USB token is sign-only and lives on the Home screen
+         as a dedicated "USB token bilan imzolash" button. AddKeyFragment
+         sets visibility = GONE on this in code as a defensive belt-and-
+         braces (in case some downstream layout override re-enables it). -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddUsbToken"
         android:layout_width="match_parent"
@@ -41,6 +46,7 @@
         android:text="@string/eimzo_ui_add_usb_token"
         app:cornerRadius="12dp"
         app:icon="@drawable/eimzo_ui_ic_usb"
+        android:visibility="gone"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
     <TextView
