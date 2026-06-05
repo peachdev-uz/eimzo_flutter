@@ -281,7 +281,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- IMZOLASH button — signs with the currently selected saved key -->
+            <!-- IMZOLASH button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSign"
                 android:layout_width="match_parent"
@@ -293,22 +293,6 @@
                 app:cornerRadius="14dp"
                 app:backgroundTint="@color/eimzo_ui_primary"
                 android:visibility="gone" />
-
-            <!-- USB token sign-only button — always visible, independent of
-                 saved keys. Opens FT-reader session on tap, prompts for PIN,
-                 signs the deeplink hash, tears the session down. Nothing
-                 about the token is persisted to the keys DB. -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSignWithUsb"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="12dp"
-                android:text="@string/eimzo_ui_sign_with_usb"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:cornerRadius="14dp"
-                app:icon="@drawable/eimzo_ui_ic_usb"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <!-- "Kalit qo'shish" divider section -->
             <LinearLayout
