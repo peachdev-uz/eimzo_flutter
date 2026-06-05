@@ -104,18 +104,6 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             handleLaunchDeeplink(call: call, result: result)
         case "openSignUi":
             handleOpenSignUi(call: call, result: result)
-        case "signWithUsbToken":
-            // iOS has no public API for USB CCID smart-card readers —
-            // CryptoTokenKit's TKSmartCard is macOS-only, iPad USB-C
-            // doesn't expose CCID, and Lightning tokens need MFi vendor
-            // SDKs. Surface UNSUPPORTED back to Dart so apps can branch
-            // on it cleanly (and direct users to NFC or saved-key
-            // signing instead).
-            result(FlutterError(
-                code: "UNSUPPORTED",
-                message: "iOS does not support USB CCID smart-card tokens. Use NFC ID-card or saved-key signing instead.",
-                details: nil
-            ))
         default:
             result(FlutterMethodNotImplemented)
         }
