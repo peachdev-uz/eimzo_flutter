@@ -31,6 +31,29 @@ class EimzoException implements Exception {
   String toString() => 'EimzoException($code): $message';
 }
 
+/// Result returned by direct-API sign calls (e.g. [EimzoFlutter.signWithUsbToken]).
+///
+/// `state` mirrors the server's `state` field — typically `send.success`,
+/// `signature.valid`, or an error string. `message` is the human-readable
+/// note returned alongside, when present.
+class EimzoSignResult {
+  final String state;
+  final String? message;
+  const EimzoSignResult(this.state, this.message);
+
+  factory EimzoSignResult.fromMap(Map<String, dynamic> m) =>
+      EimzoSignResult(m['state'] as String? ?? '', m['message'] as String?);
+
+  /// `true` when the server accepted the signature.
+  bool get isSuccess =>
+      !state.contains('invalid') &&
+      !state.contains('error') &&
+      state.isNotEmpty;
+
+  @override
+  String toString() => 'EimzoSignResult(state=$state, message=$message)';
+}
+
 /// Thin wrapper around the bundled E-IMZO Mobile SDK.
 ///
 /// The native SDK owns all signing / key-management UI — this plugin just
@@ -95,6 +118,45 @@ class EimzoFlutter {
       await _channel.invokeMethod<void>('openSignUi', {
         if (deepLink != null) 'deepLink': deepLink,
       });
+    } on PlatformException catch (e) {
+      throw EimzoException(e.code, e.message ?? '');
+    }
+  }
+
+  /// Sign a document with the USB token, **without** opening the SDK UI.
+  ///
+  /// This is a direct-API entry point: the host app handles the PIN dialog,
+  /// status display, and result handling itself. The native SDK opens a
+  /// fresh FT-reader session, waits for the token + card to be inserted,
+  /// verifies [pin] against the applet, signs [deepLink]'s hash, and tears
+  /// the session down. **Nothing is persisted** — there is no "saved USB
+  /// token" key on the device.
+  ///
+  /// Throws [EimzoException] on any error:
+  ///   - `USB_SIGN` if the FT reader or applet returns a non-PIN error
+  ///   - code `401` if the PIN is wrong
+  ///   - `NO_ACTIVITY` if the plugin is not attached to an Activity
+  ///   - `UNSUPPORTED` on iOS (CryptoTokenKit is not available there)
+  ///
+  /// Returns an [EimzoSignResult] when the server accepts the signature.
+  ///
+  /// If you'd rather let the SDK show its native UI (with PIN dialog,
+  /// progress indicators, animations, error toasts), use [openSignUi]
+  /// instead — the SDK's Home screen now has a built-in "USB Token orqali
+  /// imzolash" button as of SDK 1.1.0.
+  Future<EimzoSignResult> signWithUsbToken({
+    required String pin,
+    required String deepLink,
+  }) async {
+    try {
+      final res = await _channel.invokeMapMethod<String, dynamic>(
+        'signWithUsbToken',
+        {'pin': pin, 'deepLink': deepLink},
+      );
+      if (res == null) {
+        throw const EimzoException('USB_SIGN', 'Empty result from native side');
+      }
+      return EimzoSignResult.fromMap(res);
     } on PlatformException catch (e) {
       throw EimzoException(e.code, e.message ?? '');
     }
