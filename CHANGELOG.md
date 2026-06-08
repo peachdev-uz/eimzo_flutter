@@ -1,3 +1,23 @@
+## 1.1.0
+
+* 🔑 **iOS: USB token orqali imzolash qo'shildi.** Bundled native SDK
+  bumped `EimzoSDK 1.0.4 → 1.1.1`. iOS 16+ ning ichki `CryptoTokenKit`
+  orqali Lightning/USB-C portga ulangan CCID tokenlar (Feitian eJava,
+  ePass2003, Identiv SCR3xx va boshqalar) endi to'g'ridan-to'g'ri ishlaydi
+  — token MFi sertifikatlangan bo'lishi shart emas.
+  * `AddKeyView`'da 4-source **"USB Token"** tugmasi.
+  * `HomeView` auto-detect — CCID slot ulanganda **"USB Token aniqlandi"**
+    banneri.
+  * `KeyCard`'da `Token` chip.
+  * Server tomonidan PKCS#7 qabul qilinishi tasdiqlangan (`m.e-imzo.uz`).
+* 🔒 **Security:** USB token APIsi license-gated. Barcha kirish nuqtalar
+  `LicenseEnforcement.ensureAllowed()` orqali o'tadi.
+* **Cheklov:** Lightning iPhone'da Apple Lightning-to-USB Camera Adapter
+  (yoki MFi-certified ekvivalent) kerak. USB-C iPhone 15+ Pro / iPad'da
+  to'g'ridan-to'g'ri USB-C → USB-A kabel ishlaydi.
+* Flutter tomonida API o'zgartirish yo'q — mavjud `openEImzoView()` /
+  deeplink flow USB tokenlar uchun ham avtomatik ishlaydi.
+
 ## 1.0.9
 
 * 🧹 **Android: `EimzoFlutterPlugin.kt` tozalandi.** Foydalanuvchi
