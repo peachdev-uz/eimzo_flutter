@@ -1,3 +1,11 @@
+## 1.1.1
+
+* 🐛 **Fix: SDK 1.1.2 module dependency.** Bundled native SDK bumped
+  `EimzoSDK 1.1.1 → 1.1.2`. Avvalgi versiyada `Unable to resolve module
+  dependency: 'FeitianSDK'` compile xatosi chiqayotgan edi. Endi
+  `@_implementationOnly import FeitianSDK` orqali swiftinterface'dan
+  yashirildi — consumer loyihalar muammosiz compile qiladi.
+
 ## 1.1.0
 
 * 🔑 **iOS: USB token orqali imzolash qo'shildi.** Bundled native SDK
