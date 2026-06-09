@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'eimzo_flutter'
-  s.version          = '1.1.2'
+  s.version          = '1.1.3'
   s.summary          = 'Flutter plugin wrapping the E-IMZO Mobile SDK (iOS).'
   s.description      = <<-DESC
     Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   # Pull the pre-built EimzoSDK.xcframework from the public GitHub release
   # on every `pod install`. Keeps the pub.dev package small (no 6 MB binary
   # checked in) and lets us roll the SDK independently of the plugin.
-  EIMZO_SDK_VERSION = '1.1.3'
+  EIMZO_SDK_VERSION = '1.1.4'
   EIMZO_SDK_URL = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/EimzoSDK.xcframework.zip"
 
   s.prepare_command = <<-CMD
