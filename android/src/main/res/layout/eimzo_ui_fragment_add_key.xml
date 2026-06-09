@@ -5,65 +5,79 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:background="#EEF2F6">
 
-    <TextView
+    <!--
+      Top app bar with back navigation. setNavigationOnClickListener is
+      wired in AddKeyFragment.kt to call findNavController().navigateUp().
+    -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/eimzo_ui_add_key"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="#EEF2F6"
+        app:navigationIcon="@drawable/eimzo_ui_ic_back"
+        app:title="@string/eimzo_ui_add_key"
+        app:titleCentered="true"
+        app:titleTextColor="#1C1B1F" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddPfx"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/eimzo_ui_add_eri_pfx"
-        app:cornerRadius="12dp"
-        app:icon="@drawable/eimzo_ui_ic_qr" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddNfc"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/eimzo_ui_add_id_card"
-        app:cornerRadius="12dp"
-        app:icon="@drawable/eimzo_ui_ic_nfc"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddPfx"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/eimzo_ui_add_eri_pfx"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/eimzo_ui_ic_qr" />
 
-    <!-- USB token "add" button kept in the binding for ABI compatibility,
-         but hidden — USB token is sign-only and lives on the Home screen
-         as a dedicated "USB token bilan imzolash" button. AddKeyFragment
-         sets visibility = GONE on this in code as a defensive belt-and-
-         braces (in case some downstream layout override re-enables it). -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddUsbToken"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:text="@string/eimzo_ui_add_usb_token"
-        app:cornerRadius="12dp"
-        app:icon="@drawable/eimzo_ui_ic_usb"
-        android:visibility="gone"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddNfc"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/eimzo_ui_add_id_card"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/eimzo_ui_ic_nfc"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-    <TextView
-        android:id="@+id/tvNfcHint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/eimzo_ui_bring_card_close"
-        android:textAlignment="center"
-        android:visibility="gone" />
+        <!-- USB token "add" button kept in the binding for ABI compatibility,
+             but hidden — USB token is sign-only and lives on the Home screen
+             as a dedicated "USB token bilan imzolash" button. AddKeyFragment
+             sets visibility = GONE on this in code as a defensive belt-and-
+             braces (in case some downstream layout override re-enables it). -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddUsbToken"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/eimzo_ui_add_usb_token"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/eimzo_ui_ic_usb"
+            android:visibility="gone"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24dp"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/tvNfcHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/eimzo_ui_bring_card_close"
+            android:textAlignment="center"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
 </LinearLayout>

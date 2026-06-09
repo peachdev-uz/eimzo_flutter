@@ -16,6 +16,7 @@
     <string name="eimzo_ui_add_key">Kalit qo\'shish</string>
     <string name="eimzo_ui_add_usb_token">USB Token qo\'shish</string>
     <string name="eimzo_ui_app_name">E-IMZO</string>
+    <string name="eimzo_ui_back">Orqaga</string>
     <string name="eimzo_ui_bring_card_close">ID kartani qurilmaga yaqinlashtiring</string>
     <string name="eimzo_ui_cancel">Bekor qilish</string>
     <string name="eimzo_ui_deeplink_received">Imzo so\'rovi qabul qilindi</string>
@@ -45,6 +46,7 @@
     <string name="eimzo_ui_scan_deeplink_qr">Imzolash uchun QR kod skanerlang</string>
     <string name="eimzo_ui_see_all">hammasi</string>
     <string name="eimzo_ui_session_expired">Sessiya tugadi</string>
+    <string name="eimzo_ui_session_remaining">Sessiya: %1$d:%2$02d qoldi</string>
     <string name="eimzo_ui_set_default">Asosiy</string>
     <string name="eimzo_ui_sign">IMZOLASH</string>
     <string name="eimzo_ui_sign_success">Imzolash muvaffaqiyatli!</string>
