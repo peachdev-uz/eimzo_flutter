@@ -1,3 +1,24 @@
+## 1.1.4
+
+* 🎨 **Feature: Android SDK 1.2.3 — UX yaxshilanishlar + NFC bug-fixlar.**
+  Bundled native Android SDK bumped `eimzo-sdk 1.2.2 → 1.2.3`.
+  * **103-sek deeplink sessiya taymeri.** Tashqi `eimzo://sign?qc=...`
+    deeplink kelganida sarlavhada toza taymer ko'rsatiladi
+    (`Sessiya: 1:43 qoldi`). Foydalanuvchi kerak bo'lsa kalit qo'shishi
+    va keyin imzolashi mumkin — deeplink ushlab turiladi. QR hash
+    endi ekranga chiqarilmaydi (foydalanuvchiga ma'nosiz edi).
+  * **Orqaga qaytish tugmasi.** Home (deeplink mode), AddKey, Keys
+    ekranlarida AppBar back tugmasi.
+  * **NFC imzolashda Lottie bottom sheet.** Endi NFC kalit bilan
+    imzolashda ham kalit qo'shishdagi kabi 3 ta animatsiya
+    (yaqinlashtiring → o'qilmoqda → bajarildi) ko'rsatiladi.
+* 🐛 **Tuzatishlar (SDK 1.2.3):**
+  * NFC tag tashlanmas muammosi: `dispatchNfcTag` Activity'ning
+    pause→resume tsiklida fragment topishni boshqa usulda qiladi.
+  * `disableForegroundDispatch` crash try-catch ichida.
+  * Sessiya tugaganida app majburan yopilmaydi — taymer faqat
+    informatsion.
+
 ## 1.1.3
 
 * ✨ **Feature: SDK 1.1.4 — 103-soniyalik deeplink sessiyasi.** Bundled
