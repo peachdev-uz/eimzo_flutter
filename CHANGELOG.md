@@ -1,3 +1,11 @@
+## 1.1.2
+
+* 🐛 **Fix: SDK 1.1.3 - HomeView orqaga qaytish tugmasi.** Bundled native
+  SDK bumped `EimzoSDK 1.1.2 → 1.1.3`. EImzoView sheet sifatida
+  ochilganda HomeView'da SDK'ni yopadigan tugma yo'q edi —
+  hamburger icon funksiyasiz bor edi. Endi `chevron.backward` orqaga
+  tugmasi sheet'ni `@Environment(\.dismiss)` orqali yopadi.
+
 ## 1.1.1
 
 * 🐛 **Fix: SDK 1.1.2 module dependency.** Bundled native SDK bumped
