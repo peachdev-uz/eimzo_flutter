@@ -1,3 +1,16 @@
+## 1.1.3
+
+* ✨ **Feature: SDK 1.1.4 — 103-soniyalik deeplink sessiyasi.** Bundled
+  native iOS SDK bumped `EimzoSDK 1.1.3 → 1.1.4`. Deeplink orqali
+  ochilgan imzo so'rovi endi darhol imzolanmaydi — SDK 103 soniyalik
+  sessiya ochadi va foydalanuvchi shu vaqt davomida kalit qo'shishi
+  (ID karta / PFX / QR / USB token) yoki mavjudini tanlashi va
+  **IMZOLASH** tugmasini bosib imzolashi mumkin. `HomeView` yuqorisida
+  live countdown banner ko'rinadi (mm:ss + progress bar, 15 soniya
+  qolganda qizilga o'tadi). Vaqt tugasa "Sessiya muddati tugadi"
+  overlay chiqadi. **API o'zgarishi yo'q** — Dart tomonida hech narsa
+  o'zgarmadi, faqat native side UX o'zgardi.
+
 ## 1.1.2
 
 * 🐛 **Fix: SDK 1.1.3 - HomeView orqaga qaytish tugmasi.** Bundled native
