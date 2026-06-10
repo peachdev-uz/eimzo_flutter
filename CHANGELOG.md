@@ -1,3 +1,23 @@
+## 1.1.6
+
+* 🛠 **Fix: iOS App Store nested framework rejection.** Bundled native
+  iOS SDK bumped `EimzoSDK 1.1.4 → 1.1.5`. Avvalgi versiyalarda
+  `Pfx2qr.framework` `EimzoSDK.framework/Frameworks/` ichida embed
+  qilingan edi va App Store Connect bunday tuzilmani rad etardi:
+  ```
+  ITMS-90205  contains disallowed nested bundles
+  ITMS-90206  contains disallowed file 'Frameworks'
+  ITMS-90035  inner Pfx2qr Mach-O not properly signed
+  ```
+  Plus `dSYM` yo'qligi haqida warning. Yangi versiyada `Pfx2qr.xcframework`
+  alohida sibling sifatida `App.app/Frameworks/` ostiga joylashadi
+  va `dSYM` fayllari xcframework ichida ship qilinadi → crash log'lar
+  symbolicate bo'ladi.
+  `prepare_command` eski nested `EimzoSDK.xcframework`'ni avtomatik
+  aniqlab tozalaydi va ikkala xcframework'ni qaytadan yuklab oladi.
+  **Migration:** `cd ios && rm -rf Pods Podfile.lock && pod install`
+  Dart API o'zgargan emas.
+
 ## 1.1.5
 
 * 🚨 **Hot-fix: PFX fayldan import barcha avvalgi versiyalarda buzilgan
