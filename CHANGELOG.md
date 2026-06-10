@@ -1,5 +1,18 @@
 ## 1.1.6
 
+* 🐛 **Android: PFX import R8 hot-fix.** Bundled native Android SDK
+  bumped `eimzo-sdk 1.2.4 → 1.2.5`. R8 minification yoqilgan
+  integrator app'larda PFX kalit qo'shganda quyidagi crash bilan
+  to'qnashar edi:
+  ```
+  F/go/Seq : failed to find method Seq.getRef
+  F/libc   : Fatal signal 6 (SIGABRT) in Java_go_Seq_init
+  ```
+  Sabab: `libgojni.so` JNI orqali `go.Seq.getRef`, `go.Seq.incRef`
+  metodlarini nom orqali topadi. Consumer R8 ularni Kotlin koddan
+  hech kim chaqirmaganini ko'rib rename/strip qilardi. Plugin
+  `consumer-rules.pro` ga `go.**` va `pfx2qr.**` keep qoidalari
+  qo'shildi — endi avtomatik shipga ket.
 * 🛠 **Fix: iOS App Store nested framework rejection.** Bundled native
   iOS SDK bumped `EimzoSDK 1.1.4 → 1.1.5`. Avvalgi versiyalarda
   `Pfx2qr.framework` `EimzoSDK.framework/Frameworks/` ichida embed
