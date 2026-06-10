@@ -20,3 +20,13 @@
 
 # Plugin itself
 -keep class uz.peachdev.eimzo_flutter.** { *; }
+
+# Bundled pfx2qr Java wrapper + go-mobile JNI bridge classes. libgojni.so
+# looks up go.Seq.getRef etc. by name — R8 must NOT rename/strip them or
+# PFX parsing crashes at runtime with "failed to find method Seq.getRef"
+# (SIGABRT inside Java_go_Seq_init).
+-keep class pfx2qr.** { *; }
+-keep class go.** { *; }
+-keepclassmembers class go.** { *; }
+-dontwarn pfx2qr.**
+-dontwarn go.**
