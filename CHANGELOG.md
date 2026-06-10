@@ -1,3 +1,17 @@
+## 1.1.5
+
+* 🚨 **Hot-fix: PFX fayldan import barcha avvalgi versiyalarda buzilgan
+  edi.** Bundled native Android SDK bumped `eimzo-sdk 1.2.3 → 1.2.4`.
+  Fayl orqali kalit qo'shganda quyidagi crash bilan to'qnashar edi:
+  ```
+  java.lang.UnsatisfiedLinkError: dlopen failed:
+    library "libgojni.so" not found
+  ```
+  Sabab: `libgojni.so` (PFX parsing uchun native lib) Flutter plugin
+  jniLibs ichida yo'q edi. Endi to'g'ridan-to'g'ri bundled
+  (4 ABI × ~4.5 MB).
+* 📦 APK hajmiga ta'sir: bundled `.so` fayllar tufayli ~18 MB qo'shildi.
+
 ## 1.1.4
 
 * 🎨 **Feature: Android SDK 1.2.3 — UX yaxshilanishlar + NFC bug-fixlar.**
