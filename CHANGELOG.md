@@ -1,4 +1,4 @@
-## 1.1.6
+## 1.1.7
 
 * 🐛 **Android: PFX import R8 hot-fix.** Bundled native Android SDK
   bumped `eimzo-sdk 1.2.4 → 1.2.5`. R8 minification yoqilgan
@@ -13,6 +13,9 @@
   hech kim chaqirmaganini ko'rib rename/strip qilardi. Plugin
   `consumer-rules.pro` ga `go.**` va `pfx2qr.**` keep qoidalari
   qo'shildi — endi avtomatik shipga ket.
+
+## 1.1.6
+
 * 🛠 **Fix: iOS App Store nested framework rejection.** Bundled native
   iOS SDK bumped `EimzoSDK 1.1.4 → 1.1.5`. Avvalgi versiyalarda
   `Pfx2qr.framework` `EimzoSDK.framework/Frameworks/` ichida embed
