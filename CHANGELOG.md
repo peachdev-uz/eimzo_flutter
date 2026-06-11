@@ -1,4 +1,4 @@
-## 1.1.8
+## 1.1.9
 
 * 🔒 **Android: muddati tugagan sertifikat bilan imzolash bloklandi.**
   Bundled native Android SDK bumped `eimzo-sdk 1.2.5 → 1.2.6`.
