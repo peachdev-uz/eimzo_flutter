@@ -137,5 +137,25 @@
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <!--
+          "Muddati tugagan" pill, mirrors the same badge on the Home key
+          card. KeyAdapter toggles visibility based on PfxKey.isExpired().
+        -->
+        <TextView
+            android:id="@+id/tvExpiredBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/eimzo_ui_bg_expired_badge"
+            android:text="@string/eimzo_ui_key_expired"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/ivDefault"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="6dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

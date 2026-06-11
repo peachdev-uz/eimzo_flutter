@@ -30,6 +30,8 @@
     <string name="eimzo_ui_home">Bosh sahifa</string>
     <string name="eimzo_ui_key_add_section">Kalit qo\'shish</string>
     <string name="eimzo_ui_key_added_success">Kalit muvaffaqiyatli qo\'shildi</string>
+    <string name="eimzo_ui_key_expired">Muddati tugagan</string>
+    <string name="eimzo_ui_key_expired_cant_sign">Bu kalit muddati tugagan — imzolab bo\'lmaydi</string>
     <string name="eimzo_ui_label_duration">Muddati</string>
     <string name="eimzo_ui_label_jshshir">JSHSHIR</string>
     <string name="eimzo_ui_label_stir">STIR</string>
