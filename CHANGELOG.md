@@ -1,3 +1,18 @@
+## 1.1.8
+
+* ✨ **iOS: muddati tugagan sertifikat bloki + kalitni bir bosishda
+  tanlash.** Bundled native iOS SDK bumped `EimzoSDK 1.1.5 → 1.1.6`.
+  - Muddati o'tgan (`validTo` sanasi kelgan) sertifikat bilan endi
+    imzolab bo'lmaydi. Kartochka kulrang ko'rinishga o'tadi, qizil
+    **"Muddati tugagan"** badge chiqadi, IMZOLASH tugmasi o'chiriladi.
+    SDK-core'da ham guard bor (`SignError.certExpired`) — deeplink,
+    QR va auto-sign yo'llari qamralgan.
+  - Kalitlar ro'yxatida kartochka ustiga bir marta bosish endi uni
+    darhol faol kalit qilib tanlaydi va Home'ga qaytaradi (avval
+    uzoq bosib "Default qilish" tanlash kerak edi).
+
+  Dart API o'zgarmagan. Migration: `cd ios && rm -rf Pods Podfile.lock && pod install`
+
 ## 1.1.7
 
 * 🐛 **Android: PFX import R8 hot-fix.** Bundled native Android SDK
