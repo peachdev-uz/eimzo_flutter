@@ -1,5 +1,14 @@
 ## 1.1.8
 
+* 🔒 **Android: muddati tugagan sertifikat bilan imzolash bloklandi.**
+  Bundled native Android SDK bumped `eimzo-sdk 1.2.5 → 1.2.6`.
+  - Muddati o'tgan (`validTo` sanasi kelgan) kalit kartochkasida
+    qizil **"Muddati tugagan"** badge chiqadi, Home'da IMZOLASH
+    tugmasi o'chiriladi va kartochka xira ko'rinadi. "Mening
+    kalitlarim" ro'yxatida ham har bir muddati o'tgan kartochka
+    belgilanadi.
+  - Defence-in-depth: tugma holati o'tib ketsa ham, bosilganda
+    "Bu kalit muddati tugagan — imzolab bo'lmaydi" toast chiqadi.
 * ✨ **iOS: muddati tugagan sertifikat bloki + kalitni bir bosishda
   tanlash.** Bundled native iOS SDK bumped `EimzoSDK 1.1.5 → 1.1.6`.
   - Muddati o'tgan (`validTo` sanasi kelgan) sertifikat bilan endi
