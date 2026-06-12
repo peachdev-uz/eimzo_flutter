@@ -1,3 +1,21 @@
+## 1.2.1
+
+🔌 **USB token signing fixed** — verified end-to-end on a physical
+FEITIAN JavaCard Token V1.0.
+
+* **Bundled the missing native-SDK dependency jars.** 1.2.0 shipped
+  only the core SDK classes; the FEITIAN FTReader, ID-card applet and
+  pfx2qr jars were absent, so USB-token signing crashed with
+  `NoClassDefFoundError: com.ftsafe...FTException`. The plugin now
+  bundles all four jars.
+* Updated bundled SDK to **1.2.8**, which fixes the FEITIAN 2.0.1.7
+  USB flow: permission-request race, automatic `readerFind()` retry
+  after the grant, reader addressing by `UsbDevice` name, and direct
+  slot-status detection for tokens without an interrupt endpoint.
+* Added R8 consumer rules for `com.ftsafe.**` and
+  `uz.yt.idcard.applet.**` so release builds keep the JNI-referenced
+  reader classes.
+
 ## 1.2.0
 
 * 📐 **Android: 16 KB page size muvofiqligi (Android 15+).** Bundled

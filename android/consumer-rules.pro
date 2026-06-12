@@ -30,3 +30,12 @@
 -keepclassmembers class go.** { *; }
 -dontwarn pfx2qr.**
 -dontwarn go.**
+
+# FEITIAN FTReader (USB token) — libFTReaderPCSC JNI registers callbacks into
+# com.ftsafe classes by name; R8 must not rename or strip them. The ID-card
+# applet jar is driven over the same APDU channel.
+-keep class com.ftsafe.** { *; }
+-keepclassmembers class com.ftsafe.** { *; }
+-keep class uz.yt.idcard.applet.** { *; }
+-dontwarn com.ftsafe.**
+-dontwarn uz.yt.idcard.applet.**
