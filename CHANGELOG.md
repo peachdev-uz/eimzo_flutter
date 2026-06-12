@@ -1,3 +1,26 @@
+## 1.2.0
+
+* 📐 **Android: 16 KB page size muvofiqligi (Android 15+).** Bundled
+  native Android SDK bumped `eimzo-sdk 1.2.6 → 1.2.7`. Android 15+ va
+  16 KB xotira sahifali qurilmalar native `.so` larning ELF LOAD
+  segmentlari 16 KB ga tekislanishini talab qiladi (Google Play SDK 35
+  uchun 2025-yil 1-noyabrdan majburiy). Avval qurilma quyidagi
+  ogohlantirishni ko'rsatardi:
+  ```
+  Следующие библиотеки не выровнены по 16 КБ:
+    libgojni.so, libFTReaderPCSC_*.so
+  ```
+  Tuzatishlar:
+  * `libgojni.so` (pfx2qr) Go manbasidan 16 KB alignment bilan qayta
+    build qilindi.
+  * FEITIAN kutubxonasi `1.0.9.6 → 2.0.1.7` ga yangilandi — FEITIAN'ning
+    rasmiy 16 KB tekislangan SDK'si. Ikkala lib ham endi 16 KB ELF.
+  * `libgojni.so` va `pfx2qr.jar` bundled tartibda saqlanib qoldi.
+* ⚠️ **Integratorlar uchun:** to'liq 16 KB muvofiqlik (yakuniy APK ZIP
+  alignment) uchun ilovangizda **AGP 8.5.1+** ishlating — eski AGP
+  native lib'larni 4 KB ga zipalign qiladi.
+* ℹ️ USB token imzolash FEITIAN 2.0.1.7 API'ga o'tdi.
+
 ## 1.1.9
 
 * 🔒 **Android: muddati tugagan sertifikat bilan imzolash bloklandi.**
