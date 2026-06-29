@@ -15,5 +15,4 @@ example/android/.gradle/
 example/android/build/
 example/android/local.properties
 example/android/app/google-services.json
-.claude/
 .DS_Store
