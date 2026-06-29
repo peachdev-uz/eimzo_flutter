@@ -1,3 +1,14 @@
+## 1.2.2
+
+🔄 **Native SDK yangilandi** — test muhitining API manzili o'zgardi.
+
+* **Android SDK `1.2.8 → 1.2.9`** va **iOS SDK `1.1.6 → 1.1.7`**.
+* Test muhitining RPC manzili `https://m.test.e-imzo.uz/api/rpc` dan
+  `https://test.e-imzo.uz/api/rpc` ga ko'chirildi (`m.` subdomeni olib
+  tashlandi). Production manzili o'zgarmadi (`https://m.e-imzo.uz/api/rpc`).
+* Boshqa o'zgarish yo'q — imzolash oqimlari, bundled aux jarlar
+  (FEITIAN/applet/pfx2qr) va native `.so` lar o'sha-o'sha.
+
 ## 1.2.1
 
 🔌 **USB token signing fixed** — verified end-to-end on a physical
