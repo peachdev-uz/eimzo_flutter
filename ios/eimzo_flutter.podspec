@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'eimzo_flutter'
-  s.version          = '1.2.2'
+  s.version          = '1.2.3'
   s.summary          = 'Flutter plugin wrapping the E-IMZO Mobile SDK (iOS).'
   s.description      = <<-DESC
     Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan

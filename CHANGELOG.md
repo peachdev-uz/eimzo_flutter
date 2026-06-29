@@ -1,3 +1,18 @@
+## 1.2.3
+
+🍎 **iOS: Swift Package Manager qo'llab-quvvatlashi** + 🤖 **Android native SDK fix**.
+
+* **iOS — SPM qo'shildi.** Endi plagin `podspec` yonida `Package.swift`
+  ham tashiydi. SPM yoqilgan ilovalar (`flutter config
+  --enable-swift-package-manager`) `eimzo_flutter`'ni "qo'llab-quvvatlanmaydi"
+  deb ogohlantirmaydi. CocoaPods fallback sifatida saqlanadi — ikkala yo'l
+  ham bir xil Swift manbasini kompilyatsiya qiladi. `EimzoSDK` va `Pfx2qr`
+  xcframework'lari SPM'da remote `.binaryTarget(url:checksum:)` orqali (podspec
+  ishlatadigan o'sha GitHub release'dan) yuklanadi. Real qurilmada tasdiqlandi.
+* **Android SDK `1.2.9 → 1.2.10`.** Kalit qo'shishda yuzaga keladigan Room
+  null-krash tuzatildi. Boshqa o'zgarish yo'q — bundled aux jarlar
+  (FEITIAN/applet/pfx2qr), native `.so` lar, resurslar va manifest o'sha-o'sha.
+
 ## 1.2.2
 
 🔄 **Native SDK yangilandi** — test muhitining API manzili o'zgardi.
