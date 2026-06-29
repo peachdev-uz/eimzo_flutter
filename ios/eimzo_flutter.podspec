@@ -12,7 +12,9 @@ Pod::Spec.new do |s|
   s.author           = { 'PeachDev' => 'info@peachdev.uz' }
   s.source           = { :path => '.' }
 
-  s.source_files = 'Classes/**/*.swift'
+  # Shared with the SPM manifest (eimzo_flutter/Package.swift) so CocoaPods and
+  # Swift Package Manager compile the exact same sources.
+  s.source_files = 'eimzo_flutter/Sources/eimzo_flutter/**/*.swift'
   s.dependency 'Flutter'
   s.platform = :ios, '16.0'
   s.swift_version = '5.9'

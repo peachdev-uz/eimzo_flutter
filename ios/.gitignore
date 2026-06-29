@@ -1,3 +1,10 @@
 # Downloaded by pod install (prepare_command in eimzo_flutter.podspec)
 EimzoSDK.xcframework/
 EimzoSDK.xcframework.zip
+Pfx2qr.xcframework/
+Pfx2qr.xcframework.zip
+
+# Swift Package Manager build cache (eimzo_flutter/Package.swift)
+eimzo_flutter/.build/
+eimzo_flutter/.swiftpm/
+.build/
