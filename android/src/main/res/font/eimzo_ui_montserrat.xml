@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Montserrat, the design's typeface (E-IMZO ID Card - Redesign, project 952aaf65).
+
+  Three weights only — regular / medium / semibold — because that is what the
+  design uses. Bold (700) maps onto SemiBold deliberately: the design's @font-face
+  block does the same, so a `textStyle="bold"` anywhere in the SDK lands on the
+  weight the mockups were drawn with rather than a synthesised heavier one.
+
+  Declared through the AndroidX namespace as well as the platform one: font
+  resources are native from API 26, and this library ships to minSdk 24.
+-->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <font
+        android:font="@font/eimzo_ui_montserrat_regular"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        app:font="@font/eimzo_ui_montserrat_regular"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
+
+    <font
+        android:font="@font/eimzo_ui_montserrat_medium"
+        android:fontStyle="normal"
+        android:fontWeight="500"
+        app:font="@font/eimzo_ui_montserrat_medium"
+        app:fontStyle="normal"
+        app:fontWeight="500" />
+
+    <font
+        android:font="@font/eimzo_ui_montserrat_semibold"
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        app:font="@font/eimzo_ui_montserrat_semibold"
+        app:fontStyle="normal"
+        app:fontWeight="600" />
+
+    <font
+        android:font="@font/eimzo_ui_montserrat_semibold"
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        app:font="@font/eimzo_ui_montserrat_semibold"
+        app:fontStyle="normal"
+        app:fontWeight="700" />
+
+</font-family>

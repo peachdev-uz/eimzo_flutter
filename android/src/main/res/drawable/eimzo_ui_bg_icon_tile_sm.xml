@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The 44dp accent tile behind a route icon in the empty state's card (3c).
+     A point smaller and a point tighter than the sheet's 46/15. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_accent_12" />
+    <corners android:radius="14dp" />
+</shape>

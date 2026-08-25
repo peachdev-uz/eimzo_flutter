@@ -1,3 +1,45 @@
+## 2.0.0
+
+**BUZUVCHI: litsenziya endi majburiy.**
+
+Plagin E-IMZO SDK 2.0.0 ga o'tdi. SDK endi faqat imzolangan oflayn litsenziya
+bilan ishlaydi — Firestore ro'yxatidan tekshirish olib tashlandi, va orqada
+tushadigan zaxira yo'l yo'q. Litsenziyasiz ilova bloklanadi.
+
+### Migratsiya
+
+1. `info@yt.uz` ga yozing va ikkinchi omilni yuboring:
+   - **iOS** — Team ID (`codesign -dvvv MyApp.app 2>&1 | grep TeamIdentifier`)
+   - **Android** — release APK imzo sertifikati SHA-256
+     (`apksigner verify --print-certs app-release.apk | grep -i "SHA-256"`)
+2. Kelgan `eimzo-license.txt` faylini qo'ying:
+   - iOS: ilova bundle'iga resurs sifatida
+   - Android: `android/app/src/main/assets/`
+3. `eimzo_flutter: ^2.0.0` ga yangilang.
+
+Litsenziya paket nomingizga **va** imzo identifikatoringizga bog'lanadi, ya'ni
+boshqa ilovada ishlamaydi.
+
+### Nega
+
+Tekshiruv `firestore.googleapis.com` javob berishini talab qilardi — u yerdagi
+uzilish barcha integratorlarni to'xtatardi. Binardagi API kalitni ajratib
+olgan kishi qaysi paketlar ro'yxatda ekanini zondlab ko'ra olardi. Va paket
+nomi — chaqiruvchi tanlaydigan satr; uni tuzatadigan ikkinchi omil endi
+litsenziyaning ichida, yopiq kalitsiz o'zgartirib bo'lmaydi.
+
+### Boshqa o'zgarishlar
+
+- Native SDK: Android 1.2.10 → 2.0.0, iOS 1.1.7 → 2.0.0.
+- Yangi dizayn tizimi: qorong'i rejim, uch til (uz/ru/en), Montserrat,
+  tanlanadigan oboylar, qayta ishlangan 11 ta ekran.
+- USB-token endi kalit sifatida saqlanadi (ilgari faqat imzolash uchun edi).
+- Android: `uses-feature android:required="false"` qo'shildi — usiz Google
+  Play ilovangizni USB host'i yo'q qurilmalardan filtrlab tashlardi.
+- Android: R8 qoidalariga BouncyCastle qo'shildi. Usiz release build'da
+  litsenziya tekshiruvchisi olib tashlanib, ilova bloklanardi.
+- "Ruxsat so'rash" formasi olib tashlandi — o'rniga `info@yt.uz`.
+
 ## 1.2.3
 
 🍎 **iOS: Swift Package Manager qo'llab-quvvatlashi** + 🤖 **Android native SDK fix**.

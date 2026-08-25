@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The add-key row closing the list (3d). Inline rather than a floating
+     button: it belongs after the keys you have, not on top of them. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/addRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="38dp"
+    android:paddingTop="22dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="26dp">
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/eimzo_ui_ic_add"
+        app:tint="@color/eimzo_ui_accent_dark" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:text="@string/eimzo_ui_add_key"
+        android:textColor="@color/eimzo_ui_accent_dark"
+        android:textSize="14.5sp" />
+
+</LinearLayout>

@@ -39,3 +39,27 @@
 -keep class uz.yt.idcard.applet.** { *; }
 -dontwarn com.ftsafe.**
 -dontwarn uz.yt.idcard.applet.**
+
+# ── SDK 2.0.0 dan qo'shilgan qoidalar ───────────────────────────────────
+#
+# Bular AAR ichidagi proguard.txt dan olindi. Plaginning o'z qoidalari
+# qo'lda saqlanadi, shuning uchun ular avtomatik kelmaydi — SDK yangilanganda
+# shu ro'yxatni qayta solishtirish kerak.
+#
+# BouncyCastle ayniqsa muhim: litsenziya Ed25519 bilan imzolangan va uni
+# tekshiruvchi shu kutubxonada. R8 uni olib tashlasa, har bir litsenziya
+# tekshiruvdan o'tmaydi — 2.0 da esa orqada zaxira yo'l yo'q, ya'ni ilova
+# butunlay bloklanadi.
+-keep public class uz.eimzo.sdk.EImzoCallback { *; }
+-keep public interface uz.eimzo.sdk.UsbImportKeyCallback { *; }
+-keep public class uz.eimzo.sdk.models.QrHashData {
+    public *;
+    public static *** fromDeepLink(java.lang.String);
+}
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+-keep class org.bouncycastle.** { *; }
+-dontwarn org.bouncycastle.**
+-dontwarn javax.naming.**
+-dontwarn com.airbnb.lottie.**

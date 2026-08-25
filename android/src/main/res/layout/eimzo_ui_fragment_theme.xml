@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 3i3 — wallpaper, with the key card over it as a live preview: the card is
+     what the wallpaper actually sits behind, so choosing without it is
+     choosing blind. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/eimzo_ui_background"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/eimzo_ui_background"
+        app:navigationIcon="@drawable/eimzo_ui_ic_back"
+        app:title="@string/eimzo_ui_theme"
+        app:titleCentered="true"
+        app:titleTextColor="@color/eimzo_ui_text" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivPreview"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop" />
+
+        <include
+            android:id="@+id/previewCard"
+            layout="@layout/eimzo_ui_item_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="34dp"
+            android:layout_marginEnd="28dp" />
+    </FrameLayout>
+
+    <TextView
+        style="@style/TextAppearance.Eimzo.SectionHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/eimzo_ui_choose_theme" />
+
+    <LinearLayout
+        android:id="@+id/swatches"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/eimzo_ui_theme_dark_note"
+        android:textColor="@color/eimzo_ui_text_hint"
+        android:textSize="12.5sp" />
+
+</LinearLayout>

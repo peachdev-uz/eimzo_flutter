@@ -20,12 +20,82 @@
         <action
             android:id="@+id/action_home_to_addKey"
             app:destination="@id/addKeyFragment" />
+        <!-- 3f. A deep link no longer signs from Home; it goes through the
+             confirmation screen so the domain and the hash are seen first. -->
+        <action
+            android:id="@+id/action_home_to_signRequest"
+            app:destination="@id/signRequestFragment" />
+        <!-- 3i -->
+        <action
+            android:id="@+id/action_home_to_settings"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="uz.eimzo.sdk.fullui.settings.SettingsFragment"
+        android:label="@string/eimzo_ui_settings">
+        <action
+            android:id="@+id/action_settings_to_language"
+            app:destination="@id/languageFragment" />
+        <action
+            android:id="@+id/action_settings_to_theme"
+            app:destination="@id/themeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/languageFragment"
+        android:name="uz.eimzo.sdk.fullui.settings.LanguageFragment"
+        android:label="@string/eimzo_ui_language" />
+
+    <fragment
+        android:id="@+id/themeFragment"
+        android:name="uz.eimzo.sdk.fullui.settings.ThemeFragment"
+        android:label="@string/eimzo_ui_theme" />
+
+    <fragment
+        android:id="@+id/signRequestFragment"
+        android:name="uz.eimzo.sdk.fullui.sign.SignRequestFragment"
+        android:label="@string/eimzo_ui_sign_request_title">
+        <!-- "O'zgartirish" — pick a different key, then come back. -->
+        <action
+            android:id="@+id/action_signRequest_to_keys"
+            app:destination="@id/keysFragment" />
+        <!-- 3g. popUpTo the confirmation so back from the receipt cannot land
+             on a screen offering to sign the same document again. -->
+        <action
+            android:id="@+id/action_signRequest_to_signedReturn"
+            app:destination="@id/signedReturnFragment"
+            app:popUpTo="@id/signRequestFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signedReturnFragment"
+        android:name="uz.eimzo.sdk.fullui.sign.SignedReturnFragment"
+        android:label="@string/eimzo_ui_signed_title">
+        <argument
+            android:name="domain"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="keyName"
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/keysFragment"
         android:name="uz.eimzo.sdk.fullui.keys.KeysFragment"
         android:label="@string/eimzo_ui_my_keys">
+        <!-- Set when the empty state (3c) picked a route already: the four
+             ways are listed there, so making the user choose again in the
+             sheet is the thing that screen exists to avoid. -->
+        <argument
+            android:name="startRoute"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
         <action
             android:id="@+id/action_keys_to_addKey"
             app:destination="@id/addKeyFragment" />

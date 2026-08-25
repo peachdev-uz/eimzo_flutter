@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="eimzo_ui_accent_13">#2600C68E</color>
+    <color name="eimzo_ui_accent_26">#4200C68E</color>
+    <color name="eimzo_ui_accent_dark">#00C68E</color>
+    <color name="eimzo_ui_background">#1D2733</color>
+    <color name="eimzo_ui_button_secondary">#26323F</color>
+    <color name="eimzo_ui_card_gradient_end">#1C6259</color>
+    <color name="eimzo_ui_card_gradient_mid">#115C6A</color>
+    <color name="eimzo_ui_card_gradient_start">#0B4B64</color>
+    <color name="eimzo_ui_chevron">#8798A2</color>
+    <color name="eimzo_ui_chip_translucent">#0FFFFFFF</color>
+    <color name="eimzo_ui_divider">#1AFFFFFF</color>
+    <color name="eimzo_ui_grabber">#21F2F7F6</color>
+    <color name="eimzo_ui_hairline">#1AFFFFFF</color>
+    <color name="eimzo_ui_hash_base">#DCE6E5</color>
+    <color name="eimzo_ui_info_amber">#E0A64A</color>
+    <color name="eimzo_ui_keypad_key">#212D3B</color>
+    <color name="eimzo_ui_label">#8798A2</color>
+    <color name="eimzo_ui_on_accent">#08251E</color>
+    <color name="eimzo_ui_on_accent_disabled">#8C08251E</color>
+    <color name="eimzo_ui_option_row">#212D3B</color>
+    <color name="eimzo_ui_pill_bg">#2900C68E</color>
+    <color name="eimzo_ui_pin_dot_idle">#3DFFFFFF</color>
+    <color name="eimzo_ui_receipt">#0DFFFFFF</color>
+    <color name="eimzo_ui_row_icon">#B9C7C6</color>
+    <color name="eimzo_ui_scrim">#CC1D2733</color>
+    <color name="eimzo_ui_section_header">#8798A2</color>
+    <color name="eimzo_ui_sheet">#212D3B</color>
+    <color name="eimzo_ui_stay_button">#12FFFFFF</color>
+    <color name="eimzo_ui_step_bullet">#2E00C68E</color>
+    <color name="eimzo_ui_surface">#212D3B</color>
+    <color name="eimzo_ui_text">#F2F7F6</color>
+    <color name="eimzo_ui_text_hint">#8798A2</color>
+    <color name="eimzo_ui_text_muted">#B9C7C6</color>
+    <color name="eimzo_ui_text_on_wallpaper">#B9C7C6</color>
+    <color name="eimzo_ui_text_on_wallpaper_dim">#8798A2</color>
+    <color name="eimzo_ui_text_secondary">#DCE6E5</color>
+    <color name="eimzo_ui_well">#1D2733</color>
+    <style name="Theme.Eimzo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/eimzo_ui_accent</item>
+        <item name="colorPrimaryDark">@color/eimzo_ui_accent_dark</item>
+        <item name="colorAccent">@color/eimzo_ui_accent</item>
+        <item name="colorOnPrimary">@color/eimzo_ui_on_accent</item>
+
+        <item name="android:colorBackground">@color/eimzo_ui_background</item>
+        <item name="colorSurface">@color/eimzo_ui_surface</item>
+        <item name="android:textColorPrimary">@color/eimzo_ui_text</item>
+        <item name="android:textColorSecondary">@color/eimzo_ui_text_muted</item>
+        <item name="android:textColorHint">@color/eimzo_ui_text_hint</item>
+
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">false</item>
+
+        <item name="bottomSheetDialogTheme">@style/Theme.Eimzo.BottomSheet</item>
+    </style>
+</resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#EEF2F6">
+    android:background="@color/eimzo_ui_background">
 
     <!--
       Top app bar with back navigation. setNavigationOnClickListener is
@@ -15,11 +15,11 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#EEF2F6"
+        android:background="@color/eimzo_ui_background"
         app:navigationIcon="@drawable/eimzo_ui_ic_back"
         app:title="@string/eimzo_ui_add_key"
         app:titleCentered="true"
-        app:titleTextColor="#1C1B1F" />
+        app:titleTextColor="@color/eimzo_ui_text" />
 
     <LinearLayout
         android:layout_width="match_parent"

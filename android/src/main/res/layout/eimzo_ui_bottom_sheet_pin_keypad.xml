@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  3c — the PIN sheet, for the two routes whose secret is a PIN.
+
+  A card and a token both take eight digits, so both get digits to press:
+  typing them on a text keyboard is worse in every way, and the dots make the
+  fixed length visible instead of leaving the user to count. A .pfx file and a
+  QR key take a real password and keep the text dialog.
+
+  This replaces the system AlertDialog the SDK used before. The reason is the
+  error: an alert has nowhere to put "wrong PIN, 3 attempts left" without
+  stacking a second dialog on top, so the count was simply never shown.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/eimzo_ui_bg_sheet"
+    android:fillViewport="true"
+    android:paddingStart="20dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="34dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="44dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/eimzo_ui_sheet_grabber" />
+
+        <!-- Header: accent tile + title/subtitle. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/eimzo_ui_bg_icon_tile">
+
+                <ImageView
+                    android:id="@+id/pinIcon"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    app:tint="@color/eimzo_ui_accent_dark"
+                    tools:src="@drawable/eimzo_ui_ic_usb" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/pinTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/eimzo_ui_text"
+                    android:textSize="17.5sp"
+                    android:textStyle="bold"
+                    tools:text="Token PIN-kodi" />
+
+                <TextView
+                    android:id="@+id/pinSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:textColor="@color/eimzo_ui_text_hint"
+                    android:textSize="12.5sp"
+                    tools:text="USB-tokenda o‘rnatilgan PIN kodni kiriting" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Eight dots. Filled in code so the count stays tied to kPinLength. -->
+        <LinearLayout
+            android:id="@+id/pinDots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="22dp"
+            android:gravity="center"
+            android:orientation="horizontal" />
+
+        <TextView
+            android:id="@+id/pinError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="@color/eimzo_ui_danger"
+            android:textSize="12.5sp"
+            android:visibility="gone"
+            tools:text="Parol noto‘g‘ri. Yana 3 ta imkoniyat bor."
+            tools:visibility="visible" />
+
+        <!-- Keypad: 1-9, then blank / 0 / backspace. -->
+        <LinearLayout
+            android:id="@+id/keypad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/saveRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/eimzo_ui_save_password"
+                    android:textColor="@color/eimzo_ui_text"
+                    android:textSize="14.5sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/eimzo_ui_save_password_hint"
+                    android:textColor="@color/eimzo_ui_text_hint"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContinue"
+            style="@style/Widget.Eimzo.Button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="18dp"
+            android:enabled="false"
+            android:text="@string/eimzo_ui_continue" />
+
+    </LinearLayout>
+</ScrollView>

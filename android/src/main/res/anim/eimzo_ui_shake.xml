@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  2d — a rejected PIN shakes the dots rather than only turning the text red, so
+  the rejection is felt as well as read. The design's `ez-shake` runs ±8px over
+  roughly 400ms; the cycle interpolator supplies the back-and-forth.
+-->
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="420"
+    android:fromXDelta="-8"
+    android:interpolator="@anim/eimzo_ui_cycle_4"
+    android:toXDelta="8" />

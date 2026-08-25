@@ -1,113 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  3c — the add-key method picker.
+
+  Four routes now, in the design's order: file, QR, NFC, USB. The USB row is the
+  new one — the SDK used to hide it here and offer USB only as a sign-only
+  button on Home, which is why an Android integrator could not save a token as a
+  key while an iOS one could.
+
+  Rows are <include>d so all four share one definition. Each include needs its
+  own id, and ids inside an included layout are addressed through it
+  (`binding.optionUsb.optionTitle`), which is what keeps the four bindings apart.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/eimzo_ui_bg_sheet"
     android:orientation="vertical"
-    android:background="@drawable/eimzo_ui_bg_bottom_sheet"
+    android:paddingStart="20dp"
     android:paddingTop="12dp"
-    android:paddingBottom="36dp"
-    android:paddingHorizontal="20dp">
+    android:paddingEnd="20dp"
+    android:paddingBottom="34dp">
 
     <View
-        android:layout_width="48dp"
-        android:layout_height="4dp"
+        android:layout_width="44dp"
+        android:layout_height="5dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="32dp"
-        android:background="#D0D5DC" />
+        android:background="@drawable/eimzo_ui_sheet_grabber" />
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3"
-        android:paddingHorizontal="8dp">
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/eimzo_ui_add_key_sheet_title"
+        android:textColor="@color/eimzo_ui_text"
+        android:textSize="21sp"
+        android:textStyle="bold" />
 
-        <!-- Faylni tanlang -->
-        <LinearLayout
-            android:id="@+id/optionFile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:text="@string/eimzo_ui_add_key_sheet_subtitle"
+        android:textColor="@color/eimzo_ui_text_hint"
+        android:textSize="13.5sp" />
 
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@drawable/eimzo_ui_circle_primary"
-                android:padding="18dp"
-                android:src="@drawable/eimzo_ui_ic_folder" />
+    <include
+        android:id="@+id/optionFile"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Faylni tanlang"
-                android:textColor="#1C1B1F"
-                android:textSize="13sp" />
-        </LinearLayout>
+    <include
+        android:id="@+id/optionQr"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
 
-        <!-- QR orqali qo'shish -->
-        <LinearLayout
-            android:id="@+id/optionQr"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp">
+    <include
+        android:id="@+id/optionNfc"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
 
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@drawable/eimzo_ui_circle_primary"
-                android:padding="18dp"
-                android:src="@drawable/eimzo_ui_ic_qr_scan" />
+    <include
+        android:id="@+id/optionUsb"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="QR orqali qo\'shish"
-                android:textColor="#1C1B1F"
-                android:textSize="13sp" />
-        </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.Eimzo.Button.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/eimzo_ui_cancel" />
 
-        <!-- NFC orqali -->
-        <LinearLayout
-            android:id="@+id/optionNfc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@drawable/eimzo_ui_circle_primary"
-                android:padding="18dp"
-                android:src="@drawable/eimzo_ui_ic_nfc" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="NFC orqali"
-                android:textColor="#1C1B1F"
-                android:textSize="13sp" />
-        </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

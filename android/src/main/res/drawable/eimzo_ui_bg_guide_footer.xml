@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The "scan it here" strip closing the guide (3e). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_button_secondary" />
+    <corners android:radius="14dp" />
+</shape>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The return-to-site button. Plain accent fill; the countdown is a separate
+     view laid over it, so this only has to supply the shape and the ground. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_accent" />
+    <corners android:radius="@dimen/eimzo_ui_r_lg" />
+</shape>

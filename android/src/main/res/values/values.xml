@@ -1,43 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="eimzo_ui_background">#F5F5F5</color>
-    <color name="eimzo_ui_card_gradient_end">#2E86C1</color>
-    <color name="eimzo_ui_card_gradient_start">#1A5276</color>
-    <color name="eimzo_ui_green">#00C68E</color>
-    <color name="eimzo_ui_on_primary">#FFFFFF</color>
-    <color name="eimzo_ui_on_surface">#1C1B1F</color>
-    <color name="eimzo_ui_primary">#00C68E</color>
-    <color name="eimzo_ui_primary_dark">#00A376</color>
-    <color name="eimzo_ui_red">#E74C3C</color>
-    <color name="eimzo_ui_surface">#FFFFFF</color>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="eimzo_ui_accent">#00C68E</color>
+    <color name="eimzo_ui_accent_12">#1F00C68E</color>
+    <color name="eimzo_ui_accent_13">#2200C68E</color>
+    <color name="eimzo_ui_accent_26">#4200C68E</color>
+    <color name="eimzo_ui_accent_dark">#00857F</color>
+    <color name="eimzo_ui_accent_disabled">#4700C68E</color>
+    <color name="eimzo_ui_background">#ECF4F9</color>
+    <color name="eimzo_ui_button_secondary">#EDF3F5</color>
+    <color name="eimzo_ui_card_gradient_end">#267871</color>
+    <color name="eimzo_ui_card_gradient_mid">#166E7E</color>
+    <color name="eimzo_ui_card_gradient_start">#0F5F7E</color>
+    <color name="eimzo_ui_card_shadow">#570D3C4B</color>
+    <color name="eimzo_ui_chevron">#A8B8B8</color>
+    <color name="eimzo_ui_chip_translucent">#0F163030</color>
+    <color name="eimzo_ui_danger">#E04A4A</color>
+    <color name="eimzo_ui_danger_bright">#FF8A80</color>
+    <color name="eimzo_ui_danger_soft">#14E04A4A</color>
+    <color name="eimzo_ui_divider">#EDF2F4</color>
+    <color name="eimzo_ui_grabber">#2116302F</color>
+    <color name="eimzo_ui_hairline">#1A163030</color>
+    <color name="eimzo_ui_hash_base">#2C4A49</color>
+    <color name="eimzo_ui_info_amber">#C08532</color>
+    <color name="eimzo_ui_keypad_key">#FFFFFF</color>
+    <color name="eimzo_ui_label">#8AA0A4</color>
+    <color name="eimzo_ui_on_accent">#FFFFFF</color>
+    <color name="eimzo_ui_on_accent_disabled">#8CFFFFFF</color>
+    <color name="eimzo_ui_option_row">#FFFFFF</color>
+    <color name="eimzo_ui_pill_bg">#1F00C68E</color>
+    <color name="eimzo_ui_pin_dot_idle">#3816302F</color>
+    <color name="eimzo_ui_primary">@color/eimzo_ui_accent</color>
+    <color name="eimzo_ui_primary_dark">@color/eimzo_ui_accent_dark</color>
+    <color name="eimzo_ui_receipt">#0D163030</color>
+    <color name="eimzo_ui_row_icon">#5B7176</color>
+    <color name="eimzo_ui_scanner_scrim">#99060A0B</color>
+    <color name="eimzo_ui_scrim">#CCFFFFFF</color>
+    <color name="eimzo_ui_section_header">#8AA0A4</color>
+    <color name="eimzo_ui_sheet">#F7FAFB</color>
+    <color name="eimzo_ui_status_dot">#00E5A4</color>
+    <color name="eimzo_ui_status_text">#8FF3D4</color>
+    <color name="eimzo_ui_stay_button">#12163030</color>
+    <color name="eimzo_ui_step_bullet">#2400C68E</color>
+    <color name="eimzo_ui_surface">#F6F6FA</color>
+    <color name="eimzo_ui_text">#16302F</color>
+    <color name="eimzo_ui_text_hint">#7A8A8A</color>
+    <color name="eimzo_ui_text_muted">#5B7176</color>
+    <color name="eimzo_ui_text_on_wallpaper">#A8B8B8</color>
+    <color name="eimzo_ui_text_on_wallpaper_dim">#8AA0A4</color>
+    <color name="eimzo_ui_text_secondary">#2C4A49</color>
+    <color name="eimzo_ui_warning">#FFB84D</color>
+    <color name="eimzo_ui_well">#F1F6F8</color>
+    <dimen name="eimzo_ui_button_height">52dp</dimen>
+    <dimen name="eimzo_ui_elevation_card">8dp</dimen>
+    <dimen name="eimzo_ui_elevation_sheet">16dp</dimen>
+    <dimen name="eimzo_ui_gap">12dp</dimen>
+    <dimen name="eimzo_ui_gap_lg">20dp</dimen>
+    <dimen name="eimzo_ui_gap_md">16dp</dimen>
+    <dimen name="eimzo_ui_gap_sm">8dp</dimen>
+    <dimen name="eimzo_ui_gap_xl">28dp</dimen>
+    <dimen name="eimzo_ui_gap_xs">4dp</dimen>
+    <dimen name="eimzo_ui_gutter">20dp</dimen>
+    <dimen name="eimzo_ui_keypad_key">64dp</dimen>
+    <dimen name="eimzo_ui_r_lg">16dp</dimen>
+    <dimen name="eimzo_ui_r_md">12dp</dimen>
+    <dimen name="eimzo_ui_r_screen">44dp</dimen>
+    <dimen name="eimzo_ui_r_sheet">24dp</dimen>
+    <dimen name="eimzo_ui_r_sm">11dp</dimen>
+    <dimen name="eimzo_ui_r_xl">20dp</dimen>
+    <dimen name="eimzo_ui_row_height">52dp</dimen>
     <string name="eimzo_ui_add_eri_pfx">ERI (.pfx fayl) qo\'shish</string>
     <string name="eimzo_ui_add_eri_short">ERI qo\'shish</string>
     <string name="eimzo_ui_add_id_card">ID karta orqali qo\'shish</string>
     <string name="eimzo_ui_add_key">Kalit qo\'shish</string>
+    <string name="eimzo_ui_add_key_sheet_subtitle">Qaysi yo‘l bilan qo‘shmoqchisiz?</string>
+    <string name="eimzo_ui_add_key_sheet_title">Kalit qo‘shish</string>
     <string name="eimzo_ui_add_usb_token">USB Token qo\'shish</string>
+    <string name="eimzo_ui_adding_key">Kalit qo‘shilmoqda</string>
     <string name="eimzo_ui_app_name">E-IMZO</string>
     <string name="eimzo_ui_back">Orqaga</string>
     <string name="eimzo_ui_bring_card_close">ID kartani qurilmaga yaqinlashtiring</string>
     <string name="eimzo_ui_cancel">Bekor qilish</string>
+    <string name="eimzo_ui_change_key_action">O‘zgartirish</string>
+    <string name="eimzo_ui_choose_key_empty_hint">Imzolash uchun avval kalit qo‘shing</string>
+    <string name="eimzo_ui_choose_theme">Mavzuni tanlang</string>
+    <string name="eimzo_ui_compare_hash_hint">Saytdagi kod bilan solishtiring. Mos kelmasa imzolamang.</string>
+    <string name="eimzo_ui_contact_org">“Yangi texnologiyalar” ilmiy-axborot markazi</string>
+    <string name="eimzo_ui_contact_phone" translatable="false">202-32-32</string>
+    <string name="eimzo_ui_contact_site" translatable="false">yt.uz</string>
+    <string name="eimzo_ui_contact_us">Biz bilan bog‘lanish</string>
+    <string name="eimzo_ui_continue">Davom etish</string>
+    <string name="eimzo_ui_copy_action">Nusxa</string>
     <string name="eimzo_ui_deeplink_received">Imzo so\'rovi qabul qilindi</string>
     <string name="eimzo_ui_delete">O\'chirish</string>
     <string name="eimzo_ui_delete_key">Kalitni o\'chirish</string>
     <string name="eimzo_ui_delete_key_confirm">%1$s kalitini o\'chirmoqchimisiz?</string>
+    <string name="eimzo_ui_domain_label">DOMEN</string>
+    <string name="eimzo_ui_empty_state_subtitle">Imzolash uchun avval ERI kaliti, ID-kartangiz yoki USB-token kerak</string>
     <string name="eimzo_ui_enter_eri_password">ERI parolini kiriting</string>
     <string name="eimzo_ui_enter_id_pin">ID karta PIN kodini kiriting</string>
     <string name="eimzo_ui_enter_usb_pin">USB token parolini kiriting</string>
+    <string name="eimzo_ui_entity_legal">yuridik shaxs</string>
+    <string name="eimzo_ui_entity_person">jismoniy shaxs</string>
     <string name="eimzo_ui_error">Xatolik</string>
+    <string name="eimzo_ui_exit">Chiqish</string>
+    <string name="eimzo_ui_expired_on">Muddati tugagan · %1$s</string>
+    <string name="eimzo_ui_forget_passwords">Parollarni o‘chirish</string>
+    <string name="eimzo_ui_forget_passwords_confirm">Saqlangan parollar o‘chiriladi. Kalitlar qoladi — keyingi imzoda parol qayta so‘raladi.</string>
+    <string name="eimzo_ui_hash_copied">Hesh nusxalandi</string>
+    <string name="eimzo_ui_hash_label">HESH-KOD</string>
     <string name="eimzo_ui_home">Bosh sahifa</string>
+    <string name="eimzo_ui_id_pin_subtitle">Karta bilan berilgan 8 xonali PIN</string>
+    <string name="eimzo_ui_id_pin_title">ID-karta PIN-kodi</string>
     <string name="eimzo_ui_key_add_section">Kalit qo\'shish</string>
     <string name="eimzo_ui_key_added_success">Kalit muvaffaqiyatli qo\'shildi</string>
     <string name="eimzo_ui_key_expired">Muddati tugagan</string>
     <string name="eimzo_ui_key_expired_cant_sign">Bu kalit muddati tugagan — imzolab bo\'lmaydi</string>
+    <string name="eimzo_ui_key_label">KALIT</string>
+    <string name="eimzo_ui_key_label_plain">Kalit</string>
+    <string name="eimzo_ui_key_meta">%1$s · %2$s · %3$s</string>
+    <string name="eimzo_ui_kind_file" translatable="false">ERI</string>
+    <string name="eimzo_ui_kind_id_card">ID-karta</string>
+    <string name="eimzo_ui_kind_token">Token</string>
     <string name="eimzo_ui_label_duration">Muddati</string>
     <string name="eimzo_ui_label_jshshir">JSHSHIR</string>
     <string name="eimzo_ui_label_stir">STIR</string>
+    <string name="eimzo_ui_language">Til</string>
+    <string name="eimzo_ui_language_en" translatable="false">English</string>
+    <string name="eimzo_ui_language_en_sub">Inglizcha</string>
+    <string name="eimzo_ui_language_note">Til o‘zgartirilganda ilova qayta ishga tushmaydi — barcha matnlar darhol almashadi.</string>
+    <string name="eimzo_ui_language_ru" translatable="false">Русский</string>
+    <string name="eimzo_ui_language_ru_sub">Ruscha</string>
+    <string name="eimzo_ui_language_uz" translatable="false">O‘zbekcha</string>
+    <string name="eimzo_ui_language_uz_sub">Uzbek</string>
+    <string name="eimzo_ui_method_file_subtitle">.pfx fayl telefon xotirasidan</string>
+    <string name="eimzo_ui_method_file_title">Faylni tanlang</string>
+    <string name="eimzo_ui_method_nfc_subtitle">ID-kartani o‘qish</string>
+    <string name="eimzo_ui_method_nfc_title">NFC orqali</string>
+    <string name="eimzo_ui_method_qr_subtitle">Kamerani kodga qarating</string>
+    <string name="eimzo_ui_method_qr_title">QR orqali qo‘shish</string>
+    <string name="eimzo_ui_method_usb_disabled">Tokenni ulang</string>
+    <string name="eimzo_ui_method_usb_subtitle">Tokenni ulab, PIN kiriting</string>
+    <string name="eimzo_ui_method_usb_title">USB-token orqali</string>
     <string name="eimzo_ui_my_keys">Kalitlarim</string>
     <string name="eimzo_ui_my_keys_full">Mening kalitlarim</string>
     <string name="eimzo_ui_new_key_add">Yangi kalit qo\'shish</string>
+    <string name="eimzo_ui_night_dark">Tungi</string>
+    <string name="eimzo_ui_night_light">Yorug‘</string>
+    <string name="eimzo_ui_night_mode">Tungi rejim</string>
+    <string name="eimzo_ui_night_system">Tizim</string>
     <string name="eimzo_ui_no_internet">Internet aloqasi yo\'q</string>
     <string name="eimzo_ui_no_key_selected">Kalit tanlanmagan</string>
     <string name="eimzo_ui_no_key_tap_to_add">Kalit qo\'shish uchun bosing</string>
@@ -45,16 +155,177 @@
     <string name="eimzo_ui_not_given">Ko\'rsatilmagan</string>
     <string name="eimzo_ui_ok">OK</string>
     <string name="eimzo_ui_password_hint">Parol</string>
+    <string name="eimzo_ui_passwords_forgotten">Saqlangan parollar o‘chirildi</string>
+    <string name="eimzo_ui_qr_guide_convert_row">QR-key formatiga o‘tkazish</string>
+    <string name="eimzo_ui_qr_guide_entry">Kod qayerda?</string>
+    <string name="eimzo_ui_qr_guide_footer">Hosil bo‘lgan kodni shu yerda skanerlang</string>
+    <string name="eimzo_ui_qr_guide_menu_caption">E-IMZO · kompyuter ilovasi menyusi</string>
+    <string name="eimzo_ui_qr_guide_ok">Tushunarli</string>
+    <string name="eimzo_ui_qr_guide_pfx_row">PFX-fayl</string>
+    <string name="eimzo_ui_qr_guide_row_repack">O‘ronni o‘zgartirish</string>
+    <string name="eimzo_ui_qr_guide_row_search">Jildda PFX-fayllarni izlash …</string>
+    <string name="eimzo_ui_qr_guide_row_settings">Sozlama</string>
+    <string name="eimzo_ui_qr_guide_row_to_yks">YKS formatiga o‘tkazish</string>
+    <string name="eimzo_ui_qr_guide_row_yks">YKS-fayl</string>
+    <string name="eimzo_ui_qr_guide_step1">Kompyuterda &lt;b>E-IMZO&lt;/b> dasturini oching</string>
+    <string name="eimzo_ui_qr_guide_step2">Menyudan &lt;b>PFX-fayl → QR-key formatiga o‘tkazish&lt;/b> ni tanlang</string>
+    <string name="eimzo_ui_qr_guide_step3">Ro‘yxatdan kerakli &lt;b>PFX kalitni&lt;/b> tanlang</string>
+    <string name="eimzo_ui_qr_guide_step4">Kalit &lt;b>parolini&lt;/b> kiriting — ekranda QR kod hosil bo‘ladi</string>
+    <string name="eimzo_ui_qr_guide_subtitle">Kodni telefon yaratmaydi — u kompyuterdagi E-IMZO dasturida PFX kalitdan hosil qilinadi.</string>
+    <string name="eimzo_ui_qr_guide_title">QR kod qayerdan olinadi?</string>
+    <string name="eimzo_ui_quick_sign">TEZ IMZO</string>
+    <string name="eimzo_ui_registered_badge">Ro‘yxatda</string>
+    <string name="eimzo_ui_return_countdown">%1$s soniyadan so‘ng avtomatik ochiladi</string>
+    <string name="eimzo_ui_return_to_site">Saytga qaytish</string>
+    <string name="eimzo_ui_sample_expiry" translatable="false">2027.05.14</string>
+    <string name="eimzo_ui_sample_name" translatable="false">BAXTIYOROV XALILJON</string>
+    <string name="eimzo_ui_sample_pinfl" translatable="false">569 472 289</string>
+    <string name="eimzo_ui_save_password">Parolni saqlash</string>
+    <string name="eimzo_ui_save_password_hint">Keyingi safar so‘ralmaydi</string>
+    <string name="eimzo_ui_saved_passwords">Saqlangan parollar</string>
+    <string name="eimzo_ui_saved_passwords_count">%1$d ta kalit uchun</string>
+    <string name="eimzo_ui_saved_passwords_none">Saqlangan parol yo‘q</string>
     <string name="eimzo_ui_scan_deeplink_qr">Imzolash uchun QR kod skanerlang</string>
+    <string name="eimzo_ui_section_help">YORDAM</string>
+    <string name="eimzo_ui_section_other_keys">BOSHQA KALITLAR</string>
+    <string name="eimzo_ui_section_primary">ASOSIY</string>
+    <string name="eimzo_ui_section_security">XAVFSIZLIK</string>
     <string name="eimzo_ui_see_all">hammasi</string>
     <string name="eimzo_ui_session_expired">Sessiya tugadi</string>
     <string name="eimzo_ui_session_remaining">Sessiya: %1$d:%2$02d qoldi</string>
     <string name="eimzo_ui_set_default">Asosiy</string>
+    <string name="eimzo_ui_settings">Sozlamalar</string>
     <string name="eimzo_ui_sign">IMZOLASH</string>
+    <string name="eimzo_ui_sign_request_title">Imzolash so‘rovi</string>
     <string name="eimzo_ui_sign_success">Imzolash muvaffaqiyatli!</string>
     <string name="eimzo_ui_sign_with_usb">USB Token orqali imzolash</string>
     <string name="eimzo_ui_signed">IMZOLANDI</string>
+    <string name="eimzo_ui_signed_deeplink_body">Imzo saytga yuborildi. Endi %1$s sahifasiga qaytishingiz mumkin.</string>
+    <string name="eimzo_ui_signed_title">Imzolandi</string>
     <string name="eimzo_ui_signing">IMZOLANYABDI…</string>
+    <string name="eimzo_ui_stay_in_app">Ilovada qolish</string>
+    <string name="eimzo_ui_theme">Mavzu</string>
+    <string name="eimzo_ui_theme_dark_note">Tungi rejimda o‘z foni ishlatiladi.</string>
+    <string name="eimzo_ui_time_label">Vaqt</string>
+    <string name="eimzo_ui_unregistered_badge">Ro‘yxatda emas</string>
+    <string name="eimzo_ui_usb_busy">Token band</string>
+    <string name="eimzo_ui_usb_detached">USB token uzildi</string>
+    <string name="eimzo_ui_usb_not_found">USB token topilmadi</string>
+    <string name="eimzo_ui_usb_not_personalized">Token personalizatsiya qilinmagan</string>
+    <string name="eimzo_ui_usb_pin_subtitle">USB-tokenda o‘rnatilgan PIN kodni kiriting</string>
+    <string name="eimzo_ui_usb_pin_title">Token PIN-kodi</string>
     <string name="eimzo_ui_usb_token_hint">USB tokenni qurilmaga ulang va imzolash tugmasini bosing</string>
     <string name="eimzo_ui_usb_token_not_connected">USB tokenni ulang</string>
+    <string name="eimzo_ui_use_without_key">Kalit qo‘shmasdan foydalanish</string>
+    <string name="eimzo_ui_version">Versiya %1$s</string>
+    <string name="eimzo_ui_wp_gullar">Gullar</string>
+    <string name="eimzo_ui_wp_kapalak">Kapalak</string>
+    <string name="eimzo_ui_wp_registon">Registon</string>
+    <string name="eimzo_ui_wp_tog">Tog‘</string>
+    <string name="eimzo_ui_wrong_pin_warning">Parol noto‘g‘ri. Yana %1$d ta imkoniyat bor — 5 martadan keyin karta bloklanadi.</string>
+    <string name="eimzo_ui_wrong_pin_warning_no_count">Parol noto‘g‘ri. Qaytadan urinib ko‘ring.</string>
+    <style name="TextAppearance.Eimzo.Body" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/eimzo_ui_text_muted</item>
+    </style>
+    <style name="TextAppearance.Eimzo.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/eimzo_ui_text_hint</item>
+    </style>
+    <style name="TextAppearance.Eimzo.Keypad" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:textColor">@color/eimzo_ui_text</item>
+    </style>
+    <style name="TextAppearance.Eimzo.SectionHeader" parent="">
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textColor">@color/eimzo_ui_section_header</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">9dp</item>
+    </style>
+    <style name="TextAppearance.Eimzo.Subtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/eimzo_ui_text_secondary</item>
+    </style>
+    <style name="TextAppearance.Eimzo.Title" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/eimzo_ui_text</item>
+    </style>
+    <style name="Theme.Eimzo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/eimzo_ui_accent</item>
+        <item name="colorPrimaryDark">@color/eimzo_ui_accent_dark</item>
+        <item name="colorAccent">@color/eimzo_ui_accent</item>
+        <item name="colorOnPrimary">@color/eimzo_ui_on_accent</item>
+
+        <item name="android:colorBackground">@color/eimzo_ui_background</item>
+        <item name="colorSurface">@color/eimzo_ui_surface</item>
+        <item name="android:textColorPrimary">@color/eimzo_ui_text</item>
+        <item name="android:textColorSecondary">@color/eimzo_ui_text_muted</item>
+        <item name="android:textColorHint">@color/eimzo_ui_text_hint</item>
+
+        
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+
+        
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">true</item>
+
+        <item name="bottomSheetDialogTheme">@style/Theme.Eimzo.BottomSheet</item>
+    </style>
+    <style name="Theme.Eimzo.BottomSheet" parent="Theme.MaterialComponents.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Eimzo.BottomSheet</item>
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="android:navigationBarColor">@color/eimzo_ui_sheet</item>
+    </style>
+    <style name="Widget.Eimzo.BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="behavior_peekHeight">auto</item>
+    </style>
+    <style name="Widget.Eimzo.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:minHeight">@dimen/eimzo_ui_button_height</item>
+        <item name="backgroundTint">@color/eimzo_ui_button_bg</item>
+        <item name="android:textColor">@color/eimzo_ui_button_text</item>
+        <item name="cornerRadius">@dimen/eimzo_ui_r_lg</item>
+        <item name="elevation">0dp</item>
+    </style>
+    <style name="Widget.Eimzo.Button.Secondary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="fontFamily">@font/eimzo_ui_montserrat</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:minHeight">@dimen/eimzo_ui_button_height</item>
+        <item name="android:textColor">@color/eimzo_ui_text_secondary</item>
+        <item name="backgroundTint">@color/eimzo_ui_button_secondary</item>
+        <item name="elevation">0dp</item>
+        <item name="cornerRadius">@dimen/eimzo_ui_r_lg</item>
+    </style>
+    <style name="Widget.Eimzo.SettingsCard" parent="">
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/eimzo_ui_bg_settings_card</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+    </style>
 </resources>

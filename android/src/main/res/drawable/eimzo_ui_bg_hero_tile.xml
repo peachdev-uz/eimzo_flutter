@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The 98dp mark above the empty state (3c). White, radius 32 — a squircle,
+     not a circle: it echoes the key card rather than a status badge. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_option_row" />
+    <corners android:radius="32dp" />
+</shape>

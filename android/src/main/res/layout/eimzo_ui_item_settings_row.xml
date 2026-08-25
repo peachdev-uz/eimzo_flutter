@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One settings row (3i), measured off the design rather than eyeballed:
+  icon 22dp at 16dp from the card edge, label at 52dp, value 14sp, chevron 19dp.
+  Row height 54dp — three of them plus two dividers make the 162dp card.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rowRoot"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <ImageView
+        android:id="@+id/rowIcon"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:importantForAccessibility="no"
+        app:tint="@color/eimzo_ui_row_icon"
+        tools:src="@drawable/eimzo_ui_ic_globe" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- 15.5sp regular, not bold: the design keeps weight for the values
+             that change, and a settings list of bold labels reads as a menu of
+             warnings. -->
+        <TextView
+            android:id="@+id/rowLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="15.5sp"
+            tools:text="Til" />
+
+        <TextView
+            android:id="@+id/rowSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/eimzo_ui_text_hint"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="2 ta kalit uchun"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/rowValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/eimzo_ui_text_hint"
+        android:textSize="14sp"
+        tools:text="O‘zbekcha" />
+
+    <ImageView
+        android:id="@+id/rowChevron"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="14dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/eimzo_ui_ic_chevron_right"
+        app:tint="@color/eimzo_ui_chevron" />
+
+</LinearLayout>

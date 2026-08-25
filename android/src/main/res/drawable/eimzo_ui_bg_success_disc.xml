@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The solid centre of the success mark (3g). Full accent, not a tint: this
+     is the one thing on the screen that says the signature happened. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/eimzo_ui_accent" />
+</shape>
