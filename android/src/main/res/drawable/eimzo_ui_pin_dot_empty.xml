@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- An unfilled PIN position: 13dp ring, 2dp stroke, no fill. Eight of these
+     make the fixed PIN length visible instead of leaving the user to count. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@android:color/transparent" />
+    <stroke
+        android:width="2dp"
+        android:color="@color/eimzo_ui_pin_dot_idle" />
+</shape>

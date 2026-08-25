@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 3i2 — language. Applied with AppCompatDelegate.setApplicationLocales, so
+     the strings swap without a restart, as the design's note promises. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/eimzo_ui_background"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/eimzo_ui_background"
+        app:navigationIcon="@drawable/eimzo_ui_ic_back"
+        app:title="@string/eimzo_ui_language"
+        app:titleCentered="true"
+        app:titleTextColor="@color/eimzo_ui_text" />
+
+    <LinearLayout
+        android:id="@+id/options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="16dp"
+        android:lineSpacingExtra="2dp"
+        android:text="@string/eimzo_ui_language_note"
+        android:textColor="@color/eimzo_ui_text_hint"
+        android:textSize="12.5sp" />
+
+</LinearLayout>

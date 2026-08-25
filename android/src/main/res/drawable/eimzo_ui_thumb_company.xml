@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A company ERI key thumbnail (3d) — a deeper stop than the personal one. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="335"
+        android:startColor="#243B4A"
+        android:endColor="#3E6470"
+        android:type="linear" />
+    <corners android:radius="8dp" />
+</shape>

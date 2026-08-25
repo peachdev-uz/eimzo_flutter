@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The receipt on 3g. A translucent wash rather than the solid card used on
+     3f: this screen has no other surfaces, so a hard card would read as a
+     second subject competing with the success mark. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_receipt" />
+    <corners android:radius="18dp" />
+</shape>

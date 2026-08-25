@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Divider inside a settings card. Indented to the label (52dp) and running
+     to the card's edge — it separates rows without cutting the card in half. -->
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginStart="52dp"
+    android:background="@color/eimzo_ui_divider" />

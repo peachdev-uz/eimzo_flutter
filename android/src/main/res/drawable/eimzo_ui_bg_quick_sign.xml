@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TEZ IMZO (3c). Accent at 13% rather than solid: signing without saving a
+     key is the alternative route, and a filled button here would outrank the
+     four ways above it. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_accent_13" />
+    <corners android:radius="16dp" />
+</shape>

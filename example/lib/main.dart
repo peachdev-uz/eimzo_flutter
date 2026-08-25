@@ -38,7 +38,14 @@ class HomePage extends StatelessWidget {
             ElevatedButton.icon(
               icon: const Icon(Icons.open_in_new),
               label: const Text('Open E-IMZO native UI'),
-              onPressed: () => eimzo.openSignUi(),
+              onPressed: () async {
+                final allowed = await eimzo.init(
+                  config: const EimzoConfig(isTestMode: true),
+                );
+
+                if (!allowed) return;
+                await eimzo.openSignUi();
+              },
             ),
             const SizedBox(height: 8),
             ElevatedButton.icon(

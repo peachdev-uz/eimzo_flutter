@@ -13,7 +13,7 @@
         android:id="@+id/tvCardTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#757575"
+        android:textColor="@color/eimzo_ui_text_muted"
         android:textSize="11sp"
         android:textStyle="bold"
         android:letterSpacing="0.05" />
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:textColor="#212121"
+        android:textColor="@color/eimzo_ui_text"
         android:textSize="13sp" />
 
     <TextView
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Nusxalash uchun uzoq bosing"
-        android:textColor="#BDBDBD"
+        android:textColor="@color/eimzo_ui_text_hint"
         android:textSize="10sp"
         android:textStyle="italic" />
 </LinearLayout>

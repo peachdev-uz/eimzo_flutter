@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One of the two translucent rings around the success mark (3g). Two of
+     them nested give the mark its pulse without any animation running. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/eimzo_ui_accent_26" />
+</shape>

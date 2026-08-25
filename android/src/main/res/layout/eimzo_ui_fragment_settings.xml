@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  3i — settings.
+
+  Rebuilt against the design's measurements rather than its text. The first
+  pass grouped nothing and centred everything; the design groups rows into
+  white cards (353dp wide, radius 18) and left-aligns the header, which is what
+  makes it read as a settings screen rather than a list of links.
+
+  Numbers here come from the design frame directly: gutter 20, card radius 18,
+  row 54 high, icon 22 at 16 from the card edge, label at 52, chevron 19.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/eimzo_ui_background"
+    android:orientation="vertical">
+
+    <!-- Title sits beside the back chevron, not centred — the design reserves
+         centred titles for screens you are passing through, not landing on. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/eimzo_ui_back"
+            android:focusable="true"
+            android:src="@drawable/eimzo_ui_ic_back"
+            app:tint="@color/eimzo_ui_text" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/eimzo_ui_settings"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ── Identity ───────────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="20dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="22dp">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/eimzo_ui_eimzo_logo" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <!-- The wordmark's wide tracking is the brand, not a
+                         flourish: 2.38dp at 17sp. -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.14"
+                        android:text="@string/eimzo_ui_app_name"
+                        android:textColor="@color/eimzo_ui_text"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/eimzo_ui_text_hint"
+                        android:textSize="12sp"
+                        tools:text="Versiya 1.2.10" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ── Appearance card ────────────────────────────────────── -->
+            <LinearLayout
+                style="@style/Widget.Eimzo.SettingsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/rowLanguage"
+                    layout="@layout/eimzo_ui_item_settings_row" />
+
+                <include layout="@layout/eimzo_ui_item_settings_divider" />
+
+                <include
+                    android:id="@+id/rowTheme"
+                    layout="@layout/eimzo_ui_item_settings_row" />
+
+                <include layout="@layout/eimzo_ui_item_settings_divider" />
+
+                <include
+                    android:id="@+id/rowNight"
+                    layout="@layout/eimzo_ui_item_settings_row" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/TextAppearance.Eimzo.SectionHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eimzo_ui_section_security" />
+
+            <!-- ── Security card ──────────────────────────────────────── -->
+            <LinearLayout
+                style="@style/Widget.Eimzo.SettingsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/rowPasswords"
+                    layout="@layout/eimzo_ui_item_settings_row" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/TextAppearance.Eimzo.SectionHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eimzo_ui_section_help" />
+
+            <!-- ── Contact card ───────────────────────────────────────── -->
+            <LinearLayout
+                style="@style/Widget.Eimzo.SettingsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/eimzo_ui_contact_us"
+                    android:textColor="@color/eimzo_ui_text"
+                    android:textSize="14.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/eimzo_ui_contact_org"
+                    android:textColor="@color/eimzo_ui_text_hint"
+                    android:textSize="12.5sp" />
+
+                <!-- Two accent chips rather than two more rows: a phone number
+                     and a domain are things you act on, and the design gives
+                     them the weight of buttons. -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/chipPhone"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/eimzo_ui_bg_contact_chip"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/eimzo_ui_ic_call"
+                            app:tint="@color/eimzo_ui_accent_dark" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="7dp"
+                            android:text="@string/eimzo_ui_contact_phone"
+                            android:textColor="@color/eimzo_ui_accent_dark"
+                            android:textSize="13.5sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/chipSite"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="9dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/eimzo_ui_bg_contact_chip"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/eimzo_ui_ic_globe"
+                            app:tint="@color/eimzo_ui_accent_dark" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="7dp"
+                            android:text="@string/eimzo_ui_contact_site"
+                            android:textColor="@color/eimzo_ui_accent_dark"
+                            android:textSize="13.5sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ── Exit ───────────────────────────────────────────────── -->
+            <LinearLayout
+                android:id="@+id/rowExit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="34dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/eimzo_ui_ic_power"
+                    app:tint="@color/eimzo_ui_text_hint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="9dp"
+                    android:text="@string/eimzo_ui_exit"
+                    android:textColor="@color/eimzo_ui_text_hint"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

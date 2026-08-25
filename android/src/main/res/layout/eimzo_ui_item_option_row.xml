@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One add-key method row — the design's `DsOptionRow` (3c).
+
+  Included four times by the add-key sheet rather than repeated inline, so the
+  four routes cannot drift apart in padding or type the way the old three-tile
+  layout had already started to.
+
+  Geometry is the design's: 16dp padding, a 46dp accent tile at radius 15, 14dp
+  to the text, chevron at the end.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/optionRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/eimzo_ui_bg_option_row"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <FrameLayout
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:background="@drawable/eimzo_ui_bg_icon_tile">
+
+        <ImageView
+            android:id="@+id/optionIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            app:tint="@color/eimzo_ui_accent_dark"
+            tools:src="@drawable/eimzo_ui_ic_usb" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/optionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="15.5sp"
+            android:textStyle="bold"
+            tools:text="USB-token orqali" />
+
+        <!-- Two lines, not one: Russian runs about half again as long as Uzbek
+             and "Tokenni ulab, PIN kiriting" is already near the width. -->
+        <TextView
+            android:id="@+id/optionSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/eimzo_ui_text_hint"
+            android:textSize="12.5sp"
+            tools:text="Tokenni ulab, PIN kiriting" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/eimzo_ui_ic_chevron_right"
+        app:tint="@color/eimzo_ui_text_on_wallpaper" />
+
+</LinearLayout>

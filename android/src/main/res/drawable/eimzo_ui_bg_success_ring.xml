@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The ring behind the tick. A disc at this size would read as a filled
+     button; the ring keeps the tick as a mark, not an action. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/eimzo_ui_accent_12" />
+</shape>

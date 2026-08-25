@@ -15,7 +15,12 @@
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
-    <uses-feature android:name="android.hardware.usb.host" />
+    <!-- required="false" muhim: usiz Google Play integratorning ilovasini
+         USB host'i yo'q har qanday qurilmadan filtrlab tashlaydi, ko'p
+         telefonlarda esa u yo'q. -->
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
 
     <!--
         Exclude the SDK's Room DB (eimzo_keys.db) and encrypted prefs from
@@ -30,12 +35,12 @@
         <activity
             android:name="uz.eimzo.sdk.license.BlockedAppActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
+            android:theme="@style/Theme.Eimzo" />
         <activity
             android:name="uz.eimzo.sdk.fullui.EImzoActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:theme="@style/Theme.Eimzo"
             android:windowSoftInputMode="adjustResize" >
 
             <!--
@@ -57,7 +62,7 @@
             android:name="uz.eimzo.sdk.fullui.scanner.QrScannerActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.Eimzo" />
     </application>
 
 </manifest>

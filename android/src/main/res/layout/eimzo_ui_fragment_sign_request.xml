@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  3f — the signing confirmation.
+
+  Measured off the design frame rather than approximated: gutter 20, cards
+  353×(82/224/77) at radius 20, icon tile 46 at radius 15, labels 10.5sp
+  regular, the verdict as a 22dp pill, the hash well 317×112 at radius 14 with
+  15sp text on a 29dp rhythm, IMZOLASH 60 high at radius 18.
+
+  The hash is the reason this screen exists: it is the only value a person can
+  compare against what the site shows them, and comparing it is the whole
+  defence against signing the wrong document.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/eimzo_ui_background">
+
+    <!-- Title beside the chevron, not centred. -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/eimzo_ui_back"
+            android:focusable="true"
+            android:src="@drawable/eimzo_ui_ic_back"
+            app:tint="@color/eimzo_ui_text" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/eimzo_ui_sign_request_title"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        app:layout_constraintBottom_toTopOf="@id/actionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ── DOMEN ──────────────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="82dp"
+                android:background="@drawable/eimzo_ui_bg_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp">
+
+                <FrameLayout
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:background="@drawable/eimzo_ui_bg_icon_tile">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/eimzo_ui_ic_globe"
+                        app:tint="@color/eimzo_ui_accent_dark" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/eimzo_ui_domain_label"
+                        android:textColor="@color/eimzo_ui_label"
+                        android:textSize="10.5sp" />
+
+                    <TextView
+                        android:id="@+id/tvDomain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:ellipsize="middle"
+                        android:maxLines="1"
+                        android:textColor="@color/eimzo_ui_text"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="my.gov.uz" />
+                </LinearLayout>
+
+                <!-- The verdict is a pill: a status stamped on the domain. -->
+                <LinearLayout
+                    android:id="@+id/badgeRegistered"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/eimzo_ui_bg_pill"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="9dp"
+                    android:paddingEnd="10dp">
+
+                    <ImageView
+                        android:id="@+id/ivRegistered"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/eimzo_ui_ic_verified"
+                        app:tint="@color/eimzo_ui_accent_dark" />
+
+                    <TextView
+                        android:id="@+id/tvRegistered"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/eimzo_ui_registered_badge"
+                        android:textColor="@color/eimzo_ui_accent_dark"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ── HESH-KOD ───────────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/eimzo_ui_bg_card"
+                android:orientation="vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/eimzo_ui_hash_label"
+                        android:textColor="@color/eimzo_ui_label"
+                        android:textSize="10.5sp" />
+
+                    <LinearLayout
+                        android:id="@+id/btnCopyHash"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingBottom="2dp">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/eimzo_ui_ic_copy"
+                            app:tint="@color/eimzo_ui_accent_dark" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="@string/eimzo_ui_copy_action"
+                            android:textColor="@color/eimzo_ui_accent_dark"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 15sp on a 29dp rhythm, monospace so the columns line up
+                     the way the design draws them. -->
+                <TextView
+                    android:id="@+id/tvHash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/eimzo_ui_bg_hash_well"
+                    android:fontFamily="monospace"
+                    android:lineSpacingExtra="9dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="14dp"
+                    android:textColor="@color/eimzo_ui_hash_base"
+                    android:textIsSelectable="true"
+                    android:textSize="15sp"
+                    tools:text="9E27 B0A3 C1D4 8F1A" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_marginTop="1dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/eimzo_ui_ic_info"
+                        app:tint="@color/eimzo_ui_info_amber" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/eimzo_ui_compare_hash_hint"
+                        android:textColor="@color/eimzo_ui_text_hint"
+                        android:textSize="12.5sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ── KALIT ──────────────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/eimzo_ui_bg_card"
+                android:gravity="center_vertical"
+                android:minHeight="77dp"
+                android:orientation="horizontal"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp">
+
+                <FrameLayout
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/eimzo_ui_bg_icon_tile">
+
+                    <ImageView
+                        android:id="@+id/ivKeyKind"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/eimzo_ui_ic_keys"
+                        app:tint="@color/eimzo_ui_accent_dark" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/eimzo_ui_key_label"
+                        android:textColor="@color/eimzo_ui_label"
+                        android:textSize="10.5sp" />
+
+                    <TextView
+                        android:id="@+id/tvKeyName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/eimzo_ui_text"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="BAXTIYOROV XALILJON G‘." />
+
+                    <TextView
+                        android:id="@+id/tvKeyWarning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/eimzo_ui_danger"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        tools:text="Muddati tugagan"
+                        tools:visibility="visible" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnChangeKey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp"
+                    android:text="@string/eimzo_ui_change_key_action"
+                    android:textColor="@color/eimzo_ui_accent_dark"
+                    android:textSize="12.5sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ── Actions ────────────────────────────────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/actionBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSign"
+            style="@style/Widget.Eimzo.Button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/eimzo_ui_sign"
+            android:textSize="17sp"
+            app:cornerRadius="18dp"
+            app:icon="@drawable/eimzo_ui_ic_sign"
+            app:iconGravity="textStart"
+            app:iconSize="22dp"
+            app:iconTint="@color/eimzo_ui_button_text" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/Widget.Eimzo.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/eimzo_ui_cancel"
+            android:textSize="16sp"
+            app:cornerRadius="16dp" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/eimzo_ui_accent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

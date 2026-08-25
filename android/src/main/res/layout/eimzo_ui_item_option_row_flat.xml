@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  An add-key route inside the empty state's single card (3c, frame 1).
+
+  The same row as the sheet's, minus its own background: on the empty state the
+  four routes share one card at radius 20 and are separated by hairlines, while
+  on the sheet each is its own card at radius 18. Two treatments, deliberately —
+  a list inside a card reads as "the four ways", four cards read as "pick one".
+
+  Geometry: 78 high, tile 44 at radius 14 inset 18, text at 76, chevron 20.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/optionRoot"
+    android:layout_width="match_parent"
+    android:layout_height="78dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="18dp"
+    android:paddingEnd="18dp">
+
+    <FrameLayout
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/eimzo_ui_bg_icon_tile_sm">
+
+        <ImageView
+            android:id="@+id/optionIcon"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            app:tint="@color/eimzo_ui_accent_dark"
+            tools:src="@drawable/eimzo_ui_ic_usb" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/optionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="15.5sp"
+            android:textStyle="bold"
+            tools:text="ERI faylini tanlang" />
+
+        <TextView
+            android:id="@+id/optionSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/eimzo_ui_text_hint"
+            android:textSize="12.5sp"
+            tools:text="Telefondagi .pfx fayl" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/eimzo_ui_ic_chevron_right"
+        app:tint="@color/eimzo_ui_chevron" />
+
+</LinearLayout>

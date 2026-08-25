@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The numbered bullet in the QR guide (3e). Accent at 14%, not solid: the
+     number is an index, not an action. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/eimzo_ui_step_bullet" />
+</shape>

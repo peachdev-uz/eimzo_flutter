@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The opened submenu inside the mock (3e). A step lighter than the bar
+     behind it, the way a real menu sits above its parent. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#2E3338" />
+    <corners android:radius="9dp" />
+</shape>

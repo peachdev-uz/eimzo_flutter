@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The menu-bar item that is open (3e). A white wash, as macOS draws it. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#29FFFFFF" />
+    <corners android:radius="7dp" />
+</shape>

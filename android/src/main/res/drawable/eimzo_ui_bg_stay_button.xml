@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "Ilovada qolish" (3g). A quiet wash rather than a border - it is the way
+     out of the countdown, not a second call to action. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_stay_button" />
+    <corners android:radius="16dp" />
+</shape>

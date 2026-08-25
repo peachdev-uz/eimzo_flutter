@@ -15,7 +15,7 @@
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
-        android:background="#D0D5DC" />
+        android:background="@color/eimzo_ui_grabber" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieNfc"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="#1C1B1F"
+        android:textColor="@color/eimzo_ui_text"
         android:textSize="16sp"
         android:textStyle="bold"
         android:gravity="center"

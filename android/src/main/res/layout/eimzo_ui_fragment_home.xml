@@ -4,14 +4,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEF2F6">
+    android:background="@color/eimzo_ui_background">
 
+    <!-- One name, two files: the light wallpaper lives in drawable/ and the
+         design's dark one in drawable-night/, so the header follows the theme
+         without a line of Kotlin. Before this it stayed bright while the rest
+         of the page went dark. The design makes the wallpaper user-selectable
+         (3i3); this pair is the default until that picker exists. -->
     <ImageView
+        android:id="@+id/ivHeaderBg"
         android:layout_width="match_parent"
         android:layout_height="280dp"
         android:scaleType="centerCrop"
         android:src="@drawable/eimzo_ui_bg_sakura"
         android:contentDescription="@null" />
+
+    <!-- The wallpaper is a photograph and the header sits on top of it, so
+         "Mening kalitlarim" and the see-all link had nothing but the picture
+         behind them — measured at 1.9:1 in light and 2.7:1 in dark, well under
+         the 4.5:1 small text needs. The design answers this with a four-stop
+         scrim in the page background colour; the gradient is built in
+         HomeFragment because XML gradients cap at three stops. -->
+    <View
+        android:id="@+id/headerScrim"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:importantForAccessibility="no" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -92,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/eimzo_ui_my_keys_full"
-                    android:textColor="#1C1B1F"
+                    android:textColor="@color/eimzo_ui_text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -112,7 +130,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/eimzo_ui_see_all"
-                        android:textColor="@color/eimzo_ui_primary"
+                        android:textColor="@color/eimzo_ui_accent_dark"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -121,7 +139,7 @@
                         android:layout_height="20dp"
                         android:layout_marginStart="2dp"
                         android:src="@drawable/eimzo_ui_ic_chevron_right"
-                        app:tint="@color/eimzo_ui_primary" />
+                        app:tint="@color/eimzo_ui_accent_dark" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -247,40 +265,17 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Empty state card (no keys) -->
-            <androidx.cardview.widget.CardView
+            <!--
+              3c — the empty state. Replaces the old 360dp "+" card, which
+              named one of the four ways in and hid the other three. Kept as a
+              separate layout so the sheet and this list stay one definition
+              apart rather than two copies of the same four rows.
+            -->
+            <include
                 android:id="@+id/tvNoKey"
+                layout="@layout/eimzo_ui_view_empty_state"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="24dp"
-                    android:background="#FFFFFF">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/eimzo_ui_ic_add"
-                        app:tint="#9AA0A6" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/eimzo_ui_new_key_add"
-                        android:textColor="#9AA0A6"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:layout_height="wrap_content" />
 
             <!-- Deep link info -->
             <androidx.cardview.widget.CardView
@@ -297,7 +292,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="14dp"
-                    android:background="#E8F7F1">
+                    android:background="@color/eimzo_ui_accent_12">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -382,21 +377,21 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1"
-                    android:background="#C0C4CC" />
+                    android:background="@color/eimzo_ui_divider" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="12dp"
                     android:text="@string/eimzo_ui_key_add_section"
-                    android:textColor="#5F6368"
+                    android:textColor="@color/eimzo_ui_text_muted"
                     android:textSize="13sp" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1"
-                    android:background="#C0C4CC" />
+                    android:background="@color/eimzo_ui_divider" />
             </LinearLayout>
 
             <!-- ERI qo'shish row -->
@@ -416,14 +411,14 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="20dp"
-                    android:background="#FFFFFF">
+                    android:background="@color/eimzo_ui_surface">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/eimzo_ui_add_eri_short"
-                        android:textColor="#1C1B1F"
+                        android:textColor="@color/eimzo_ui_text"
                         android:textSize="16sp" />
 
                     <ImageView

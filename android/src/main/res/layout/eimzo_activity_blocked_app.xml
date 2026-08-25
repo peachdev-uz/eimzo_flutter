@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="@color/eimzo_ui_background">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/eimzoBlockedToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#FFFFFF"
+        android:background="@color/eimzo_ui_background"
         app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
-        app:titleTextColor="#1C1B1F" />
+        app:titleTextColor="@color/eimzo_ui_text" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:src="@android:drawable/ic_lock_lock"
-                app:tint="#E53935"
+                app:tint="@color/eimzo_ui_danger"
                 android:contentDescription="@null" />
 
             <TextView
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Ruxsat berilmagan"
-                android:textColor="#1C1B1F"
+                android:textColor="@color/eimzo_ui_text"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:gravity="center" />
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Ushbu ilova E-IMZO modulidan foydalanishga ruxsat etilmagan.\n\nIntegrator sifatida ro'yxatdan o'tish uchun biz bilan bog'laning."
-                android:textColor="#424242"
+                android:textColor="@color/eimzo_ui_text_secondary"
                 android:textSize="14sp"
                 android:lineSpacingExtra="4dp"
                 android:gravity="center" />
@@ -82,7 +82,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:cornerRadius="14dp"
-                app:backgroundTint="#00C68E" />
+                app:backgroundTint="@color/eimzo_ui_accent" />
 
             <!-- Contact email (fallback) -->
             <TextView
@@ -93,7 +93,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="12dp"
                 android:text="info@yt.uz"
-                android:textColor="#1976D2"
+                android:textColor="@color/eimzo_ui_accent"
                 android:textSize="14sp"
                 android:background="@drawable/eimzo_blocked_email_border" />
         </LinearLayout>

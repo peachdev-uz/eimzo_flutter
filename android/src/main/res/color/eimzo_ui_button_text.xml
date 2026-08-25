@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Label on the primary button; dims with the fill. See eimzo_ui_button_bg. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/eimzo_ui_on_accent_disabled" android:state_enabled="false" />
+    <item android:color="@color/eimzo_ui_on_accent" />
+</selector>

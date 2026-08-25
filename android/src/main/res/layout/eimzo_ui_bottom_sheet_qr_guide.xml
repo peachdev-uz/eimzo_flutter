@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  3e — «Kod qayerda?».
+
+  Opens over the scanner, so the camera keeps running underneath and closing
+  the sheet resumes scanning with nothing to re-enter.
+
+  The reason it exists: the QR code is not something the phone can produce. It
+  comes out of the desktop E-IMZO application, and a user standing in front of
+  a scanner has no way to guess that from the scanner.
+
+  The menu mock below is drawn as a small picture of the desktop app rather
+  than described in prose — recognising the menu is the whole job, and a path
+  written out ("PFX-fayl → …") is something you have to translate back into
+  what you are looking at. Its colours are hardcoded on purpose: it is a
+  screenshot of another program, so it stays dark in both themes.
+
+  Measured: gutter 22, mock 349×125 at radius 16, steps on 24dp accent bullets,
+  footer strip 42 at radius 14, "Tushunarli" 54 at radius 16.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/eimzo_ui_bg_sheet"
+    android:paddingStart="22dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="22dp"
+    android:paddingBottom="28dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="44dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/eimzo_ui_sheet_grabber" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/eimzo_ui_qr_guide_title"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/eimzo_ui_qr_guide_subtitle"
+            android:textColor="@color/eimzo_ui_text_muted"
+            android:textSize="13.5sp" />
+
+        <!-- ── The desktop menu, as a picture ─────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/eimzo_ui_bg_menu_mock"
+            android:orientation="horizontal"
+            android:paddingStart="11dp"
+            android:paddingTop="11dp"
+            android:paddingEnd="11dp"
+            android:paddingBottom="11dp">
+
+            <!-- Menu bar column: the item you open. -->
+            <LinearLayout
+                android:layout_width="137dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:background="@drawable/eimzo_ui_bg_menu_open"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/eimzo_ui_qr_guide_pfx_row"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:alpha="0.6"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/eimzo_ui_ic_chevron_right"
+                        app:tint="#FFFFFF" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/eimzo_ui_qr_guide_row_yks"
+                    android:textColor="#6BFFFFFF"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/eimzo_ui_qr_guide_row_settings"
+                    android:textColor="#6BFFFFFF"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- The submenu it opens, with the item to click highlighted. -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="103dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/eimzo_ui_bg_menu_panel"
+                android:orientation="vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="7dp"
+                    android:text="@string/eimzo_ui_qr_guide_row_repack"
+                    android:textColor="#6BFFFFFF"
+                    android:textSize="10.5sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="7dp"
+                    android:text="@string/eimzo_ui_qr_guide_row_to_yks"
+                    android:textColor="#6BFFFFFF"
+                    android:textSize="10.5sp" />
+
+                <!-- macOS selection blue, not the brand accent: this is a
+                     picture of another application, and recolouring its
+                     highlight would make it stop looking like one. -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:background="@drawable/eimzo_ui_bg_menu_selected"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingStart="7dp"
+                    android:paddingEnd="7dp"
+                    android:text="@string/eimzo_ui_qr_guide_convert_row"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingStart="7dp"
+                    android:text="@string/eimzo_ui_qr_guide_row_search"
+                    android:textColor="#6BFFFFFF"
+                    android:textSize="10.5sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/eimzo_ui_qr_guide_menu_caption"
+            android:textColor="@color/eimzo_ui_text_hint"
+            android:textSize="11sp" />
+
+        <!-- Numbered because the steps are a real sequence: doing 3 before 2
+             gets you a file list with nothing in it. -->
+        <LinearLayout
+            android:id="@+id/steps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/eimzo_ui_bg_guide_footer"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/eimzo_ui_ic_qr_scan"
+                app:tint="@color/eimzo_ui_accent_dark" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="9dp"
+                android:layout_weight="1"
+                android:text="@string/eimzo_ui_qr_guide_footer"
+                android:textColor="@color/eimzo_ui_row_icon"
+                android:textSize="12.5sp" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOk"
+            style="@style/Widget.Eimzo.Button"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/eimzo_ui_qr_guide_ok"
+            android:textSize="16.5sp"
+            app:cornerRadius="16dp" />
+    </LinearLayout>
+</ScrollView>
