@@ -1,3 +1,24 @@
+## 2.1.1
+
+**Tuzatish: kalitsiz imzolashda kalit qo'sha olmaslik.**
+
+Deeplink bilan kirgan, kaliti yo'q foydalanuvchi "Kalitlarim" ekranida
+tiqilib qolishi mumkin edi: bo'sh ro'yxat va boshqa hech nima. Kalit ham
+qo'sha olmasdi, imzolay ham olmasdi.
+
+Bosh ekrandagi "Kalit qo'shish" kartasining butun foni bosiladigan edi va
+kalitlar ekraniga o'tkazardi; u yerda esa ro'yxat bo'sh bo'lsa qo'shish
+qatori umuman chiqmasdi. Endi fon bosilmaydi va qo'shish qatori har doim
+turadi — oxirgi kalitni o'chirgan holatda ham.
+
+**Tuzatish: litsenziya tekshiruvi paytida ortga qaytilsa ilova qulardi.**
+
+Tekshiruv asinxron, javob esa activity tirikmi-yo'qmi ko'rmasdan qaytarilardi.
+Foydalanuvchi shu orada ekrandan chiqsa, `NullPointerException` bilan krash
+bo'lardi. Endi yopilayotgan activity'ga javob umuman yetkazilmaydi.
+
+iOS binariga tegilmadi — u 2.1.0 da qoladi.
+
 ## 2.1.0
 
 **BUZUVCHI — raqam minor bo'lsa ham.** `signWithUsbToken` olib tashlandi; SDK
