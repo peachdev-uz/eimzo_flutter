@@ -1,3 +1,20 @@
+## 2.0.2
+
+**Bosh ekrandan qayta dizayndan qolgan tugmalar olib tashlandi.**
+
+TEZ IMZO ostida eski interfeysning uchta bo'lagi turardi: "USB TOKENNI ULANG"
+tugmasi, "Kalit qo'shish" ajratgichi va "ERI qo'shish" qatori. Kalit qo'shish
+kartasi va TEZ IMZO ularning o'rnini bosgan edi, ya'ni ekranda bir xil narsa
+ikki marta ko'rinardi. Endi ekran TEZ IMZO da tugaydi.
+
+**E'tibor bering:** USB tokendan to'g'ridan-to'g'ri, hech nima saqlamasdan
+imzolash tugmasi kalit saqlagan foydalanuvchilarga ham ko'rinardi. U endi
+yo'q — token "USB token orqali" yo'li bilan kalit sifatida qo'shiladi va
+odatdagidek imzolanadi. `signWithUsbToken` API'si o'zgarmagan, ya'ni o'z
+interfeysingizdan chaqirsangiz ishlayveradi.
+
+iOS tomoniga tegilmadi.
+
 ## 2.0.1
 
 **Android tuzatish: sozlamalar ekrani ochilmasdi.**
