@@ -13,9 +13,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 import uz.eimzo.sdk.EImzoConfig
 import uz.eimzo.sdk.EImzoSDK
-import uz.eimzo.sdk.SignCallback
 import uz.eimzo.sdk.fullui.EImzoActivity
-import uz.eimzo.sdk.models.SignResult
 
 class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware,
     PluginRegistry.NewIntentListener {
@@ -52,38 +50,8 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
             "getInitialDeeplink" -> result.success(pendingInitialLink.also { pendingInitialLink = null })
             "launchDeeplink" -> handleLaunchDeeplink(call, result)
             "openSignUi" -> handleOpenSignUi(call, result)
-            "signWithUsbToken" -> handleSignWithUsbToken(call, result)
             else -> result.notImplemented()
         }
-    }
-
-    /**
-     * High-level USB token sign — wraps [EImzoSDK.signWithUsbToken] which
-     * handles deeplink parsing, FT-reader session, PIN validation, OzDST 1092
-     * signing, and the `m.e-imzo.uz` backend round-trip.
-     *
-     * Returns `{"state": ..., "message": ...}` to Dart. The SDK already
-     * marshals the callback onto the main (platform) thread, so this method
-     * can hand the result directly to [result] without a Handler hop.
-     */
-    private fun handleSignWithUsbToken(call: MethodCall, result: MethodChannel.Result) {
-        requireActivity(result) ?: return
-        val pin = call.argument<String>("pin")
-            ?: return result.error("ARG", "pin is required", null)
-        val deepLink = call.argument<String>("deepLink")
-            ?: return result.error("ARG", "deepLink is required", null)
-
-        // Capture the channel result so the anonymous SignCallback can use the
-        // supertype's parameter names without shadowing this outer `result`.
-        val channelResult = result
-        EImzoSDK.get().signWithUsbToken(pin, deepLink, object : SignCallback {
-            override fun onSuccess(result: SignResult.Success) {
-                channelResult.success(mapOf("state" to result.state, "message" to result.message))
-            }
-            override fun onError(error: SignResult.Failure) {
-                channelResult.error(error.code ?: "SIGN_ERROR", error.error, null)
-            }
-        })
     }
 
     /**

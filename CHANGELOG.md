@@ -1,3 +1,47 @@
+## 2.1.0
+
+**BUZUVCHI — raqam minor bo'lsa ham.** `signWithUsbToken` olib tashlandi; SDK
+endi faqat `openSignUi` orqali ishlatiladi.
+
+Odatda bunday o'zgarish major raqamni talab qiladi. Bu yerda minor tanlandi,
+chunki bu metodni chaqirayotgan integrator yo'q. Ammo `^2.0.0` ga bog'langan
+loyiha uni `pub upgrade` da avtomatik oladi — agar `signWithUsbToken` ni
+ishlatayotgan bo'lsangiz, build shu paytda yiqiladi. Quyidagi migratsiyaga
+qarang.
+
+Plaginda endi beshta narsa bor: `init`, `getInitialDeeplink`, `launchDeeplink`,
+`openSignUi` va `onNewDeeplink`. Imzolash va kalit qo'shishning barcha yo'llari
+native UI ichida — tashqaridan chaqirib bo'lmaydi.
+
+`signWithUsbToken` bilan birga `EimzoSignResult` ham ketdi — u faqat shu metod
+uchun edi.
+
+### Nega
+
+Imzolash oqimi litsenziya tekshiruvi, PIN so'rash, sessiya muddati va backend
+bilan aloqani o'z ichiga oladi. Uni bo'lak-bo'lak tashqariga chiqarish har bir
+integratorga o'sha ketma-ketlikni qayta yig'ish imkonini berardi — va noto'g'ri
+yig'ish imkonini ham. Yagona kirish nuqtasi buni yo'q qiladi.
+
+### Migratsiya
+
+`signWithUsbToken` ni chaqirayotgan bo'lsangiz, o'rniga:
+
+```dart
+await EimzoFlutter.instance.openSignUi(deepLink: link);
+```
+
+USB token endi UI ichida "USB token orqali" yo'li bilan qo'shiladi va
+odatdagidek imzolanadi. Boshqa hech narsa o'zgarmagan — `init` va `openSignUi`
+imzolari ham, litsenziya ham, sozlamalar ham o'sha-o'sha.
+
+### Native SDK'lar
+
+Android va iOS SDK'larining ommaviy yuzasi ham shunga mos qisqartirildi.
+Android'da tashqarida `EImzoActivity`, `EImzoConfig` va
+`EImzoSDK.checkLicenseAndInit` qoldi; iOS'da `EImzoView`, `EImzoConfig` va
+`SignResult` — UI'dan tashqari 141 ta ommaviy e'lon o'rniga uchtasi.
+
 ## 2.0.2
 
 **Bosh ekrandan qayta dizayndan qolgan tugmalar olib tashlandi.**
