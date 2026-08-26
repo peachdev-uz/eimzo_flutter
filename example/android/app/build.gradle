@@ -29,6 +29,11 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.debug
+            // Integratorlar release'ni R8 bilan yig'adi, shuning uchun example
+            // ham shunday yig'iladi. 2.0.0 dagi xato — R8 SDK ekranlarini olib
+            // tashlashi — aynan shu yoqilgan bo'lganda ushlanardi.
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
         }
     }
 }

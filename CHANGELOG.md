@@ -1,3 +1,27 @@
+## 2.0.1
+
+**Android tuzatish: sozlamalar ekrani ochilmasdi.**
+
+2.0.0 da SDK ichidagi to'rtta ekran — sozlamalar, til, mavzu va imzo
+natijasi — release build'da `ClassNotFoundException` bilan yiqilardi.
+
+Sabab: kutubxonaning o'zi R8 bilan qisqartirilardi. Bu ekranlar faqat
+navigatsiya grafidan, `android:name` orqali chaqiriladi, kutubxona uchun AAPT
+yozadigan keep qoidalari esa navigatsiya grafini qamrab olmaydi — u faqat
+manifest komponentlarini va layout'dagi custom view'larni ko'radi. Natijada R8
+ular chaqirilmaydi deb hisoblab, AAR'dan butunlay olib tashlagan.
+
+Endi kutubxona o'zini qisqartirmaydi. Ilovangizning R8'i esa bu ekranlarni
+to'g'ri saqlaydi — ilova darajasida AAPT nav-graf fragmentlari uchun keep
+qoidasini o'zi yozadi, ya'ni sizdan qo'shimcha ProGuard sozlamasi talab
+qilinmaydi.
+
+iOS tomoniga tegilmadi — u SwiftUI'da, navigatsiya grafi yo'q.
+
+### Yangilash
+
+`eimzo_flutter: ^2.0.1`. Litsenziya, API va sozlamalar o'zgarmagan.
+
 ## 2.0.0
 
 **BUZUVCHI: litsenziya endi majburiy.**
