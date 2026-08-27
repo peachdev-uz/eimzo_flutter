@@ -1,3 +1,24 @@
+## 2.1.3
+
+Faqat hujjat. Kodda o'zgarish yo'q, bundlangan SDK 2.1.2 da qoladi.
+
+README pub.dev'da 1.x davridan qolib ketgan edi. Yangilandi:
+
+- **Litsenziya bo'limi** butunlay qayta yozildi. U hali "paket nomini
+  yuboring, tasdiqlaymiz" va "ilova ichidagi so'rov formasi" haqida
+  gapirardi — 2.0 dan beri bunday emas. Endi ikkinchi omilni qanday olish,
+  tokenni qayerga qo'yish va iOS'da eng ko'p uchraydigan xato (fayl
+  *Copy Bundle Resources* ga tushmagani) qanday tekshirilishi yozilgan.
+- `EimzoConfig(license:)` hujjatlashtirildi.
+- Deeplink oqimi noto'g'ri tasvirlangan edi — tasdiqlash ekrani
+  o'tkazib yuboriladi deb yozilgandi, u 1.1.4 da o'zgargan.
+- Android mavzusi talabi eskirgan: SDK ekranlari endi o'z mavzusini
+  tashiydi, hostnikiga bog'liq emas.
+- Test manzili `m.test.e-imzo.uz` emas, `https://test.e-imzo.uz/api/rpc`.
+- Bundlangan SDK versiyasi va bog'liqlik raqami to'g'rilandi.
+- Litsenziya izohi aniqlashtirildi: plagin kodi MIT, bundlangan E-IMZO SDK
+  binarlari esa mulkiy.
+
 ## 2.1.2
 
 **Tuzatish: `EimzoConfig` iOS'da e'tiborsiz qolardi.**
