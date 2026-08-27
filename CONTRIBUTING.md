@@ -81,6 +81,48 @@ Keyin Xcode'da `example/ios/Runner.xcworkspace`'ni oching va o'z
 
 Hech qanday qo'shimcha qadam kerak emas — `flutter run` to'liq ishlatadi.
 
+## Testlar
+
+```bash
+flutter test
+```
+
+Uch fayl, uchtasi ham qurilmasiz ishlaydi:
+
+- `test/method_channel_test.dart` — Dart kanalga aynan nimani qo'yishi:
+  metod nomlari, argumentlar, `PlatformException` → `EimzoException`.
+- `test/native_contract_test.dart` — **eng muhimi.** Dart yuboradigan har bir
+  metod va har bir `EimzoConfig` kaliti ikkala native manbada o'qilishini
+  tekshiradi. Metod kanalida umumiy tip yo'q: bir tomon o'qimagan kalit
+  ovozsiz yo'qoladi va buni na build, na analizator ko'radi. 2.1.2 gacha iOS
+  plagini konfiguratsiyani umuman o'qimasdi — bu test bo'lganda o'shanda
+  yiqilardi.
+- `test/bundled_sdk_test.dart` — navigatsiya grafi va manifest nomlagan har
+  bir klass bundlangan jar ichida borligini tekshiradi. 2.0.0 da R8 to'rtta
+  ekranni AAR'dan o'chirib yuborgan va bu faqat foydalanuvchi tugmani
+  bosganda bilingan edi. `unzip` kerak; bo'lmasa o'zini o'tkazib yuboradi.
+
+Native tomonda:
+
+```bash
+cd ../EimzoAndroid && ./gradlew :eimzo-sdk:testReleaseUnitTest
+cd ../EimzoIOS && swift test
+```
+
+## SDK'ni yangilash
+
+Plagin native SDK'ni uch bo'lak qilib tashiydi — `android/libs/` dagi
+klasslar, `android/src/main/res/`, `android/src/main/jniLibs/`. Ulardan
+bittasini unutish oson va build buni ko'rmaydi, shuning uchun ko'chirish
+skript bilan qilinadi:
+
+```bash
+tool/sync_sdk.sh ../eimzo-mobile-sdk/maven/uz/eimzo/eimzo-sdk/X.Y.Z/eimzo-sdk-X.Y.Z.aar
+tool/sync_sdk.sh --check <o'sha aar>   # ko'chirmaydi, farqni aytadi
+```
+
+Chiqarishdan oldin `--check` toza bo'lishi va `flutter test` o'tishi kerak.
+
 ## Pull Request qoidalari
 
 1. **Branch nomi** — `feature/...`, `fix/...`, `docs/...` prefix bilan
@@ -99,7 +141,7 @@ Hech qanday qo'shimcha qadam kerak emas — `flutter run` to'liq ishlatadi.
 
 ## Litsenziya
 
-Bu plagin **closed-source SDK** (eimzo-sdk-1.x.aar va EimzoSDK.xcframework)
+Bu plagin **closed-source SDK** (eimzo-sdk-*.jar va EimzoSDK.xcframework)
 ni o'rab oladi. Plagin'ning Dart va platform-channel kodi MIT litsenziyasida.
 PR yuborganingizda, kod siz egasiligini va MIT ostida tarqatishga roziligingizni
 tasdiqlaysiz.
@@ -108,6 +150,7 @@ tasdiqlaysiz.
 
 - **GitHub Issues** — bug va xususiyatlar uchun
 - **Email** — `info@yt.uz` — biznes va license savollari uchun
-- **License** uchun bundle ID'ni ro'yxatdan o'tkazish — `info@yt.uz`
+- **Litsenziya** olish — `info@yt.uz` (paket nomi va ikkinchi omil bilan;
+  README'dagi Licence bo'limiga qarang)
 
 Rahmat va xush kelibsiz! 🌸
