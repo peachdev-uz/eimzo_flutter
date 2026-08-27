@@ -109,12 +109,28 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
         }
     }
 
+    /// The configuration Dart handed us in `init`, kept for `openSignUi`.
+    ///
+    /// Until 2.1.2 this plugin dropped it on the floor: `init` returned true
+    /// without reading its arguments and `openSignUi` built `EImzoView` with a
+    /// default config. Everything the host configured — test mode, API URLs,
+    /// the licence — stopped at the platform channel.
+    private var config = EImzoConfig()
+
     /// On Android, `init` performs the license check up front so the host
     /// app can show a blocked banner if needed. On iOS, the SDK runs the
     /// license check inside `EImzoView.bootstrap()` and shows its own
     /// blocked screen if needed — we just return `true` here so the Dart
     /// API stays symmetrical.
     private func handleInit(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let args = (call.arguments as? [String: Any]) ?? [:]
+        let defaults = EImzoConfig()
+        config = EImzoConfig(
+            isTestMode: args["isTestMode"] as? Bool ?? defaults.isTestMode,
+            productionApiUrl: args["productionApiUrl"] as? String ?? defaults.productionApiUrl,
+            testApiUrl: args["testApiUrl"] as? String ?? defaults.testApiUrl,
+            license: args["license"] as? String
+        )
         result(true)
     }
 
@@ -162,6 +178,7 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
 
         let host = UIHostingController(
             rootView: EImzoView(
+                config: config,
                 deepLink: deepLink,
                 onSignComplete: { [weak self] _ in
                     DispatchQueue.main.async {

@@ -8,16 +8,39 @@ class EimzoConfig {
   final String? productionApiUrl;
   final String? testApiUrl;
 
+  /// The `EIMZO1.…` licence issued by YT.
+  ///
+  /// Optional in the sense that a file is the other way to supply it: leave
+  /// this null and the SDK looks for an `eimzo-license.txt` resource in the
+  /// app bundle (iOS) or in `android/app/src/main/assets/` (Android). One of
+  /// the two must be present.
+  ///
+  /// Pass it here when the file placement is awkward — on iOS it has to sit in
+  /// the Runner target's *Copy Bundle Resources*, which is easy to miss and
+  /// silently produces "Litsenziya topilmadi". Loading the token from a
+  /// Flutter asset and handing it over here avoids Xcode entirely:
+  ///
+  /// ```dart
+  /// final token = await rootBundle.loadString('assets/eimzo-license.txt');
+  /// await EimzoFlutter.instance.init(config: EimzoConfig(license: token));
+  /// ```
+  ///
+  /// The licence is bound to your package name and signing identity, so it
+  /// does not need to be kept secret.
+  final String? license;
+
   const EimzoConfig({
     this.isTestMode = false,
     this.productionApiUrl,
     this.testApiUrl,
+    this.license,
   });
 
   Map<String, dynamic> toMap() => {
         'isTestMode': isTestMode,
         if (productionApiUrl != null) 'productionApiUrl': productionApiUrl,
         if (testApiUrl != null) 'testApiUrl': testApiUrl,
+        if (license != null) 'license': license,
       };
 }
 

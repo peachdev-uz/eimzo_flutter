@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'eimzo_flutter'
-  s.version          = '2.1.1'
+  s.version          = '2.1.2'
   s.summary          = 'Flutter plugin wrapping the E-IMZO Mobile SDK (iOS).'
   s.description      = <<-DESC
     Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
@@ -26,9 +26,8 @@ Pod::Spec.new do |s|
   # 1.1.5+ ships TWO sibling xcframeworks instead of one nested one —
   # App Store rejects nested frameworks (errors 90205/90206/90035).
   # Both go into App.app/Frameworks/ at the top level.
-  # 2.1.1 faqat Android tuzatishi. iOS binari 2.1.0 da qoladi — unda ommaviy
-  # API EImzoView, EImzoConfig va SignResult gacha qisqartirilgan.
-  EIMZO_SDK_VERSION = '2.1.0'
+  # 2.1.2 da iOS binari ham yangilandi: EimzoConfig endi SDK'gacha yetadi.
+  EIMZO_SDK_VERSION = '2.1.2'
   EIMZO_SDK_URL  = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/EimzoSDK.xcframework.zip"
   PFX2QR_URL     = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/Pfx2qr.xcframework.zip"
 
