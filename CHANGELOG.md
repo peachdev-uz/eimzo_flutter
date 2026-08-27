@@ -1,3 +1,34 @@
+## 2.1.2
+
+**Tuzatish: `EimzoConfig` iOS'da e'tiborsiz qolardi.**
+
+iOS plagini `init` ga berilgan konfiguratsiyani o'qimasdan tashlab yuborardi,
+`openSignUi` esa SDK ekranini standart sozlamalar bilan ochardi. Ya'ni
+`isTestMode`, API manzillari va litsenziya — hech biri iOS SDK'siga
+yetmasdi. Android tomonda ham litsenziya UI ochilishi bilan o'chib ketardi.
+
+**Yangi: litsenziyani Dart'dan berish mumkin.**
+
+`EimzoConfig(license: ...)` qo'shildi. Bu iOS'dagi eng ko'p uchraydigan
+muammoni chetlab o'tadi: fayl Xcode'da Runner maqsadining *Copy Bundle
+Resources* bosqichida bo'lishi kerak, buni o'tkazib yuborish oson va natija
+sezdirmay "Litsenziya topilmadi" bo'ladi.
+
+```dart
+final token = await rootBundle.loadString('assets/eimzo-license.txt');
+await EimzoFlutter.instance.init(config: EimzoConfig(license: token));
+```
+
+Fayl usuli ham ishlayveradi — bu qo'shimcha yo'l, almashtirish emas.
+
+**Yaxshilandi: "Litsenziya topilmadi" endi nima qilish kerakligini aytadi.**
+
+Xabar bundle ichida `eimzo` nomli fayl bor-yo'qligini tekshiradi va shunga
+qarab javob beradi. Ilgari u faqat "litsenziya oling" derdi — vaholanki
+odatda litsenziya bor, faqat bundle'ga tushmagan.
+
+Yo'l-yo'lakay: iOS sozlamalar ekrani `Versiya 2.0.0` ko'rsatib turgan edi.
+
 ## 2.1.1
 
 **Tuzatish: kalitsiz imzolashda kalit qo'sha olmaslik.**
