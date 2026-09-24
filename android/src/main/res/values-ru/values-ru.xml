@@ -10,6 +10,9 @@
     <string name="eimzo_ui_adding_key">Добавление ключа</string>
     <string name="eimzo_ui_app_name">E-IMZO</string>
     <string name="eimzo_ui_back">Назад</string>
+    <string name="eimzo_ui_baik_pin_subtitle">Введите PIN-код, установленный на BAIK-токене</string>
+    <string name="eimzo_ui_baik_pin_title">PIN-код BAIK-токена</string>
+    <string name="eimzo_ui_baik_wrong_pin_warning">Неверный PIN. Осталось попыток: %1$d — когда они закончатся, токен заблокируется.</string>
     <string name="eimzo_ui_bring_card_close">Поднесите ID-карту к устройству</string>
     <string name="eimzo_ui_cancel">Отмена</string>
     <string name="eimzo_ui_change_key_action">Изменить</string>
@@ -26,6 +29,7 @@
     <string name="eimzo_ui_delete_key_confirm">Удалить ключ %1$s?</string>
     <string name="eimzo_ui_domain_label">ДОМЕН</string>
     <string name="eimzo_ui_empty_state_subtitle">Для подписания нужен ключ ЭЦП, ID-карта или USB-токен</string>
+    <string name="eimzo_ui_enter_baik_pin">Введите PIN-код BAIK-токена</string>
     <string name="eimzo_ui_enter_eri_password">Введите пароль ЭЦП</string>
     <string name="eimzo_ui_enter_id_pin">Введите PIN-код ID-карты</string>
     <string name="eimzo_ui_enter_usb_pin">Введите пароль USB-токена</string>
@@ -58,6 +62,9 @@
     <string name="eimzo_ui_language_note">При смене языка приложение не перезапускается — все тексты меняются сразу.</string>
     <string name="eimzo_ui_language_ru_sub">Русский</string>
     <string name="eimzo_ui_language_uz_sub">Узбекский</string>
+    <string name="eimzo_ui_method_baik_disabled">Подключите BAIK-токен</string>
+    <string name="eimzo_ui_method_baik_subtitle">Подключите BAIK-токен и введите PIN</string>
+    <string name="eimzo_ui_method_baik_title">Через BAIK-токен</string>
     <string name="eimzo_ui_method_file_subtitle">Файл .pfx из памяти телефона</string>
     <string name="eimzo_ui_method_file_title">Выбрать файл</string>
     <string name="eimzo_ui_method_nfc_subtitle">Чтение ID-карты</string>
@@ -133,6 +140,8 @@
     <string name="eimzo_ui_unregistered_badge">Не в реестре</string>
     <string name="eimzo_ui_usb_busy">Токен занят</string>
     <string name="eimzo_ui_usb_detached">USB-токен отключён</string>
+    <string name="eimzo_ui_usb_locked">Токен заблокирован — попытки ввода PIN исчерпаны</string>
+    <string name="eimzo_ui_usb_no_permission">Доступ к токену не разрешён</string>
     <string name="eimzo_ui_usb_not_found">USB-токен не найден</string>
     <string name="eimzo_ui_usb_not_personalized">Токен не персонализирован</string>
     <string name="eimzo_ui_usb_pin_subtitle">Введите PIN-код, установленный на USB-токене</string>

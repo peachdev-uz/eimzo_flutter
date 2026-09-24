@@ -78,6 +78,9 @@
     <string name="eimzo_ui_adding_key">Kalit qo‘shilmoqda</string>
     <string name="eimzo_ui_app_name">E-IMZO</string>
     <string name="eimzo_ui_back">Orqaga</string>
+    <string name="eimzo_ui_baik_pin_subtitle">BAIK tokenda o‘rnatilgan PIN kodni kiriting</string>
+    <string name="eimzo_ui_baik_pin_title">BAIK token PIN-kodi</string>
+    <string name="eimzo_ui_baik_wrong_pin_warning">PIN noto‘g‘ri. Yana %1$d ta urinish qoldi — ular tugasa token bloklanadi.</string>
     <string name="eimzo_ui_bring_card_close">ID kartani qurilmaga yaqinlashtiring</string>
     <string name="eimzo_ui_cancel">Bekor qilish</string>
     <string name="eimzo_ui_change_key_action">O‘zgartirish</string>
@@ -96,6 +99,7 @@
     <string name="eimzo_ui_delete_key_confirm">%1$s kalitini o\'chirmoqchimisiz?</string>
     <string name="eimzo_ui_domain_label">DOMEN</string>
     <string name="eimzo_ui_empty_state_subtitle">Imzolash uchun avval ERI kaliti, ID-kartangiz yoki USB-token kerak</string>
+    <string name="eimzo_ui_enter_baik_pin">BAIK token PIN-kodini kiriting</string>
     <string name="eimzo_ui_enter_eri_password">ERI parolini kiriting</string>
     <string name="eimzo_ui_enter_id_pin">ID karta PIN kodini kiriting</string>
     <string name="eimzo_ui_enter_usb_pin">USB token parolini kiriting</string>
@@ -118,6 +122,7 @@
     <string name="eimzo_ui_key_label">KALIT</string>
     <string name="eimzo_ui_key_label_plain">Kalit</string>
     <string name="eimzo_ui_key_meta">%1$s · %2$s · %3$s</string>
+    <string name="eimzo_ui_kind_baik" translatable="false">BAIK</string>
     <string name="eimzo_ui_kind_file" translatable="false">ERI</string>
     <string name="eimzo_ui_kind_id_card">ID-karta</string>
     <string name="eimzo_ui_kind_token">Token</string>
@@ -132,6 +137,9 @@
     <string name="eimzo_ui_language_ru_sub">Ruscha</string>
     <string name="eimzo_ui_language_uz" translatable="false">O‘zbekcha</string>
     <string name="eimzo_ui_language_uz_sub">Uzbek</string>
+    <string name="eimzo_ui_method_baik_disabled">BAIK tokenni ulang</string>
+    <string name="eimzo_ui_method_baik_subtitle">BAIK tokenni ulab, PIN kiriting</string>
+    <string name="eimzo_ui_method_baik_title">BAIK token orqali</string>
     <string name="eimzo_ui_method_file_subtitle">.pfx fayl telefon xotirasidan</string>
     <string name="eimzo_ui_method_file_title">Faylni tanlang</string>
     <string name="eimzo_ui_method_nfc_subtitle">ID-kartani o‘qish</string>
@@ -210,6 +218,8 @@
     <string name="eimzo_ui_unregistered_badge">Ro‘yxatda emas</string>
     <string name="eimzo_ui_usb_busy">Token band</string>
     <string name="eimzo_ui_usb_detached">USB token uzildi</string>
+    <string name="eimzo_ui_usb_locked">Token bloklangan — PIN urinishlari tugagan</string>
+    <string name="eimzo_ui_usb_no_permission">Tokenga kirishga ruxsat berilmadi</string>
     <string name="eimzo_ui_usb_not_found">USB token topilmadi</string>
     <string name="eimzo_ui_usb_not_personalized">Token personalizatsiya qilinmagan</string>
     <string name="eimzo_ui_usb_pin_subtitle">USB-tokenda o‘rnatilgan PIN kodni kiriting</string>

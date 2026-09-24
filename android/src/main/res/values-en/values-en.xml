@@ -10,6 +10,9 @@
     <string name="eimzo_ui_adding_key">Adding the key</string>
     <string name="eimzo_ui_app_name">E-IMZO</string>
     <string name="eimzo_ui_back">Back</string>
+    <string name="eimzo_ui_baik_pin_subtitle">Enter the PIN set on the BAIK token</string>
+    <string name="eimzo_ui_baik_pin_title">BAIK token PIN</string>
+    <string name="eimzo_ui_baik_wrong_pin_warning">Wrong PIN. %1$d attempts left — when they run out the token locks.</string>
     <string name="eimzo_ui_bring_card_close">Hold the ID card against the device</string>
     <string name="eimzo_ui_cancel">Cancel</string>
     <string name="eimzo_ui_change_key_action">Change</string>
@@ -26,6 +29,7 @@
     <string name="eimzo_ui_delete_key_confirm">Delete the key %1$s?</string>
     <string name="eimzo_ui_domain_label">DOMAIN</string>
     <string name="eimzo_ui_empty_state_subtitle">Signing needs a signature key, your ID card or a USB token</string>
+    <string name="eimzo_ui_enter_baik_pin">Enter the BAIK token PIN</string>
     <string name="eimzo_ui_enter_eri_password">Enter the key password</string>
     <string name="eimzo_ui_enter_id_pin">Enter the ID card PIN</string>
     <string name="eimzo_ui_enter_usb_pin">Enter the USB token password</string>
@@ -58,6 +62,9 @@
     <string name="eimzo_ui_language_note">Changing the language does not restart the app — every text swaps immediately.</string>
     <string name="eimzo_ui_language_ru_sub">Russian</string>
     <string name="eimzo_ui_language_uz_sub">Uzbek</string>
+    <string name="eimzo_ui_method_baik_disabled">Plug in a BAIK token</string>
+    <string name="eimzo_ui_method_baik_subtitle">Plug the BAIK token in and enter the PIN</string>
+    <string name="eimzo_ui_method_baik_title">With a BAIK token</string>
     <string name="eimzo_ui_method_file_subtitle">.pfx file from phone storage</string>
     <string name="eimzo_ui_method_file_title">Choose a file</string>
     <string name="eimzo_ui_method_nfc_subtitle">Read the ID card</string>
@@ -133,6 +140,8 @@
     <string name="eimzo_ui_unregistered_badge">Not registered</string>
     <string name="eimzo_ui_usb_busy">Token busy</string>
     <string name="eimzo_ui_usb_detached">USB token disconnected</string>
+    <string name="eimzo_ui_usb_locked">Token locked — no PIN attempts left</string>
+    <string name="eimzo_ui_usb_no_permission">Access to the token was not allowed</string>
     <string name="eimzo_ui_usb_not_found">USB token not found</string>
     <string name="eimzo_ui_usb_not_personalized">Token is not personalised</string>
     <string name="eimzo_ui_usb_pin_subtitle">Enter the PIN set on the USB token</string>

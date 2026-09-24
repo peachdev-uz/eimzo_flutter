@@ -1,3 +1,7 @@
+## 2.2.0
+
+**Yangi: BAIK USB token.** Endi BAIK token orqali kalit qo'shish va imzolash mumkin.
+
 ## 2.1.3
 
 Faqat hujjat. Kodda o'zgarish yo'q, bundlangan SDK 2.1.2 da qoladi.
