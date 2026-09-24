@@ -2,14 +2,15 @@
 <!--
   3c — the add-key method picker.
 
-  Four routes now, in the design's order: file, QR, NFC, USB. The USB row is the
-  new one — the SDK used to hide it here and offer USB only as a sign-only
+  Five routes now: file, QR, NFC, USB, and the BAIK token after it — a USB
+  token too, but one with its own protocol and certificate, so its own row. The
+  USB row was the previous addition — the SDK used to hide it here and offer USB only as a sign-only
   button on Home, which is why an Android integrator could not save a token as a
   key while an iOS one could.
 
-  Rows are <include>d so all four share one definition. Each include needs its
+  Rows are <include>d so all of them share one definition. Each include needs its
   own id, and ids inside an included layout are addressed through it
-  (`binding.optionUsb.optionTitle`), which is what keeps the four bindings apart.
+  (`binding.optionUsb.optionTitle`), which is what keeps the bindings apart.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -69,6 +70,13 @@
 
     <include
         android:id="@+id/optionUsb"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
+    <include
+        android:id="@+id/optionBaik"
         layout="@layout/eimzo_ui_item_option_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

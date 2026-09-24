@@ -6,8 +6,8 @@
   "Kalitlar mavjud emas" card and one "ERI qo'shish" row, which named one of
   the four ways in and hid the rest.
 
-  Numbers: hero 98 at radius 32, title 24sp, card 345 at radius 20 with four
-  78dp rows and hairlines indented to 76, then a labelled rule and TEZ IMZO at
+  Numbers: hero 98 at radius 32, title 24sp, card 345 at radius 20 with one
+  78dp row per route and hairlines indented to 76, then a labelled rule and TEZ IMZO at
   55 high, radius 16, accent at 13%.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -58,7 +58,7 @@
         android:textColor="@color/eimzo_ui_text_hint"
         android:textSize="14.5sp" />
 
-    <!-- One card, four routes, hairlines between. -->
+    <!-- One card, five routes, hairlines between. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,10 +99,20 @@
         <include
             android:id="@+id/emptyUsb"
             layout="@layout/eimzo_ui_item_option_row_flat" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="76dp"
+            android:background="@color/eimzo_ui_divider" />
+
+        <include
+            android:id="@+id/emptyBaik"
+            layout="@layout/eimzo_ui_item_option_row_flat" />
     </LinearLayout>
 
     <!-- A rule with its label sitting in the gap: the quick-sign route is an
-         alternative to the four above, not a fifth one. -->
+         alternative to the routes above, not one more of them. -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
