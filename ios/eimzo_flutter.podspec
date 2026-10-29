@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'eimzo_flutter'
-  s.version          = '2.3.0-dev.1'
+  s.version          = '2.3.0-dev.2'
   s.summary          = 'Flutter plugin wrapping the E-IMZO Mobile SDK (iOS).'
   s.description      = <<-DESC
     Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
@@ -28,7 +28,8 @@ Pod::Spec.new do |s|
   # Both go into App.app/Frameworks/ at the top level.
   # 2.2.0 da iOS binari ham yangilandi: BAIK token.
   # 2.3.0-dev.1 da iOS binari ham yangilandi: gateway rejimi va kalit turi.
-  EIMZO_SDK_VERSION = '2.3.0-dev.1'
+  # 2.3.0-dev.2: xatolar va crash'lar gateway'ga yuboriladi.
+  EIMZO_SDK_VERSION = '2.3.0-dev.2'
   EIMZO_SDK_URL  = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/EimzoSDK.xcframework.zip"
   PFX2QR_URL     = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/Pfx2qr.xcframework.zip"
 
