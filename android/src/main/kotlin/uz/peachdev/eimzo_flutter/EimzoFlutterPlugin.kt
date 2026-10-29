@@ -88,12 +88,18 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
         val prodUrl = call.argument<String>("productionApiUrl")
         val testUrl = call.argument<String>("testApiUrl")
         val license = call.argument<String>("license")
+        val testGateway = call.argument<String>("testGatewayUrl")
+        val prodGateway = call.argument<String>("productionGatewayUrl")
+        val debugLogging = call.argument<Boolean>("debugLogging") ?: false
         val config = EImzoConfig().let { defaults ->
             EImzoConfig(
                 isTestMode,
                 prodUrl ?: defaults.productionApiUrl,
                 testUrl ?: defaults.testApiUrl,
+                debugLogging = debugLogging,
                 license = license,
+                productionGatewayUrl = prodGateway ?: defaults.productionGatewayUrl,
+                testGatewayUrl = testGateway,
             )
         }
         // checkLicenseAndInit invokes its callback on Dispatchers.Main, so the

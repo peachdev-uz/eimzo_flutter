@@ -29,11 +29,30 @@ class EimzoConfig {
   /// does not need to be kept secret.
   final String? license;
 
+  /// The YT gateway to use in test mode, e.g.
+  /// `http://10.0.2.2:8080/mobile/gateway` from the Android emulator.
+  ///
+  /// Since 2.3 an app without a licence signs through the gateway, which
+  /// knows registered apps by their package name and signing identity. In
+  /// production the SDK has the address built in; in test mode it has none,
+  /// and without this the SDK says the gateway is not configured.
+  final String? testGatewayUrl;
+
+  /// Replaces the production gateway address built into the SDK. Leave null.
+  final String? productionGatewayUrl;
+
+  /// Logs the SDK's steps to the console — never keys, PINs or signatures.
+  /// For debug builds, e.g. `debugLogging: kDebugMode`.
+  final bool debugLogging;
+
   const EimzoConfig({
     this.isTestMode = false,
     this.productionApiUrl,
     this.testApiUrl,
     this.license,
+    this.testGatewayUrl,
+    this.productionGatewayUrl,
+    this.debugLogging = false,
   });
 
   Map<String, dynamic> toMap() => {
@@ -41,6 +60,9 @@ class EimzoConfig {
         if (productionApiUrl != null) 'productionApiUrl': productionApiUrl,
         if (testApiUrl != null) 'testApiUrl': testApiUrl,
         if (license != null) 'license': license,
+        if (testGatewayUrl != null) 'testGatewayUrl': testGatewayUrl,
+        if (productionGatewayUrl != null) 'productionGatewayUrl': productionGatewayUrl,
+        'debugLogging': debugLogging,
       };
 }
 
