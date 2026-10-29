@@ -302,6 +302,25 @@ await _eimzo.init(
 );
 ```
 
+### Error and crash reports (2.3)
+
+In gateway mode the SDK sends its errors and crashes to the YT gateway, so
+YT sees what goes wrong on real phones. It is always on, and only in gateway
+mode: an app with a licence sends nothing.
+
+- **Sent:** the action (adding a key, signing, scanning a QR, deleting a key),
+  an error code, the message the user was shown, the kind of key, the SDK and
+  OS versions, the device model, and for a crash its stack.
+- **Never sent:** names, PINFL/STIR, certificate serials, passwords, PINs, QR
+  codes, documents or their hashes. Messages and stacks are scrubbed of such
+  values before they leave the phone.
+
+A crash is sent on the next start; your own crash reporter still gets it.
+
+**iOS — App Store privacy.** In App Store Connect → App Privacy, declare
+**Crash Data** and **Other Diagnostic Data**: not linked to the user, not
+used for tracking, purpose *App Functionality*.
+
 The gateway counts signatures per app and per kind of key (PFX file, QR code,
 ID card, USB token, BAIK token). It never stores what was signed or by whom.
 

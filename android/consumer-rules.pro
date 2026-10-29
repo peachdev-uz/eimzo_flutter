@@ -63,3 +63,9 @@
 -dontwarn org.bouncycastle.**
 -dontwarn javax.naming.**
 -dontwarn com.airbnb.lottie.**
+
+# Paket nomlari saqlanadi: crash hisoboti crash SDK'dan chiqqanini stack'dagi
+# "uz.eimzo.sdk." frame'idan taniydi. Busiz minify qilingan build'da paket
+# "a.b" bo'lib qoladi va SDK crash'lari yuborilmaydi (SDK'ning o'z
+# consumer-rules.pro'sidan).
+-keeppackagenames uz.eimzo.sdk.**

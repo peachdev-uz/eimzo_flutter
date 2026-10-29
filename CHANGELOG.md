@@ -1,3 +1,8 @@
+## 2.3.0-dev.2
+
+Sinov versiyasi: gateway rejimida SDK xatolari va crash'lar YT gateway'iga
+yuboriladi. Nima yuborilishi README'da, «Error and crash reports» bo'limida.
+
 ## 2.3.0-dev.1
 
 Sinov versiyasi.
