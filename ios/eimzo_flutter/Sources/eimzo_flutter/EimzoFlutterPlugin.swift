@@ -129,7 +129,10 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             isTestMode: args["isTestMode"] as? Bool ?? defaults.isTestMode,
             productionApiUrl: args["productionApiUrl"] as? String ?? defaults.productionApiUrl,
             testApiUrl: args["testApiUrl"] as? String ?? defaults.testApiUrl,
-            license: args["license"] as? String
+            license: args["license"] as? String,
+            productionGatewayUrl: args["productionGatewayUrl"] as? String ?? defaults.productionGatewayUrl,
+            testGatewayUrl: args["testGatewayUrl"] as? String,
+            debugLogging: args["debugLogging"] as? Bool ?? defaults.debugLogging
         )
         result(true)
     }

@@ -1,6 +1,6 @@
 # eimzo_flutter
 
-Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.2.1` bundled inside) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it, opens it, and receives `eimzo://sign?...` deep links.
+Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.3.0-dev.1` bundled inside) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it, opens it, and receives `eimzo://sign?...` deep links.
 
 ## Platform support
 
@@ -16,6 +16,10 @@ Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://git
 dependencies:
   eimzo_flutter: ^2.2.1
 ```
+
+`2.3.0-dev.1` is a pre-release with the [YT gateway](#yt-gateway-23-pre-release).
+`^2.2.1` does not pick it up; to try it, pin it exactly:
+`eimzo_flutter: 2.3.0-dev.1`.
 
 ### 2. Android — `android/app/build.gradle`
 
@@ -272,6 +276,35 @@ only work in test mode, and vice versa.
 await _eimzo.init(config: const EimzoConfig(isTestMode: true));
 ```
 
+### YT gateway (2.3 pre-release)
+
+From 2.3 an app **without** a licence signs through the YT gateway instead.
+The gateway knows registered apps by their package name and signing
+certificate on Android, and by bundle id and Team ID on iOS — the same second
+factors as a licence, but there is no token to ship. To register, email
+**info@yt.uz** with them. An app that has a licence keeps working as before,
+straight to E-IMZO.
+
+The production gateway (`https://e-imzo.soliq.uz/mobile/gateway`) is built
+into the SDK, but **it is not live yet**. Until it is, a release build without
+a licence cannot sign, so keep using a licence in production for now.
+
+Test mode has no default gateway: pass the test address YT gives you on
+registration.
+
+```dart
+await _eimzo.init(
+  config: const EimzoConfig(
+    isTestMode: true,
+    testGatewayUrl: 'https://<test gateway>/mobile/gateway',
+    debugLogging: kDebugMode, // the SDK's steps to the console, never keys or PINs
+  ),
+);
+```
+
+The gateway counts signatures per app and per kind of key (PFX file, QR code,
+ID card, USB token, BAIK token). It never stores what was signed or by whom.
+
 ## API
 
 - **`EimzoFlutter.instance.init({EimzoConfig config})`** → `Future<bool>`
@@ -299,8 +332,10 @@ await _eimzo.init(config: const EimzoConfig(isTestMode: true));
   dev to test the deeplink path without an external trigger.
 
 `EimzoConfig` accepts `isTestMode` (default `false`), `license` (the
-`EIMZO1.…` token — see [Licence](#8-licence)), and optional
-`productionApiUrl` / `testApiUrl` overrides.
+`EIMZO1.…` token — see [Licence](#8-licence)), optional
+`productionApiUrl` / `testApiUrl` overrides, and since 2.3 `testGatewayUrl`,
+`productionGatewayUrl` and `debugLogging` (see
+[YT gateway](#yt-gateway-23-pre-release)).
 
 > Before 2.1.2 the iOS side discarded this config entirely: `init` ignored
 > its arguments and the UI opened with defaults. If you are on an earlier

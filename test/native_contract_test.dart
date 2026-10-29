@@ -82,11 +82,16 @@ void main() {
       productionApiUrl: 'https://prod.example/rpc',
       testApiUrl: 'https://test.example/rpc',
       license: 'EIMZO1.payload.signature',
+      testGatewayUrl: 'http://test.example/mobile/gateway',
+      productionGatewayUrl: 'https://prod.example/mobile/gateway',
+      debugLogging: true,
     );
     final keys = full.toMap().keys.toSet();
 
-    expect(keys, contains('license'),
-        reason: 'toMap() license ni chiqarmayapti — test o\'z manbasini yo\'qotdi');
+    for (final key in ['license', 'testGatewayUrl', 'productionGatewayUrl', 'debugLogging']) {
+      expect(keys, contains(key),
+          reason: 'toMap() $key ni chiqarmayapti — test o\'z manbasini yo\'qotdi');
+    }
 
     for (final key in keys) {
       expect(kotlinSource, contains('"$key"'),

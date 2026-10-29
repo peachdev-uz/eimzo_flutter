@@ -1,3 +1,7 @@
+## 2.3.0-dev.1
+
+Sinov versiyasi.
+
 ## 2.2.1
 
 **Tuzatish: Android 12 va undan pastida ERI fayl va QR kalit bilan ishlab bo'lmasdi** — «No static field TWO» xatosi chiqardi.
