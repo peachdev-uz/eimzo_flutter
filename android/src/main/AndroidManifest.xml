@@ -36,28 +36,19 @@
             android:name="uz.eimzo.sdk.license.BlockedAppActivity"
             android:exported="false"
             android:theme="@style/Theme.Eimzo" />
+        <!--
+             No eimzo://sign filter here, and not exported: the app declares
+             the filter on its own MainActivity, reads the link from Dart and
+             passes it to openSignUi(deepLink:). A filter in the plugin was
+             merged into every app using it — a second handler next to the
+             app's own, an "Open with" chooser on any phone with two such apps.
+        -->
         <activity
             android:name="uz.eimzo.sdk.fullui.EImzoActivity"
-            android:exported="true"
+            android:exported="false"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Eimzo"
-            android:windowSoftInputMode="adjustResize" >
-
-            <!--
-                 Receives external eimzo://sign?qc=... deeplinks (when integrator
-                 doesn't declare its own MainActivity with this intent filter).
-            -->
-            <intent-filter android:autoVerify="true" >
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="sign"
-                    android:scheme="eimzo" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="uz.eimzo.sdk.fullui.scanner.QrScannerActivity"
             android:exported="false"
