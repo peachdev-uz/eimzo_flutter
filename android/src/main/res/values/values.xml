@@ -97,6 +97,7 @@
     <string name="eimzo_ui_delete">O\'chirish</string>
     <string name="eimzo_ui_delete_key">Kalitni o\'chirish</string>
     <string name="eimzo_ui_delete_key_confirm">%1$s kalitini o\'chirmoqchimisiz?</string>
+    <string name="eimzo_ui_delete_key_failed">Kalitni o\'chirib bo\'lmadi. Qaytadan urinib ko\'ring.</string>
     <string name="eimzo_ui_domain_label">DOMEN</string>
     <string name="eimzo_ui_empty_state_subtitle">Imzolash uchun avval ERI kaliti, ID-kartangiz yoki USB-token kerak</string>
     <string name="eimzo_ui_enter_baik_pin">BAIK token PIN-kodini kiriting</string>
@@ -202,6 +203,7 @@
     <string name="eimzo_ui_session_expired">Sessiya tugadi</string>
     <string name="eimzo_ui_session_remaining">Sessiya: %1$d:%2$02d qoldi</string>
     <string name="eimzo_ui_set_default">Asosiy</string>
+    <string name="eimzo_ui_set_default_failed">Kalitni asosiy qilib bo\'lmadi. Qaytadan urinib ko\'ring.</string>
     <string name="eimzo_ui_settings">Sozlamalar</string>
     <string name="eimzo_ui_sign">IMZOLASH</string>
     <string name="eimzo_ui_sign_request_title">Imzolash so‘rovi</string>

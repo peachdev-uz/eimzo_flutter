@@ -27,6 +27,7 @@
     <string name="eimzo_ui_delete">Удалить</string>
     <string name="eimzo_ui_delete_key">Удалить ключ</string>
     <string name="eimzo_ui_delete_key_confirm">Удалить ключ %1$s?</string>
+    <string name="eimzo_ui_delete_key_failed">Не удалось удалить ключ. Попробуйте ещё раз.</string>
     <string name="eimzo_ui_domain_label">ДОМЕН</string>
     <string name="eimzo_ui_empty_state_subtitle">Для подписания нужен ключ ЭЦП, ID-карта или USB-токен</string>
     <string name="eimzo_ui_enter_baik_pin">Введите PIN-код BAIK-токена</string>
@@ -124,6 +125,7 @@
     <string name="eimzo_ui_session_expired">Сессия завершена</string>
     <string name="eimzo_ui_session_remaining">Сессия: осталось %1$d:%2$02d</string>
     <string name="eimzo_ui_set_default">Основной</string>
+    <string name="eimzo_ui_set_default_failed">Не удалось сделать ключ основным. Попробуйте ещё раз.</string>
     <string name="eimzo_ui_settings">Настройки</string>
     <string name="eimzo_ui_sign">ПОДПИСАТЬ</string>
     <string name="eimzo_ui_sign_request_title">Запрос на подпись</string>

@@ -1,3 +1,8 @@
+## 2.3.0-dev.3
+
+Sinov versiyasi: ID karta va USB token bilan imzolash, karta egasining ismi
+tuzatildi.
+
 ## 2.3.0-dev.2
 
 Sinov versiyasi: gateway rejimida SDK xatolari va crash'lar YT gateway'iga

@@ -1,6 +1,6 @@
 # eimzo_flutter
 
-Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.3.0-dev.1` bundled inside) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it, opens it, and receives `eimzo://sign?...` deep links.
+Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.3.0-dev.3` bundled inside) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it, opens it, and receives `eimzo://sign?...` deep links.
 
 ## Platform support
 
@@ -17,9 +17,9 @@ dependencies:
   eimzo_flutter: ^2.2.1
 ```
 
-`2.3.0-dev.1` is a pre-release with the [YT gateway](#yt-gateway-23-pre-release).
+`2.3.0-dev.3` is a pre-release with the [YT gateway](#yt-gateway-23-pre-release).
 `^2.2.1` does not pick it up; to try it, pin it exactly:
-`eimzo_flutter: 2.3.0-dev.1`.
+`eimzo_flutter: 2.3.0-dev.3`.
 
 ### 2. Android — `android/app/build.gradle`
 
