@@ -27,6 +27,7 @@
     <string name="eimzo_ui_delete">Delete</string>
     <string name="eimzo_ui_delete_key">Delete key</string>
     <string name="eimzo_ui_delete_key_confirm">Delete the key %1$s?</string>
+    <string name="eimzo_ui_delete_key_failed">Could not delete the key. Try again.</string>
     <string name="eimzo_ui_domain_label">DOMAIN</string>
     <string name="eimzo_ui_empty_state_subtitle">Signing needs a signature key, your ID card or a USB token</string>
     <string name="eimzo_ui_enter_baik_pin">Enter the BAIK token PIN</string>
@@ -124,6 +125,7 @@
     <string name="eimzo_ui_session_expired">Session ended</string>
     <string name="eimzo_ui_session_remaining">Session: %1$d:%2$02d left</string>
     <string name="eimzo_ui_set_default">Default</string>
+    <string name="eimzo_ui_set_default_failed">Could not make this the default key. Try again.</string>
     <string name="eimzo_ui_settings">Settings</string>
     <string name="eimzo_ui_sign">SIGN</string>
     <string name="eimzo_ui_sign_request_title">Signing request</string>
