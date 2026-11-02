@@ -1,3 +1,14 @@
+## 2.3.0-dev.5
+
+Sinov versiyasi: SDK ekranlari tizim zonalariga tegmaydi. Android 15/16 da
+ilova targetSdk 35 va undan yuqori bo'lsa (Flutter shabloni hozir 36)
+sarlavhalar status bar ostiga, IMZOLASH va «Bekor qilish» navigatsiya paneli
+ostiga, landscape'da kontent kamera teshigi ostiga tushardi — endi har bir
+ekran status bar, navigatsiya paneli va kamera teshigini hisobga oladi. PIN va
+kalit qo'shish oynalari to'liq ochiladi, landscape'da ekranlar scroll bo'ladi.
+iOS'da ekranlar landscape'da va klaviatura chiqqanda xavfsiz zonadan
+chiqmaydi.
+
 ## 2.3.0-dev.4
 
 Sinov versiyasi: ID karta bir daqiqada o'qilmasa (Android) yoki USB token

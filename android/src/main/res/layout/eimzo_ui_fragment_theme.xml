@@ -19,49 +19,63 @@
         app:titleCentered="true"
         app:titleTextColor="@color/eimzo_ui_text" />
 
-    <FrameLayout
+    <!-- Scrolls: on a phone turned sideways the preview alone is most of the
+         screen, and the swatches below it were cut in half. -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/ivPreview"
-            android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop" />
-
-        <include
-            android:id="@+id/previewCard"
-            layout="@layout/eimzo_ui_item_key"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="34dp"
-            android:layout_marginEnd="28dp" />
-    </FrameLayout>
+            android:orientation="vertical">
 
-    <TextView
-        style="@style/TextAppearance.Eimzo.SectionHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/eimzo_ui_choose_theme" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/swatches"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp" />
+                <ImageView
+                    android:id="@+id/ivPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:contentDescription="@null"
+                    android:scaleType="centerCrop" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/eimzo_ui_theme_dark_note"
-        android:textColor="@color/eimzo_ui_text_hint"
-        android:textSize="12.5sp" />
+                <include
+                    android:id="@+id/previewCard"
+                    layout="@layout/eimzo_ui_item_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginTop="34dp"
+                    android:layout_marginEnd="28dp" />
+            </FrameLayout>
+
+            <TextView
+                style="@style/TextAppearance.Eimzo.SectionHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eimzo_ui_choose_theme" />
+
+            <LinearLayout
+                android:id="@+id/swatches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/eimzo_ui_theme_dark_note"
+                android:textColor="@color/eimzo_ui_text_hint"
+                android:textSize="12.5sp" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
