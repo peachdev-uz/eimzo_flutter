@@ -22,27 +22,31 @@
          centred titles for screens you are passing through, not landing on. -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:minHeight="56dp"
         android:orientation="horizontal"
-        android:paddingStart="18dp"
+        android:paddingStart="6dp"
         android:paddingEnd="18dp">
 
+        <!-- 48dp for the finger, the 24dp arrow where it was drawn (D4). -->
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:contentDescription="@string/eimzo_ui_back"
             android:focusable="true"
+            android:padding="12dp"
             android:src="@drawable/eimzo_ui_ic_back"
             app:tint="@color/eimzo_ui_text" />
 
         <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="-4dp"
             android:layout_weight="1"
             android:text="@string/eimzo_ui_settings"
             android:textColor="@color/eimzo_ui_text"
@@ -132,6 +136,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tvSecurity"
                 style="@style/TextAppearance.Eimzo.SectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,6 +154,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tvHelp"
                 style="@style/TextAppearance.Eimzo.SectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -257,13 +263,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="34dp"
+                android:layout_marginTop="30dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
+                android:minHeight="48dp"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp">
 
                 <ImageView
                     android:layout_width="20dp"

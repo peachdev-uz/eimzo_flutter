@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  A blocking notice in a sheet — the app's DsBlockingError: a 60dp tile, a
+  title, a line of explanation, one way forward and one way back. B4's "NFC
+  o'chirilgan" (with "Sozlamalarni ochish") and "NFC mavjud emas" (with
+  "Orqaga") are both this.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/eimzo_ui_bg_sheet"
+    android:fillViewport="true"
+    android:paddingStart="24dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="44dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/eimzo_ui_sheet_grabber" />
+
+        <FrameLayout
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/eimzo_ui_bg_badge_warning">
+
+            <ImageView
+                android:id="@+id/noticeIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:src="@drawable/eimzo_ui_ic_contactless"
+                app:tint="@color/eimzo_ui_info_amber" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/noticeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tools:text="NFC o‘chirilgan" />
+
+        <TextView
+            android:id="@+id/noticeBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.25"
+            android:textColor="@color/eimzo_ui_text_muted"
+            android:textSize="13.5sp"
+            tools:text="ID-kartani o‘qish uchun sozlamalardan NFC ni yoqing" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/noticePrimary"
+            style="@style/Widget.Eimzo.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:minHeight="48dp"
+            android:textSize="15.5sp"
+            android:visibility="gone"
+            tools:text="Sozlamalarni ochish"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/noticeSecondary"
+            style="@style/Widget.Eimzo.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minHeight="52dp"
+            tools:text="Bekor qilish" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  B1 — the top banner, the one surface for transient messages (the app's
+  AppBanner / DsSystemBanner). Replaces every Toast: a toast rises from the
+  bottom over the sign button, shows two lines at most on Android 12+, and
+  cannot carry an action.
+
+  Icon 21 in the tone's colour, title 13.5 semibold white, a second line in
+  white 60% — "Yopish uchun bosing", the offline body, or an action in accent
+  — and, for the offline banner, a short action at the end.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bannerRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/eimzo_ui_bg_banner"
+    android:clickable="true"
+    android:elevation="10dp"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="48dp"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="14dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="14dp">
+
+    <ImageView
+        android:id="@+id/bannerIcon"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:importantForAccessibility="no"
+        tools:src="@drawable/eimzo_ui_ic_error"
+        tools:tint="@color/eimzo_ui_danger_bright" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bannerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="13.5sp"
+            android:textStyle="bold"
+            tools:text="Serverga ulanib bo‘lmadi" />
+
+        <!-- The hint, or the offline body. -->
+        <TextView
+            android:id="@+id/bannerMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:textColor="#99FFFFFF"
+            android:textSize="12sp"
+            tools:text="Yopish uchun bosing" />
+
+        <!-- An action on the second line, in accent. 48dp tall for the
+             finger, pulled back into the line by its negative margins so the
+             banner keeps its height. -->
+        <TextView
+            android:id="@+id/bannerLineAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-14dp"
+            android:layout_marginBottom="-14dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:textColor="@color/eimzo_ui_accent"
+            android:textSize="12.5sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="Qayta urinish" />
+    </LinearLayout>
+
+    <!-- The offline banner's "Qayta". -->
+    <TextView
+        android:id="@+id/bannerEndAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-14dp"
+        android:layout_marginEnd="-8dp"
+        android:layout_marginBottom="-14dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textColor="@color/eimzo_ui_accent"
+        android:textSize="12.5sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="Qayta"
+        tools:visibility="visible" />
+</LinearLayout>

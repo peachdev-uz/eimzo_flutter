@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  C9 — the ways to add a key, one list for the two places that offer them:
+  the empty Home and the add-key sheet (AddKeyRoutes). They used to be two
+  lists that had drifted — the empty state's rows were one-line and never
+  greyed the token routes, so a user typed the PIN for a token that was not
+  there before being told so.
+
+  File, QR, the ID card (only on a phone with NFC), the USB token and the BAIK
+  token (greyed, "…ulang", until one is plugged in — live).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/optionFile"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <include
+        android:id="@+id/optionQr"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
+    <include
+        android:id="@+id/optionNfc"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
+    <include
+        android:id="@+id/optionUsb"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
+    <include
+        android:id="@+id/optionBaik"
+        layout="@layout/eimzo_ui_item_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+</LinearLayout>

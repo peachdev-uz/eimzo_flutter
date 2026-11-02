@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The accent glow behind the signed screen's badge (C10): the app's radial
+     gradient, accent 20% at the centre fading out by 70% of its radius. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:centerX="0.5"
+        android:centerY="0.22"
+        android:endColor="#0000C68E"
+        android:gradientRadius="320dp"
+        android:startColor="#3300C68E"
+        android:type="radial" />
+</shape>

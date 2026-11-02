@@ -40,6 +40,7 @@
             android:background="@drawable/eimzo_ui_sheet_grabber" />
 
         <TextView
+            android:id="@+id/guideTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -49,6 +50,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/guideSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
@@ -59,10 +61,12 @@
 
         <!-- ── The desktop menu, as a picture ─────────────────────────── -->
         <LinearLayout
+            android:id="@+id/menuMock"
             android:layout_width="match_parent"
             android:layout_height="125dp"
             android:layout_marginTop="18dp"
             android:background="@drawable/eimzo_ui_bg_menu_mock"
+            android:importantForAccessibility="noHideDescendants"
             android:orientation="horizontal"
             android:paddingStart="11dp"
             android:paddingTop="11dp"
@@ -182,6 +186,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/menuCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -199,10 +204,14 @@
             android:orientation="vertical" />
 
         <LinearLayout
+            android:id="@+id/guideFooter"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/eimzo_ui_bg_guide_footer"
+            android:minHeight="42dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="14dp"
@@ -229,7 +238,8 @@
             android:id="@+id/btnOk"
             style="@style/Widget.Eimzo.Button"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="wrap_content"
+            android:minHeight="54dp"
             android:layout_marginTop="18dp"
             android:text="@string/eimzo_ui_qr_guide_ok"
             android:textSize="16.5sp"

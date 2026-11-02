@@ -8,9 +8,7 @@
 
     <!-- One name, two files: the light wallpaper lives in drawable/ and the
          design's dark one in drawable-night/, so the header follows the theme
-         without a line of Kotlin. Before this it stayed bright while the rest
-         of the page went dark. The design makes the wallpaper user-selectable
-         (3i3); this pair is the default until that picker exists. -->
+         without a line of Kotlin. The user picks the light one (3i3). -->
     <ImageView
         android:id="@+id/ivHeaderBg"
         android:layout_width="match_parent"
@@ -44,89 +42,109 @@
             android:orientation="vertical"
             android:paddingHorizontal="20dp">
 
-            <!-- Top bar: back/menu (left) + help (right) -->
+            <!-- C5 — the top bar, the app's: "‹" closes the SDK as system
+                 Back does, the E-IMZO mark and word in the middle, ⚙ for
+                 settings. The menu icon and the "?" that opened the key-QR
+                 guide with no scanner in sight are gone. -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="-14dp"
+                android:layout_marginEnd="-14dp"
                 android:gravity="center_vertical"
-                android:paddingTop="12dp"
-                android:paddingBottom="20dp">
-
-                <!--
-                  Back arrow — visible only when the activity was launched
-                  via an eimzo:// deeplink. Tapping it returns the user to
-                  the calling integrator app via finishAndRemoveTask().
-                  In standalone-launch mode the menu icon is shown instead.
-                -->
-                <ImageView
-                    android:id="@+id/btnBack"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="8dp"
-                    android:src="@drawable/eimzo_ui_ic_back"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/eimzo_ui_back"
-                    android:visibility="gone" />
+                android:minHeight="56dp"
+                android:orientation="horizontal"
+                android:paddingTop="4dp">
 
                 <ImageView
-                    android:id="@+id/btnMenu"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="6dp"
-                    android:src="@drawable/eimzo_ui_ic_menu"
+                    android:id="@+id/btnClose"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/eimzo_ui_home" />
+                    android:clickable="true"
+                    android:contentDescription="@string/eimzo_ui_close"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:src="@drawable/eimzo_ui_ic_chevron_left"
+                    app:tint="@color/eimzo_ui_text" />
 
-                <View
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/eimzo_ui_ic_eimzo_mark" />
+
+                    <TextView
+                        android:id="@+id/tvWordmark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:letterSpacing="0.16"
+                        android:text="@string/eimzo_ui_app_name"
+                        android:textColor="@color/eimzo_ui_text"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/btnHelp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="4dp"
-                    android:src="@drawable/eimzo_ui_ic_help"
+                    android:id="@+id/btnSettings"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/eimzo_ui_home" />
+                    android:clickable="true"
+                    android:contentDescription="@string/eimzo_ui_settings"
+                    android:focusable="true"
+                    android:padding="12dp"
+                    android:src="@drawable/eimzo_ui_ic_settings"
+                    app:tint="@color/eimzo_ui_text" />
             </LinearLayout>
 
             <Space
+                android:id="@+id/headerGap"
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />
 
-            <!-- Section header: "Mening kalitlarim" + "hammasi >" -->
+            <!-- Section header: "Mening kalitlarim" + "hammasi ›" -->
             <LinearLayout
                 android:id="@+id/headerKeys"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginBottom="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/tvMyKeys"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/eimzo_ui_my_keys_full"
                     android:textColor="@color/eimzo_ui_text"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
+                <!-- 48dp tall for the finger; the link itself as drawn. -->
                 <LinearLayout
                     android:id="@+id/btnSeeAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:layout_marginEnd="-10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="4dp">
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -140,237 +158,75 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginStart="2dp"
+                        android:importantForAccessibility="no"
                         android:src="@drawable/eimzo_ui_ic_chevron_right"
                         app:tint="@color/eimzo_ui_accent_dark" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Key card (populated state) -->
-            <androidx.cardview.widget.CardView
+            <!-- C6 — the primary key, the same card as the key list's. -->
+            <include
                 android:id="@+id/cardKey"
+                layout="@layout/eimzo_ui_item_key"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
-                android:visibility="gone">
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/eimzo_ui_gradient_card"
-                    android:padding="20dp">
+            <!-- A2 — a deep link with no key to open 3f with yet. -->
+            <include
+                android:id="@+id/requestWaiting"
+                layout="@layout/eimzo_ui_view_request_waiting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/lblHomeStir"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/eimzo_ui_label_stir"
-                        android:textColor="#B3FFFFFF"
-                        android:textSize="12sp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvKeyId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:layout_constraintTop_toBottomOf="@id/lblHomeStir"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvKeyName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
-
-                    <TextView
-                        android:id="@+id/lblHomeJshshir"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/eimzo_ui_label_jshshir"
-                        android:textColor="#B3FFFFFF"
-                        android:textSize="12sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/tvKeyPinfl" />
-
-                    <TextView
-                        android:id="@+id/tvKeyPinfl"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/guidelineHomeMid"
-                        app:layout_constraintBottom_toBottomOf="parent" />
-
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guidelineHomeMid"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.55" />
-
-                    <TextView
-                        android:id="@+id/lblHomeDuration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/eimzo_ui_label_duration"
-                        android:textColor="#B3FFFFFF"
-                        android:textSize="12sp"
-                        app:layout_constraintStart_toStartOf="@id/guidelineHomeMid"
-                        app:layout_constraintBottom_toTopOf="@id/tvKeyExpiry" />
-
-                    <TextView
-                        android:id="@+id/tvKeyExpiry"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="@id/guidelineHomeMid"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent" />
-
-                    <!--
-                      "Muddati tugagan" badge — top-right pill, semi-transparent
-                      red. Only shown when the certificate validTo timestamp is
-                      in the past. Sits over the gradient so it's legible
-                      regardless of the card's underlying color stops.
-                    -->
-                    <TextView
-                        android:id="@+id/tvKeyExpiredBadge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="4dp"
-                        android:background="@drawable/eimzo_ui_bg_expired_badge"
-                        android:text="@string/eimzo_ui_key_expired"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:visibility="gone"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!--
-              3c — the empty state. Replaces the old 360dp "+" card, which
-              named one of the four ways in and hid the other three. Kept as a
-              separate layout so the sheet and this list stay one definition
-              apart rather than two copies of the same four rows.
-            -->
+            <!-- 3c / C9 — no key yet: the ways to add one. Hidden until the
+                 keys have been read, like the card: shown by default it
+                 flashed "Kalit qo‘shing" at users who have keys. -->
             <include
                 android:id="@+id/tvNoKey"
                 layout="@layout/eimzo_ui_view_empty_state"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
-            <!-- Deep link info -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardDeepLink"
+            <!-- IMZOLASH: opens the scanner for a request, or 3f for the one
+                 on screen — never a signature from here (A6). -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSign"
+                style="@style/Widget.Eimzo.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:minHeight="58dp"
+                android:text="@string/eimzo_ui_sign"
+                android:textSize="17sp"
+                android:visibility="gone"
+                app:icon="@drawable/eimzo_ui_ic_sign"
+                app:iconGravity="textStart"
+                app:iconSize="22dp"
+                app:iconTint="@color/eimzo_ui_button_text" />
+
+            <!-- C9 — with a key, the add-key sheet is one tap from Home, as on
+                 iOS: the same routes as the empty state. -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddKey"
+                style="@style/Widget.Eimzo.Button.Secondary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="1dp"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp"
-                    android:background="@color/eimzo_ui_accent_12">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/eimzo_ui_deeplink_received"
-                        android:textColor="@color/eimzo_ui_primary_dark"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <!--
-                      Raw eimzo://sign?qc=... URL is intentionally not
-                      surfaced to the user. The QR hash is meaningless to
-                      a human reader and just clutters the UI; the deeplink
-                      is still tracked in the ViewModel and used at sign
-                      time. Kept in the binding (visibility=gone) for ABI
-                      compatibility with any downstream layout overrides.
-                    -->
-                    <TextView
-                        android:id="@+id/tvDeepLinkInfo"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:visibility="gone" />
-
-                    <!--
-                      Live countdown for the 103-second sign session that
-                      started when the deeplink arrived. Drives user
-                      urgency without forcing them out of the key-import
-                      flow; auto-hides on session end.
-                    -->
-                    <TextView
-                        android:id="@+id/tvSessionTimer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:textColor="@color/eimzo_ui_primary_dark"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- IMZOLASH button — signs with the currently selected saved key -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSign"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/eimzo_ui_sign"
-                android:textSize="16sp"
+                android:minHeight="54dp"
+                android:text="@string/eimzo_ui_add_key"
+                android:textColor="@color/eimzo_ui_accent_dark"
                 android:textStyle="bold"
-                app:cornerRadius="14dp"
-                app:backgroundTint="@color/eimzo_ui_primary"
-                android:visibility="gone" />
-
-            <!-- Sign result -->
-            <TextView
-                android:id="@+id/tvSignResult"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:visibility="gone" />
-
-            <!-- Legacy USB-only button kept hidden for binding compatibility -->
-            <Space
-                android:id="@+id/btnUsbToken"
-                android:layout_width="0dp"
-                android:layout_height="0dp" />
+                android:visibility="gone"
+                app:backgroundTint="@color/eimzo_ui_option_row"
+                app:icon="@drawable/eimzo_ui_ic_add"
+                app:iconGravity="textStart"
+                app:iconSize="20dp"
+                app:iconTint="@color/eimzo_ui_accent_dark" />
 
             <Space
                 android:layout_width="match_parent"

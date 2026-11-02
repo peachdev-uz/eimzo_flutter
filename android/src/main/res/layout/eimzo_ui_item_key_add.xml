@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The add-key row closing the list (3d). Inline rather than a floating
-     button: it belongs after the keys you have, not on top of them. -->
+<!-- C7 — "+ Kalit qo'shish" closing the list: a dashed row, the app's. The
+     list is never empty of it, so a phone with no keys still has the way in. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/addRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:layout_marginTop="14dp"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/eimzo_ui_bg_dashed_row"
     android:clickable="true"
     android:focusable="true"
-    android:gravity="center_vertical"
+    android:gravity="center"
+    android:minHeight="56dp"
     android:orientation="horizontal"
-    android:paddingStart="38dp"
-    android:paddingTop="22dp"
-    android:paddingEnd="20dp"
-    android:paddingBottom="26dp">
+    android:paddingStart="16dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="12dp">
 
     <ImageView
         android:layout_width="22dp"
@@ -24,12 +27,12 @@
         app:tint="@color/eimzo_ui_accent_dark" />
 
     <TextView
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_weight="1"
+        android:layout_marginStart="8dp"
         android:text="@string/eimzo_ui_add_key"
         android:textColor="@color/eimzo_ui_accent_dark"
-        android:textSize="14.5sp" />
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

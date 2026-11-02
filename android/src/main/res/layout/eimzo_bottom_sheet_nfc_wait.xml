@@ -1,38 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  B4 — the ID card sheet: waiting for the card, reading it, and what went wrong
+  when it did. The app's NFC session sheet (nfc_session_sheet.dart).
+
+  One layout for every state, so a failure replaces the waiting content in
+  place rather than one sheet closing and another opening over it:
+
+    WAITING / READING  title, hint, the card animation, "Bekor qilish"
+    FAILED             badge, "Karta o'qilmadi", three hints, the attempts
+                       note, "Qayta urinish", "Bekor qilish"
+    TIMEOUT            badge, "Karta topilmadi", "Qayta urinish", "Bekor qilish"
+    BLOCKED            danger badge, the severe box, "Yopish"
+
+  The text used to be one hardcoded Uzbek line per state ("ID kartani
+  qurilmangiz yaqin tuting", "Xatolik yuz berdi"), with no button at all.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/eimzo_bg_bottom_sheet"
+    android:background="@drawable/eimzo_ui_bg_sheet"
+    android:fillViewport="true"
+    android:paddingStart="24dp"
     android:paddingTop="12dp"
-    android:paddingBottom="36dp"
-    android:paddingHorizontal="20dp">
+    android:paddingEnd="24dp"
+    android:paddingBottom="24dp">
 
-    <View
-        android:layout_width="48dp"
-        android:layout_height="4dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
-        android:background="@color/eimzo_ui_grabber" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieNfc"
-        android:layout_width="match_parent"
-        android:layout_height="280dp"
-        app:lottie_rawRes="@raw/eimzo_nfc_state_1"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true" />
-
-    <TextView
-        android:id="@+id/tvNfcHint"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/eimzo_ui_text"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:text="ID kartani qurilmangiz yaqin tuting" />
-</LinearLayout>
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="44dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/eimzo_ui_sheet_grabber" />
+
+        <!-- A failure's badge. -->
+        <FrameLayout
+            android:id="@+id/nfcBadge"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/eimzo_ui_bg_badge_warning"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/nfcBadgeIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:src="@drawable/eimzo_ui_ic_contactless"
+                app:tint="@color/eimzo_ui_info_amber" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/nfcTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:gravity="center"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            tools:text="ID-kartani telefonga yaqinlashtiring" />
+
+        <TextView
+            android:id="@+id/tvNfcHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="12dp"
+            android:accessibilityLiveRegion="polite"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.25"
+            android:textColor="@color/eimzo_ui_text_muted"
+            android:textSize="14sp"
+            tools:text="Kartani telefonning yuqori orqa qismiga qo‘ying" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieNfc"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:importantForAccessibility="no"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/eimzo_nfc_state_1" />
+
+        <!-- FAILED: what to try. -->
+        <LinearLayout
+            android:id="@+id/nfcHints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/eimzo_ui_bg_group"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <include
+                android:id="@+id/hintPosition"
+                layout="@layout/eimzo_ui_item_hint_row" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="46dp"
+                android:background="@color/eimzo_ui_divider" />
+
+            <include
+                android:id="@+id/hintCase"
+                layout="@layout/eimzo_ui_item_hint_row" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="46dp"
+                android:background="@color/eimzo_ui_divider" />
+
+            <include
+                android:id="@+id/hintHold"
+                layout="@layout/eimzo_ui_item_hint_row" />
+        </LinearLayout>
+
+        <!-- FAILED before the PIN was checked: no attempt was spent. -->
+        <LinearLayout
+            android:id="@+id/nfcNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/eimzo_ui_bg_note"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/eimzo_ui_ic_info"
+                app:tint="@color/eimzo_ui_text_muted" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="9dp"
+                android:layout_weight="1"
+                android:text="@string/eimzo_ui_nfc_pin_not_checked"
+                android:textColor="@color/eimzo_ui_text_muted"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- BLOCKED: the severe box. -->
+        <LinearLayout
+            android:id="@+id/nfcSevere"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/eimzo_ui_bg_severe"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/eimzo_ui_ic_block"
+                app:tint="@color/eimzo_ui_danger" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/eimzo_ui_err_card_blocked_title"
+                    android:textColor="@color/eimzo_ui_danger_text"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="@string/eimzo_ui_err_card_blocked_body"
+                    android:textColor="@color/eimzo_ui_danger_text"
+                    android:textSize="12.5sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNfcRetry"
+            style="@style/Widget.Eimzo.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:minHeight="56dp"
+            android:text="@string/eimzo_ui_retry"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:icon="@drawable/eimzo_ui_ic_refresh"
+            app:iconGravity="textStart"
+            app:iconSize="20dp"
+            app:iconTint="@color/eimzo_ui_button_text"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNfcCancel"
+            style="@style/Widget.Eimzo.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minHeight="52dp"
+            android:text="@string/eimzo_ui_cancel" />
+    </LinearLayout>
+</ScrollView>

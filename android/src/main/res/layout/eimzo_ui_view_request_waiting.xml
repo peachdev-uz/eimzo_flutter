@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A deep link's request, while there is no key to open 3f with yet (A2):
+     says it waits, and that adding a key opens it. No timer — the server says
+     when a request has run out. The same card as the iOS SDK's. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/eimzo_ui_bg_request_card"
+    android:orientation="vertical"
+    android:paddingHorizontal="14dp"
+    android:paddingTop="14dp"
+    android:paddingBottom="4dp">
+
+    <LinearLayout
+        android:id="@+id/requestText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/eimzo_ui_bg_circle_accent_12"
+            android:importantForAccessibility="no"
+            android:padding="10dp"
+            android:src="@drawable/eimzo_ui_ic_sign"
+            app:tint="@color/eimzo_ui_accent_dark" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRequestTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eimzo_ui_request_waiting"
+                android:textColor="@color/eimzo_ui_text"
+                android:textSize="14.5sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/eimzo_ui_request_waiting_no_key"
+                android:textColor="@color/eimzo_ui_text_hint"
+                android:textSize="12.5sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 48dp tall for the finger; the word itself as drawn. -->
+    <TextView
+        android:id="@+id/btnRequestCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="-10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:gravity="center"
+        android:minHeight="48dp"
+        android:paddingHorizontal="10dp"
+        android:text="@string/eimzo_ui_cancel"
+        android:textColor="@color/eimzo_ui_text_muted"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+</LinearLayout>

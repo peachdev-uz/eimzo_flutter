@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- An unfilled PIN position: 13dp ring, 2dp stroke, no fill. Eight of these
-     make the fixed PIN length visible instead of leaving the user to count. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
+<!-- A PIN digit still to type (C4): a 2dp ring. Eight of them make the fixed
+     length visible instead of leaving the user to count. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
     <solid android:color="@android:color/transparent" />
     <stroke
         android:width="2dp"
