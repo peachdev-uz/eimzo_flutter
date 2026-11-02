@@ -1,4 +1,4 @@
-## Keyingi versiya (chiqmagan)
+## 2.3.0-dev.8
 
 `eimzo://` havolalari endi tashqaridan qabul qilinmaydi — bu sxema E-IMZO
 ilovasiniki. `getInitialDeeplink`, `onNewDeeplink` va `launchDeeplink` olib
