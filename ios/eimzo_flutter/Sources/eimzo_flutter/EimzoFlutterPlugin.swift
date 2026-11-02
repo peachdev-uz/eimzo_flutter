@@ -3,28 +3,22 @@ import UIKit
 import SwiftUI
 @_spi(EImzoTesting) import EimzoSDK
 
-/// Flutter ↔ EimzoSDK bridge. Mirrors the Android `EimzoFlutterPlugin`
-/// surface (method channel + event channel for deeplinks).
+/// Flutter ↔ EimzoSDK bridge. Mirrors the Android `EimzoFlutterPlugin`.
 ///
 /// Method channel (`uz.peachdev/eimzo_flutter`):
 ///   - `init(config)`        → Bool  (license verdict — iOS always returns
 ///                              `true`; the actual license check runs
 ///                              inside `EImzoView` when `openSignUi` fires)
-///   - `getInitialDeeplink()` → String?
-///   - `launchDeeplink(url)`  → void (UIApplication.shared.open)
 ///   - `openSignUi(deepLink)` → void (presents `EImzoView` over Flutter UI)
 ///
-/// Event channel (`uz.peachdev/eimzo_flutter/links`):
-///   broadcasts `eimzo://…` URLs the app receives at runtime.
+/// The plugin does not listen for URLs. `eimzo://` is the E-IMZO app's
+/// scheme, and a host that takes it from outside would open its SDK for any
+/// page or app that sends one. A sign request reaches the SDK only as
+/// `openSignUi`'s `deepLink`, which the app makes itself (Dart
+/// `EimzoSignLink.create`).
 public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
 
     private var methodChannel: FlutterMethodChannel?
-    private var eventChannel: FlutterEventChannel?
-    private let linkStreamHandler = LinkStreamHandler()
-
-    /// Captured if the app was cold-launched via an `eimzo://` URL —
-    /// `getInitialDeeplink()` from Dart drains it.
-    private var pendingInitialLink: String?
 
     /// Current EImzoView host so we can dismiss it after a sign completes.
     private weak var presentedHost: UIViewController?
@@ -38,56 +32,6 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             binaryMessenger: registrar.messenger()
         )
         instance.methodChannel?.setMethodCallHandler(instance.onMethodCall(_:result:))
-
-        instance.eventChannel = FlutterEventChannel(
-            name: "uz.peachdev/eimzo_flutter/links",
-            binaryMessenger: registrar.messenger()
-        )
-        instance.eventChannel?.setStreamHandler(instance.linkStreamHandler)
-
-        registrar.addApplicationDelegate(instance)
-    }
-
-    // MARK: - UIApplicationDelegate
-
-    /// Cold-launch path: iOS hands the launch URL via the options dict.
-    public func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
-    ) -> Bool {
-        if let url = launchOptions?[.url] as? URL, url.scheme == "eimzo" {
-            pendingInitialLink = url.absoluteString
-        }
-        return true
-    }
-
-    /// Warm-launch path: app already running, a new `eimzo://` URL arrives.
-    public func application(
-        _ application: UIApplication,
-        open url: URL,
-        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
-    ) -> Bool {
-        guard url.scheme == "eimzo" else { return false }
-        let link = url.absoluteString
-        pendingInitialLink = link
-        linkStreamHandler.sink?(link)
-        return true
-    }
-
-    /// Scene-based delegate fallback (iOS 13+, when the app uses
-    /// UIScene). Flutter's UIApplicationDelegate route handles most apps.
-    public func application(
-        _ application: UIApplication,
-        continue userActivity: NSUserActivity,
-        restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
-    ) -> Bool {
-        if let url = userActivity.webpageURL, url.scheme == "eimzo" {
-            let link = url.absoluteString
-            pendingInitialLink = link
-            linkStreamHandler.sink?(link)
-            return true
-        }
-        return false
     }
 
     // MARK: - Method dispatch
@@ -96,12 +40,6 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "init":
             handleInit(call: call, result: result)
-        case "getInitialDeeplink":
-            let link = pendingInitialLink
-            pendingInitialLink = nil
-            result(link)
-        case "launchDeeplink":
-            handleLaunchDeeplink(call: call, result: result)
         case "openSignUi":
             handleOpenSignUi(call: call, result: result)
         default:
@@ -137,25 +75,6 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
         // takes in a development-signed build only.
         .withGatewayOverride(args["gatewayOverride"] as? String)
         result(true)
-    }
-
-    private func handleLaunchDeeplink(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let args = call.arguments as? [String: Any],
-              let urlStr = args["url"] as? String,
-              let url = URL(string: urlStr)
-        else {
-            result(FlutterError(code: "ARG", message: "url is required", details: nil))
-            return
-        }
-        UIApplication.shared.open(url, options: [:]) { success in
-            if success {
-                result(nil)
-            } else {
-                result(FlutterError(code: "NO_HANDLER",
-                                    message: "Couldn't open \(urlStr)",
-                                    details: nil))
-            }
-        }
     }
 
     /// Presents `EImzoView` modally on the Flutter root view controller.
@@ -201,19 +120,3 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
     }
 }
 
-// MARK: - EventChannel sink for deeplinks
-
-private final class LinkStreamHandler: NSObject, FlutterStreamHandler {
-    fileprivate var sink: FlutterEventSink?
-
-    func onListen(withArguments arguments: Any?,
-                  eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        sink = events
-        return nil
-    }
-
-    func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        sink = nil
-        return nil
-    }
-}

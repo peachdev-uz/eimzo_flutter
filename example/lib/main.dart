@@ -21,8 +21,15 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  static const _deepLink =
-      'eimzo://sign?qc=1a4759282737518b091cc3878831103872e422ec71d2e6ee501e255dce3290af02042edfcd6989e4017b';
+  /// A sign request the way an app makes one: the site's id, the document's
+  /// id and the hash come from the app's own backend — here, a document
+  /// captured from E-IMZO during QA — and the plugin makes the link. Never an
+  /// `eimzo://` link taken from outside: that scheme is the E-IMZO app's.
+  static final _signLink = EimzoSignLink.create(
+    siteId: '1a47',
+    documentId: '59282737',
+    hash: '518b091cc3878831103872e422ec71d2e6ee501e255dce3290af02042edfcd69',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +57,8 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 8),
             ElevatedButton.icon(
               icon: const Icon(Icons.qr_code_2),
-              label: const Text('Open with deep link (sign flow)'),
-              onPressed: () => eimzo.openSignUi(deepLink: _deepLink),
+              label: const Text('Open with a sign request'),
+              onPressed: () => eimzo.openSignUi(deepLink: _signLink),
             ),
           ],
         ),

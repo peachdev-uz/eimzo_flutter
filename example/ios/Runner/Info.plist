@@ -84,17 +84,6 @@
 		<string>65696D7A6F617070</string>
 	</array>
 
-	<!-- Deeplink scheme — boshqa ilovalardan 'eimzo://sign?qc=...' qabul qilish -->
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>uz.peachdev.eimzo_flutter_example.signing</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>eimzo</string>
-			</array>
-		</dict>
-	</array>
+	<!-- eimzo:// URL sxemasi yo'q: u E-IMZO ilovasiniki. Imzo so'rovi ilova ichida yasaladi (EimzoSignLink). -->
 </dict>
 </plist>
