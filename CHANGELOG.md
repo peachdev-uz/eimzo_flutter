@@ -1,3 +1,11 @@
+## 2.3.0-dev.9
+
+Kalit qaysi muhitda (`EimzoEnvironment.prod`/`dev`) qo'shilganini eslab
+qoladi: boshqa muhitda u ro'yxatda qoladi, lekin «Boshqa server» deb
+belgilanadi va imzolamaydi. Avval qo'shilgan kalitlar belgisiz, ikkala
+muhitda ishlaydi. iOS: ID-karta va USB-token muddati va JSHSHIR endi to'g'ri
+o'qiladi — avvalgi versiyada qo'shilgan bunday kalitni qayta qo'shing.
+
 ## 2.3.0-dev.8
 
 `eimzo://` havolalari endi tashqaridan qabul qilinmaydi — bu sxema E-IMZO

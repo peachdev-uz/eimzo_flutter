@@ -83,6 +83,7 @@
     <string name="eimzo_ui_err_invalid_qr">QR-код неверен или повреждён</string>
     <string name="eimzo_ui_err_key_exists">Этот ключ уже добавлен</string>
     <string name="eimzo_ui_err_key_expired">Срок действия ключа истёк</string>
+    <string name="eimzo_ui_err_key_other_server">Ключ добавлен на другом сервере</string>
     <string name="eimzo_ui_err_not_eimzo_card">Это не ID-карта E-IMZO</string>
     <string name="eimzo_ui_err_offline">Нет соединения с интернетом</string>
     <string name="eimzo_ui_err_request_expired">Запрос устарел. Обновите QR-код на сайте и отсканируйте снова.</string>
@@ -116,6 +117,9 @@
     <string name="eimzo_ui_key_expired">Срок истёк</string>
     <string name="eimzo_ui_key_expired_cant_sign">Срок действия ключа истёк — подписать нельзя</string>
     <string name="eimzo_ui_key_label">КЛЮЧ</string>
+    <string name="eimzo_ui_key_other_server">Другой сервер</string>
+    <string name="eimzo_ui_key_other_server_cant_sign">Ключ добавлен на другом сервере — здесь им подписать нельзя.</string>
+    <string name="eimzo_ui_key_other_server_hint">Добавлен на другом сервере</string>
     <string name="eimzo_ui_key_pill">%1$s · %2$s</string>
     <string name="eimzo_ui_key_valid">Действителен</string>
     <string name="eimzo_ui_keypad_backspace">Удалить последнюю цифру</string>
