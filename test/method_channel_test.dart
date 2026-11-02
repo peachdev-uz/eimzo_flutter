@@ -140,28 +140,6 @@ void main() {
     });
   });
 
-  group('deep links', () {
-    test('getInitialDeeplink returns what the native side held', () async {
-      reply = 'eimzo://sign?qc=COLD';
-      expect(await EimzoFlutter.instance.getInitialDeeplink(),
-          'eimzo://sign?qc=COLD');
-      expect(calls.single.method, 'getInitialDeeplink');
-    });
-
-    test('getInitialDeeplink returns null on a cold start with no link',
-        () async {
-      reply = null;
-      expect(await EimzoFlutter.instance.getInitialDeeplink(), isNull);
-    });
-
-    test('launchDeeplink sends the url', () async {
-      await EimzoFlutter.instance.launchDeeplink('eimzo://sign?qc=X');
-
-      expect(calls.single.method, 'launchDeeplink');
-      expect(argsOf(calls.single)['url'], 'eimzo://sign?qc=X');
-    });
-  });
-
   group('errors', () {
     test('a PlatformException surfaces as EimzoException', () async {
       reply = PlatformException(code: 'NO_VC', message: 'No root controller');

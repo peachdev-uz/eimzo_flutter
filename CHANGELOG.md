@@ -1,3 +1,11 @@
+## Keyingi versiya (chiqmagan)
+
+`eimzo://` havolalari endi tashqaridan qabul qilinmaydi — bu sxema E-IMZO
+ilovasiniki. `getInitialDeeplink`, `onNewDeeplink` va `launchDeeplink` olib
+tashlandi: imzo so'rovini ilova ichida `EimzoSignLink.create(siteId:,
+documentId:, hash:)` bilan yasang va `openSignUi(deepLink:)`ga bering.
+AndroidManifest va Info.plist'dan `eimzo` sxemasini olib tashlang.
+
 ## 2.3.0-dev.7
 
 Sinov versiyasi: SDK ekranlari E-IMZO ilovasidagidek — imzo so'rovi avval

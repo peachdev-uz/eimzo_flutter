@@ -1,56 +1,43 @@
 package uz.peachdev.eimzo_flutter
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.PluginRegistry
 import uz.eimzo.sdk.EImzoConfig
 import uz.eimzo.sdk.EImzoEnvironment
 import uz.eimzo.sdk.EImzoSDK
 import uz.eimzo.sdk.EImzoTesting
 import uz.eimzo.sdk.fullui.EImzoActivity
 
-class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware,
-    PluginRegistry.NewIntentListener {
+/**
+ * The plugin opens the SDK; it does not listen for links. `eimzo://` is the
+ * E-IMZO app's scheme, and a host that takes it from outside would open its
+ * SDK for any page or app that sends one. A sign request reaches the SDK only
+ * as `openSignUi`'s `deepLink`, which the app makes itself (Dart
+ * `EimzoSignLink.create`).
+ */
+class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
 
     private lateinit var methodChannel: MethodChannel
-    private lateinit var eventChannel: EventChannel
-    private var eventSink: EventChannel.EventSink? = null
     private var activity: Activity? = null
-    private var pendingInitialLink: String? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         methodChannel = MethodChannel(binding.binaryMessenger, CHANNEL_METHOD)
         methodChannel.setMethodCallHandler(this)
-        eventChannel = EventChannel(binding.binaryMessenger, CHANNEL_LINKS)
-        eventChannel.setStreamHandler(object : EventChannel.StreamHandler {
-            override fun onListen(args: Any?, sink: EventChannel.EventSink?) {
-                eventSink = sink
-            }
-            override fun onCancel(args: Any?) {
-                eventSink = null
-            }
-        })
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         methodChannel.setMethodCallHandler(null)
-        eventChannel.setStreamHandler(null)
-        eventSink = null
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "init" -> handleInit(call, result)
-            "getInitialDeeplink" -> result.success(pendingInitialLink.also { pendingInitialLink = null })
-            "launchDeeplink" -> handleLaunchDeeplink(call, result)
             "openSignUi" -> handleOpenSignUi(call, result)
             else -> result.notImplemented()
         }
@@ -68,20 +55,6 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
         }
         act.startActivity(intent)
         result.success(null)
-    }
-
-    private fun handleLaunchDeeplink(call: MethodCall, result: MethodChannel.Result) {
-        val act = requireActivity(result) ?: return
-        val url = call.argument<String>("url")
-            ?: return result.error("ARG", "url is required", null)
-        try {
-            act.startActivity(
-                Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            )
-            result.success(null)
-        } catch (e: ActivityNotFoundException) {
-            result.error("NO_HANDLER", "No activity handles $url", null)
-        }
     }
 
     @OptIn(EImzoTesting::class)
@@ -121,14 +94,10 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
         return act
     }
 
-    // ── Activity lifecycle / deep links ─────────────────────────────────────────
+    // ── Activity lifecycle ──────────────────────────────────────────────────
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activity = binding.activity
-        binding.addOnNewIntentListener(this)
-        binding.activity.intent?.data?.takeIf { it.scheme == DEEP_LINK_SCHEME }?.let {
-            pendingInitialLink = it.toString()
-        }
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
@@ -137,25 +106,13 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
         activity = binding.activity
-        binding.addOnNewIntentListener(this)
     }
 
     override fun onDetachedFromActivity() {
         activity = null
     }
 
-    override fun onNewIntent(intent: Intent): Boolean {
-        val data = intent.data ?: return false
-        if (data.scheme != DEEP_LINK_SCHEME) return false
-        val link = data.toString()
-        pendingInitialLink = link
-        eventSink?.success(link)
-        return true
-    }
-
     private companion object {
         const val CHANNEL_METHOD = "uz.peachdev/eimzo_flutter"
-        const val CHANNEL_LINKS = "uz.peachdev/eimzo_flutter/links"
-        const val DEEP_LINK_SCHEME = "eimzo"
     }
 }

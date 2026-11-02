@@ -1,6 +1,6 @@
 # eimzo_flutter
 
-Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.3.0-dev.7` bundled inside) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it, opens it, and receives `eimzo://sign?...` deep links.
+Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.3.0-dev.7` bundled inside) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it and opens it — with a sign request the app makes itself, or without one.
 
 ## Platform support
 
@@ -50,37 +50,19 @@ dependencies {
 > ⚠️ If you skip desugaring you'll see `NoClassDefFoundError: java/time/...`
 > at runtime when the SDK builds PKCS#7 signed attributes.
 
-### 3. Android — `AndroidManifest.xml` (deep-link intent-filter)
+### 3. Android — `AndroidManifest.xml`
 
-Only the `<intent-filter>` is your job. Permissions (`INTERNET`, `ACCESS_NETWORK_STATE`, `NFC`,
-`CAMERA`, `READ_EXTERNAL_STORAGE` ≤ API 32) and `<uses-feature>` entries
-for NFC / USB host are merged in from the plugin's manifest
-automatically — don't re-declare them.
+Nothing to add. Permissions (`INTERNET`, `ACCESS_NETWORK_STATE`, `NFC`,
+`CAMERA`, `READ_EXTERNAL_STORAGE` ≤ API 32), `<uses-feature>` entries for
+NFC / USB host and the SDK's activities are merged in from the plugin's
+manifest automatically — don't re-declare them.
 
-```xml
-<activity
-    android:name=".MainActivity"
-    android:exported="true"
-    android:launchMode="singleTop">
-
-    <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-    </intent-filter>
-
-    <!-- Receive eimzo://sign?qc=... from external apps / scanners -->
-    <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="eimzo" android:host="sign" />
-    </intent-filter>
-</activity>
-```
-
-`android:launchMode="singleTop"` matters — without it Android creates
-a fresh activity instance each time an `eimzo://` link arrives and the
-Dart side never sees `onNewDeeplink()`.
+**Do not declare an `eimzo://` intent-filter.** That scheme is the E-IMZO
+app's: an app that claims it opens its SDK for any page or app that sends
+one. A sign request is made inside your app — see
+[Open with a sign request](#open-with-a-sign-request-made-in-your-app). If
+the SDK finds the filter, it logs a warning; remove it when upgrading from
+2.3.0-dev.7 or earlier.
 
 ### 4. Android — theme
 
@@ -101,7 +83,7 @@ In `ios/Podfile`:
 platform :ios, '16.0'
 ```
 
-### 6. iOS — `Info.plist` permissions and deeplink scheme
+### 6. iOS — `Info.plist` permissions
 
 ```xml
 <!-- Camera (QR scanner) -->
@@ -115,20 +97,10 @@ platform :ios, '16.0'
 <array>
   <string>65696D7A6F617070</string>  <!-- "eimzoapp" ASCII -->
 </array>
-
-<!-- eimzo:// deep links -->
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleURLName</key>
-    <string>YOUR.BUNDLE.ID.signing</string>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>eimzo</string>
-    </array>
-  </dict>
-</array>
 ```
+
+**Do not add `eimzo` to `CFBundleURLTypes`** — the scheme is the E-IMZO
+app's (see step 3). The SDK logs a warning when it finds it there.
 
 ### 7. iOS — NFC entitlement
 
@@ -228,46 +200,33 @@ class _AppState extends State<App> {
 }
 ```
 
-### Open with an external deeplink (sign flow auto-starts)
+### Open with a sign request made in your app
 
-When another app or website sends an `eimzo://sign?qc=...` URL, route it
-straight into the native sign flow. The UI opens a confirmation screen
-showing what is about to be signed — the site, the hash and the key — and
-signs only when the user taps IMZOLASH there. With no key yet, the request
-waits on the home screen and opens as soon as the first key is added. There
-is no timer on the phone: if the site's request has expired, the server says
-so and the SDK shows it.
-
-Earlier versions signed the moment the deeplink arrived. That was removed
-in 1.1.4 — hosts were importing a key on the same screen and never got to
-see what they were signing.
+Your app does not take `eimzo://` links from outside — that scheme is the
+E-IMZO app's. When your own backend has a document for the user to sign,
+it gets the site's id, the document's id and the hash from E-IMZO; the app
+makes the link from them and opens the SDK with it:
 
 ```dart
-class _AppState extends State<App> {
-  final _eimzo = EimzoFlutter.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    _captureDeeplinks();
-  }
-
-  Future<void> _captureDeeplinks() async {
-    // Cold-start: app was launched by tapping an eimzo:// URL.
-    final initial = await _eimzo.getInitialDeeplink();
-    if (initial != null) _openSign(initial);
-
-    // Warm: user came back to a running app via a new eimzo:// URL.
-    _eimzo.onNewDeeplink().listen(_openSign);
-  }
-
-  Future<void> _openSign(String link) async {
-    final allowed = await _eimzo.init();
-    if (!allowed) return;
-    await _eimzo.openSignUi(deepLink: link);
-  }
+Future<void> signDocument(String siteId, String documentId, String hash) async {
+  final link = EimzoSignLink.create(
+    siteId: siteId,          // 4 hex characters
+    documentId: documentId,  // 8, 10, 12, 14 or 16 hex characters
+    hash: hash,              // 64 hex characters
+  );
+  final allowed = await EimzoFlutter.instance.init();
+  if (!allowed) return;
+  await EimzoFlutter.instance.openSignUi(deepLink: link);
 }
 ```
+
+`EimzoSignLink.create` adds the CRC32 the SDK checks and throws an
+`ArgumentError` when a value is not in that form. The UI then shows what
+is about to be signed — the site, the hash and the key — and signs only when
+the user taps IMZOLASH there. With no key yet, the request waits on the home
+screen and opens as soon as the first key is added. There is no timer on
+the phone: if the site's request has expired, the server says so and the SDK
+shows it.
 
 ### Environment
 
@@ -339,21 +298,17 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
   Call it before `openSignUi` on both platforms.
 
 - **`EimzoFlutter.instance.openSignUi({String? deepLink})`** → `Future<void>`
-  Presents the full native UI (Home / Cards / sign flow). If `deepLink`
-  is provided, jumps straight into signing that document. Returns when
-  the UI is presented — subscribe to `onNewDeeplink` for re-entries.
+  Presents the full native UI (Home / Cards / sign flow). `deepLink` is a
+  sign request made with `EimzoSignLink.create`; the UI shows it and signs
+  when the user taps IMZOLASH. Returns when the UI is presented.
 
-- **`EimzoFlutter.instance.getInitialDeeplink()`** → `Future<String?>`
-  The `eimzo://sign?...` URL the app was cold-started with. Consume
-  once on app launch.
+- **`EimzoSignLink.create({siteId, documentId, hash})`** → `String`
+  Makes the `eimzo://sign?qc=…` link for `openSignUi` from a document's
+  values, with the CRC32 the SDK checks. Throws `ArgumentError` on a value
+  out of form.
 
-- **`EimzoFlutter.instance.onNewDeeplink()`** → `Stream<String>`
-  Broadcast stream of `eimzo://...` URLs delivered while the app is
-  already running.
-
-- **`EimzoFlutter.instance.launchDeeplink(String url)`** → `Future<void>`
-  Convenience that fires an `eimzo://` URL through the OS — useful in
-  dev to test the deeplink path without an external trigger.
+`getInitialDeeplink()`, `onNewDeeplink()` and `launchDeeplink()` were
+removed after 2.3.0-dev.7: the plugin no longer listens for `eimzo://` links.
 
 `EimzoConfig` accepts `environment` (default `EimzoEnvironment.prod`, see
 [Environment](#environment)), `license` (the `EIMZO1.…` token — see

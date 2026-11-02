@@ -110,9 +110,8 @@ void main() {
         reason: 'iOS plagini konfiguratsiyani EImzoView ga uzatmayapti');
   });
 
-  test('the channel names match on all three sides', () {
+  test('the method channel name matches on all three sides', () {
     const method = 'uz.peachdev/eimzo_flutter';
-    const event = 'uz.peachdev/eimzo_flutter/links';
 
     for (final entry in {
       'Dart': dartSource,
@@ -121,8 +120,28 @@ void main() {
     }.entries) {
       expect(entry.value, contains(method),
           reason: '${entry.key} boshqa metod kanalini ishlatyapti');
-      expect(entry.value, contains(event),
-          reason: '${entry.key} boshqa hodisa kanalini ishlatyapti');
+    }
+  });
+
+  test('no side listens for eimzo:// links any more', () {
+    // eimzo:// is the E-IMZO app's. A handler left behind on either platform
+    // would take a link from any page or app and open the SDK with it.
+    for (final entry in {
+      'Dart': dartSource,
+      'Android': kotlinSource,
+      'iOS': swiftSource,
+    }.entries) {
+      for (final gone in [
+        'getInitialDeeplink',
+        'launchDeeplink',
+        'onNewDeeplink',
+        'eimzo_flutter/links',
+        'onNewIntent',
+        'addApplicationDelegate',
+      ]) {
+        expect(entry.value, isNot(contains(gone)),
+            reason: '${entry.key} da $gone qolib ketgan');
+      }
     }
   });
 
