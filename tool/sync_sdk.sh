@@ -68,6 +68,23 @@ for pair in "res:android/src/main/res" "jni:android/src/main/jniLibs"; do
     fi
 done
 
+# 4. R8 qoidalari — faqat tekshiriladi. android/consumer-rules.pro AAR'dagi
+# proguard.txt'dan qo'lda ko'chiriladi (unda plaginning o'z qoidalari ham
+# bor), shuning uchun skript uni yozmaydi: SDK'ning har bir qoida qatori
+# plaginda ham bo'lishini talab qiladi. Bu qatorlar yetmasa, ilova debug'da
+# ishlaydi, release (R8) build'da esa yiqiladi — 2.3.0-dev.5 gacha Gson
+# qoidasi yo'qligidan imzo aynan shunday yiqilardi.
+rules_missing=""
+if [[ -f "$TMP/proguard.txt" ]]; then
+    rule_lines() { grep -vE '^[[:space:]]*(#|$)' "$1" | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//' | sort -u; }
+    rules_missing="$(comm -23 <(rule_lines "$TMP/proguard.txt") <(rule_lines "$ROOT/android/consumer-rules.pro"))"
+fi
+if [[ -n "$rules_missing" ]]; then
+    echo "FARQ: android/consumer-rules.pro da SDK'ning R8 qoidalari yo'q (qo'lda qo'shing):" >&2
+    echo "$rules_missing" | sed 's/^/    /' >&2
+    drift=1
+fi
+
 if [[ $CHECK -eq 1 ]]; then
     if [[ $drift -eq 0 ]]; then
         echo "Plagin $VERSION bilan mos."
@@ -76,6 +93,9 @@ if [[ $CHECK -eq 1 ]]; then
         echo "Plagin AAR'dan orqada. Sinxronlash: $0 $AAR" >&2
         exit 1
     fi
+elif [[ -n "$rules_missing" ]]; then
+    echo "SDK $VERSION ko'chirildi, lekin R8 qoidalari qo'lda qo'shilishi kerak." >&2
+    exit 1
 else
     echo "SDK $VERSION ko'chirildi."
 fi

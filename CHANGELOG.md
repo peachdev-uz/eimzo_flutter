@@ -12,6 +12,11 @@ gateway'nikini.
   o'rniga `environment: EimzoEnvironment.dev` yozing.
 - `isTestMode` ishlashda davom etadi (`true` — `dev`), lekin eskirgan deb
   belgilandi.
+- **Tuzatish (Android): release build'da imzo yiqilardi.** Flutter release
+  APK'da (R8, AGP 8) E-IMZO'ning har bir javobi «requires 0 type arguments,
+  but got 1» xatosi bilan o'qilmasdi: R8 SDK'ning JSON modellaridan generic
+  turni olib tashlardi. Plaginning `consumer-rules.pro`siga Gson modellari
+  uchun qoida qo'shildi. Debug build'ga bu ta'sir qilmagan.
 
 ## 2.3.0-dev.5
 

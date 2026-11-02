@@ -59,6 +59,19 @@
 -keepclassmembers class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
+
+# Gson JSON-RPC modellari. R8 full mode (AGP 8 dan sukut bo'yicha) generic
+# signature'ni faqat keep qoidasi tushgan klasslarda qoldiradi: busiz
+# JsonRpcResponse<T> ning tur parametri o'chadi va release build'da E-IMZO'ning
+# har bir javobi "requires 0 type arguments, but got 1" bilan yiqiladi. Faqat
+# Gson yaratadigan klasslarni R8 abstrakt qilishi yoki konstruktorini olib
+# tashlashi ham mumkin, shuning uchun @SerializedName maydonli SDK klasslari
+# konstruktorlari bilan saqlanadi.
+-keepattributes Signature
+-keepclasseswithmembers class uz.eimzo.sdk.** {
+    @com.google.gson.annotations.SerializedName <fields>;
+    <init>(...);
+}
 -keep class org.bouncycastle.** { *; }
 -dontwarn org.bouncycastle.**
 -dontwarn javax.naming.**
