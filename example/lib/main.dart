@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
               label: const Text('Open E-IMZO native UI'),
               onPressed: () async {
                 final allowed = await eimzo.init(
-                  config: const EimzoConfig(isTestMode: true),
+                  config: const EimzoConfig(environment: EimzoEnvironment.dev),
                 );
 
                 if (!allowed) return;

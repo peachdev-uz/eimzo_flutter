@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 import SwiftUI
-import EimzoSDK
+@_spi(EImzoTesting) import EimzoSDK
 
 /// Flutter ↔ EimzoSDK bridge. Mirrors the Android `EimzoFlutterPlugin`
 /// surface (method channel + event channel for deeplinks).
@@ -126,14 +126,16 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
         let args = (call.arguments as? [String: Any]) ?? [:]
         let defaults = EImzoConfig()
         config = EImzoConfig(
-            isTestMode: args["isTestMode"] as? Bool ?? defaults.isTestMode,
+            environment: (args["environment"] as? String).flatMap(EImzoEnvironment.init(rawValue:))
+                ?? defaults.environment,
             productionApiUrl: args["productionApiUrl"] as? String ?? defaults.productionApiUrl,
             testApiUrl: args["testApiUrl"] as? String ?? defaults.testApiUrl,
             license: args["license"] as? String,
-            productionGatewayUrl: args["productionGatewayUrl"] as? String ?? defaults.productionGatewayUrl,
-            testGatewayUrl: args["testGatewayUrl"] as? String,
             debugLogging: args["debugLogging"] as? Bool ?? defaults.debugLogging
         )
+        // YT's own testing: --dart-define=EIMZO_GATEWAY_URL=…, which the SDK
+        // takes in a development-signed build only.
+        .withGatewayOverride(args["gatewayOverride"] as? String)
         result(true)
     }
 

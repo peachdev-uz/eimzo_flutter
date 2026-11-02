@@ -78,20 +78,22 @@ void main() {
     // Every field set, so toMap() emits the full key set — the optional ones
     // are omitted when null, which is exactly how the gap hid before.
     const full = EimzoConfig(
-      isTestMode: true,
+      environment: EimzoEnvironment.dev,
       productionApiUrl: 'https://prod.example/rpc',
       testApiUrl: 'https://test.example/rpc',
       license: 'EIMZO1.payload.signature',
-      testGatewayUrl: 'http://test.example/mobile/gateway',
-      productionGatewayUrl: 'https://prod.example/mobile/gateway',
       debugLogging: true,
     );
-    final keys = full.toMap().keys.toSet();
+    // The gateway override for YT's testing is in the map only when the app
+    // is built with --dart-define=EIMZO_GATEWAY_URL, so it is added by hand.
+    final keys = {...full.toMap().keys, 'gatewayOverride'};
 
-    for (final key in ['license', 'testGatewayUrl', 'productionGatewayUrl', 'debugLogging']) {
+    for (final key in ['environment', 'license', 'debugLogging']) {
       expect(keys, contains(key),
           reason: 'toMap() $key ni chiqarmayapti — test o\'z manbasini yo\'qotdi');
     }
+    expect(dartSource, contains("'gatewayOverride'"),
+        reason: 'Dart gateway override kalitini boshqa nom bilan yuboryapti');
 
     for (final key in keys) {
       expect(kotlinSource, contains('"$key"'),
@@ -122,6 +124,38 @@ void main() {
       expect(entry.value, contains(event),
           reason: '${entry.key} boshqa hodisa kanalini ishlatyapti');
     }
+  });
+
+  test('the environment values are the ones both platforms read', () {
+    // Dart sends the enum's name; the native sides map "dev" and fall back to
+    // prod. A renamed value would quietly become prod on both.
+    expect(EimzoEnvironment.values.map((e) => e.name), ['prod', 'dev']);
+    expect(kotlinSource, contains('"dev"'),
+        reason: 'Android plagini "dev" muhitini tanimaydi');
+    expect(swiftSource, contains('EImzoEnvironment.init(rawValue:)'),
+        reason: 'iOS plagini muhitni nomidan o\'qimaydi');
+  });
+
+  test('gateway addresses and the isTestMode key are gone from every side', () {
+    // Removed before 2.3.0: the SDK carries its gateways, and the integrator
+    // picks only the environment. isTestMode survives in Dart as a deprecated
+    // parameter, but the channel carries the environment alone.
+    for (final entry in {
+      'Dart': dartSource,
+      'Android': kotlinSource,
+      'iOS': swiftSource,
+    }.entries) {
+      for (final key in ['testGatewayUrl', 'productionGatewayUrl']) {
+        expect(entry.value, isNot(contains(key)),
+            reason: '${entry.key} da $key qolib ketgan');
+      }
+    }
+    expect(dartSource, isNot(contains("'isTestMode'")),
+        reason: 'Dart isTestMode kalitini hamon yuboryapti');
+    expect(kotlinSource, isNot(contains('"isTestMode"')),
+        reason: 'Android plagini isTestMode kalitini hamon o\'qiyapti');
+    expect(swiftSource, isNot(contains('"isTestMode"')),
+        reason: 'iOS plagini isTestMode kalitini hamon o\'qiyapti');
   });
 
   test('signWithUsbToken is gone from every side', () {

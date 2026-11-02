@@ -211,7 +211,7 @@ class _AppState extends State<App> {
     // Applies the config on both platforms and runs the licence check.
     // Android answers here; iOS returns true and checks inside the UI.
     final allowed = await _eimzo.init(
-      config: const EimzoConfig(isTestMode: false),
+      config: const EimzoConfig(environment: EimzoEnvironment.prod),
     );
     if (!allowed) return; // native SDK is showing its blocked screen
 
@@ -266,15 +266,29 @@ class _AppState extends State<App> {
 }
 ```
 
-### Test mode
+### Environment
 
-Pass `isTestMode: true` to talk to `https://test.e-imzo.uz/api/rpc`
-instead of the production endpoint. QRs generated against the test stand
-only work in test mode, and vice versa.
+`environment` picks which E-IMZO the SDK works with:
+
+- `EimzoEnvironment.prod`, the default: E-IMZO itself, with real keys.
+- `EimzoEnvironment.dev`: YT's test environment on `test.e-imzo.uz`, for
+  development and QA builds. Only test keys sign there.
+
+A QR code from one environment only works in that environment. Nothing else
+needs configuring: the SDK knows where each environment is, both for an app
+with a licence and for one without.
 
 ```dart
-await _eimzo.init(config: const EimzoConfig(isTestMode: true));
+await _eimzo.init(
+  config: const EimzoConfig(
+    environment: kReleaseMode ? EimzoEnvironment.prod : EimzoEnvironment.dev,
+    debugLogging: kDebugMode, // the SDK's steps to the console, never keys or PINs
+  ),
+);
 ```
+
+Up to 2.2 this was `isTestMode`. It still works (`true` is `dev`), but it is
+deprecated.
 
 ### YT gateway (2.3 pre-release)
 
@@ -282,25 +296,13 @@ From 2.3 an app **without** a licence signs through the YT gateway instead.
 The gateway knows registered apps by their package name and signing
 certificate on Android, and by bundle id and Team ID on iOS — the same second
 factors as a licence, but there is no token to ship. To register, email
-**info@yt.uz** with them. An app that has a licence keeps working as before,
-straight to E-IMZO.
+**info@yt.uz** with them and say which environment the app is for: `dev`
+while you test, `prod` for release. An app that has a licence keeps working
+as before, straight to E-IMZO.
 
-The production gateway (`https://e-imzo.soliq.uz/mobile/gateway`) is built
-into the SDK, but **it is not live yet**. Until it is, a release build without
-a licence cannot sign, so keep using a licence in production for now.
-
-Test mode has no default gateway: pass the test address YT gives you on
-registration.
-
-```dart
-await _eimzo.init(
-  config: const EimzoConfig(
-    isTestMode: true,
-    testGatewayUrl: 'https://<test gateway>/mobile/gateway',
-    debugLogging: kDebugMode, // the SDK's steps to the console, never keys or PINs
-  ),
-);
-```
+`environment` decides which gateway the app uses; there is nothing to set
+for it. The `prod` gateway **is not live yet**. Until it is, a release build
+without a licence cannot sign, so keep using a licence in production for now.
 
 ### Error and crash reports (2.3)
 
@@ -350,11 +352,11 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
   Convenience that fires an `eimzo://` URL through the OS — useful in
   dev to test the deeplink path without an external trigger.
 
-`EimzoConfig` accepts `isTestMode` (default `false`), `license` (the
-`EIMZO1.…` token — see [Licence](#8-licence)), optional
-`productionApiUrl` / `testApiUrl` overrides, and since 2.3 `testGatewayUrl`,
-`productionGatewayUrl` and `debugLogging` (see
-[YT gateway](#yt-gateway-23-pre-release)).
+`EimzoConfig` accepts `environment` (default `EimzoEnvironment.prod`, see
+[Environment](#environment)), `license` (the `EIMZO1.…` token — see
+[Licence](#8-licence)), optional `productionApiUrl` / `testApiUrl` overrides
+and, since 2.3, `debugLogging`. The 2.2 `isTestMode` still works and is
+deprecated.
 
 > Before 2.1.2 the iOS side discarded this config entirely: `init` ignored
 > its arguments and the UI opened with defaults. If you are on an earlier

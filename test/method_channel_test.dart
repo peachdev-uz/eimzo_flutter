@@ -58,27 +58,56 @@ void main() {
       expect(argsOf(calls.single).containsKey('license'), isFalse);
     });
 
-    test('sends isTestMode even when false', () async {
-      // Always present, because "absent" and "false" must not be the same
+    test('sends the environment, prod when none is chosen', () async {
+      // Always present, because "absent" and "prod" must not be the same
       // question for the native side to answer.
       reply = true;
       await EimzoFlutter.instance.init();
 
-      expect(argsOf(calls.single)['isTestMode'], false);
+      expect(argsOf(calls.single)['environment'], 'prod');
+    });
+
+    test('sends dev when it is chosen', () async {
+      reply = true;
+      await EimzoFlutter.instance
+          .init(config: const EimzoConfig(environment: EimzoEnvironment.dev));
+
+      expect(argsOf(calls.single)['environment'], 'dev');
+    });
+
+    test('a 2.2 config with isTestMode still picks the environment', () async {
+      reply = true;
+      // ignore: deprecated_member_use_from_same_package
+      await EimzoFlutter.instance.init(config: const EimzoConfig(isTestMode: true));
+
+      expect(argsOf(calls.single)['environment'], 'dev');
+      expect(argsOf(calls.single).containsKey('isTestMode'), isFalse);
+    });
+
+    test('sends no gateway address', () async {
+      // The SDK carries the gateways itself; the integrator picks an
+      // environment and nothing else. The override for YT's testing comes
+      // only from --dart-define, which these tests do not set.
+      reply = true;
+      await EimzoFlutter.instance
+          .init(config: const EimzoConfig(environment: EimzoEnvironment.dev));
+
+      final keys = argsOf(calls.single).keys;
+      expect(keys.where((k) => k.toLowerCase().contains('gateway')), isEmpty);
     });
 
     test('carries API URL overrides', () async {
       reply = true;
       await EimzoFlutter.instance.init(
         config: const EimzoConfig(
-          isTestMode: true,
+          environment: EimzoEnvironment.dev,
           productionApiUrl: 'https://prod.example/rpc',
           testApiUrl: 'https://test.example/rpc',
         ),
       );
 
       final args = argsOf(calls.single);
-      expect(args['isTestMode'], true);
+      expect(args['environment'], 'dev');
       expect(args['productionApiUrl'], 'https://prod.example/rpc');
       expect(args['testApiUrl'], 'https://test.example/rpc');
     });
