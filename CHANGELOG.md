@@ -1,4 +1,4 @@
-## Keyingi versiya (chiqmagan)
+## 2.3.0-dev.6
 
 Sinov versiyasi: gateway manzili endi berilmaydi. `EimzoConfig`ga
 `environment` maydoni qo'shildi: `EimzoEnvironment.prod` (sukut bo'yicha)
