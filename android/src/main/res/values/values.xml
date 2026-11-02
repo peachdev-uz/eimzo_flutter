@@ -158,6 +158,7 @@
     <string name="eimzo_ui_err_invalid_qr">QR kod noto‘g‘ri yoki buzilgan</string>
     <string name="eimzo_ui_err_key_exists">Bu kalit allaqachon qo‘shilgan</string>
     <string name="eimzo_ui_err_key_expired">Kalit muddati tugagan</string>
+    <string name="eimzo_ui_err_key_other_server">Kalit boshqa serverda qo‘shilgan</string>
     <string name="eimzo_ui_err_not_eimzo_card">Bu karta E-IMZO ID-kartasi emas</string>
     <string name="eimzo_ui_err_offline">Internet aloqasi yo‘q</string>
     <string name="eimzo_ui_err_request_expired">So‘rov eskirgan. Saytda QR kodni yangilab, qayta skanerlang.</string>
@@ -191,6 +192,9 @@
     <string name="eimzo_ui_key_expired">Muddati tugagan</string>
     <string name="eimzo_ui_key_expired_cant_sign">Bu kalit muddati tugagan — imzolab bo‘lmaydi</string>
     <string name="eimzo_ui_key_label">KALIT</string>
+    <string name="eimzo_ui_key_other_server">Boshqa server</string>
+    <string name="eimzo_ui_key_other_server_cant_sign">Bu kalit boshqa serverda qo‘shilgan — bu yerda u bilan imzolab bo‘lmaydi.</string>
+    <string name="eimzo_ui_key_other_server_hint">Boshqa serverda qo‘shilgan</string>
     <string name="eimzo_ui_key_pill">%1$s · %2$s</string>
     <string name="eimzo_ui_key_valid">Amal qiladi</string>
     <string name="eimzo_ui_keypad_backspace">Oxirgi raqamni o‘chirish</string>

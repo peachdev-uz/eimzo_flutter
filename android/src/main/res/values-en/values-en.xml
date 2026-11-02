@@ -73,6 +73,7 @@
     <string name="eimzo_ui_err_invalid_qr">The QR code is invalid or damaged</string>
     <string name="eimzo_ui_err_key_exists">This key is already added</string>
     <string name="eimzo_ui_err_key_expired">This key has expired</string>
+    <string name="eimzo_ui_err_key_other_server">This key was added on a different server</string>
     <string name="eimzo_ui_err_not_eimzo_card">This is not an E-IMZO ID card</string>
     <string name="eimzo_ui_err_offline">No internet connection</string>
     <string name="eimzo_ui_err_request_expired">The request has expired. Refresh the QR code on the site and scan it again.</string>
@@ -106,6 +107,9 @@
     <string name="eimzo_ui_key_expired">Expired</string>
     <string name="eimzo_ui_key_expired_cant_sign">This key has expired — it cannot sign</string>
     <string name="eimzo_ui_key_label">KEY</string>
+    <string name="eimzo_ui_key_other_server">Other server</string>
+    <string name="eimzo_ui_key_other_server_cant_sign">This key was added on a different server — it cannot sign here.</string>
+    <string name="eimzo_ui_key_other_server_hint">Added on a different server</string>
     <string name="eimzo_ui_key_pill">%1$s · %2$s</string>
     <string name="eimzo_ui_key_valid">Valid</string>
     <string name="eimzo_ui_keypad_backspace">Delete the last digit</string>
