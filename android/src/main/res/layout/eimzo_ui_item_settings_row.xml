@@ -2,14 +2,18 @@
 <!--
   One settings row (3i), measured off the design rather than eyeballed:
   icon 22dp at 16dp from the card edge, label at 52dp, value 14sp, chevron 19dp.
-  Row height 54dp — three of them plus two dividers make the 162dp card.
+  54dp high at least, and taller with its text (D1): the fixed 54 clipped the
+  second line from about 1.5× font size.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rowRoot"
     android:layout_width="match_parent"
-    android:layout_height="54dp"
+    android:layout_height="wrap_content"
+    android:minHeight="54dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
@@ -40,8 +44,6 @@
             android:id="@+id/rowLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
             android:textColor="@color/eimzo_ui_text"
             android:textSize="15.5sp"
             tools:text="Til" />
@@ -51,8 +53,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
-            android:ellipsize="end"
-            android:maxLines="1"
             android:textColor="@color/eimzo_ui_text_hint"
             android:textSize="12sp"
             android:visibility="gone"

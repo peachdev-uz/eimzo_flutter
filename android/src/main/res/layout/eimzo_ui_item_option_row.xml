@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  One add-key method row — the design's `DsOptionRow` (3c).
+  One add-key method row — the design's `DsOptionRow` (3c, C9).
 
-  Included four times by the add-key sheet rather than repeated inline, so the
-  four routes cannot drift apart in padding or type the way the old three-tile
-  layout had already started to.
+  Included by the one routes list (eimzo_ui_view_add_key_routes) that the
+  empty Home and the add-key sheet share, so the routes cannot drift apart in
+  padding or type.
 
   Geometry is the design's: 16dp padding, a 46dp accent tile at radius 15, 14dp
-  to the text, chevron at the end.
+  to the text, chevron at the end. Grows with its text (D1).
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -49,8 +49,6 @@
             android:id="@+id/optionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
             android:textColor="@color/eimzo_ui_text"
             android:textSize="15.5sp"
             android:textStyle="bold"
@@ -63,9 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/eimzo_ui_text_hint"
+            android:textColor="@color/eimzo_ui_text_muted"
             android:textSize="12.5sp"
             tools:text="Tokenni ulab, PIN kiriting" />
     </LinearLayout>
@@ -76,6 +72,6 @@
         android:layout_marginStart="8dp"
         android:importantForAccessibility="no"
         android:src="@drawable/eimzo_ui_ic_chevron_right"
-        app:tint="@color/eimzo_ui_text_on_wallpaper" />
+        app:tint="@color/eimzo_ui_chevron" />
 
 </LinearLayout>

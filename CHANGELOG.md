@@ -1,3 +1,9 @@
+## 2.3.0-dev.7
+
+Sinov versiyasi: SDK ekranlari E-IMZO ilovasidagidek — imzo so'rovi avval
+tasdiq ekranida, xatolar tushunarli banner bilan, uz/ru/en matnlar. Ommaviy
+API o'zgarmadi; Android manifestiga `ACCESS_NETWORK_STATE` qo'shildi.
+
 ## 2.3.0-dev.6
 
 Sinov versiyasi: gateway manzili endi berilmaydi. `EimzoConfig`ga

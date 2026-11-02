@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One tip in the card-trouble sheet (B4): an icon and a line, the app's DsHintRow. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="52dp"
+    android:orientation="horizontal"
+    android:paddingStart="14dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="14dp"
+    android:paddingBottom="10dp">
+
+    <ImageView
+        android:id="@+id/hintIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:importantForAccessibility="no"
+        app:tint="@color/eimzo_ui_accent_dark"
+        tools:src="@drawable/eimzo_ui_ic_phone" />
+
+    <TextView
+        android:id="@+id/hintText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:textColor="@color/eimzo_ui_text_secondary"
+        android:textSize="13.5sp"
+        tools:text="Qalin g‘ilof yoki metall plastinkani oling" />
+</LinearLayout>

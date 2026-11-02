@@ -10,17 +10,23 @@
     <color name="eimzo_ui_card_gradient_start">#0B4B64</color>
     <color name="eimzo_ui_chevron">#8798A2</color>
     <color name="eimzo_ui_chip_translucent">#0FFFFFFF</color>
+    <color name="eimzo_ui_danger_text">#FF8A80</color>
+    <color name="eimzo_ui_dashed">#8000C68E</color>
     <color name="eimzo_ui_divider">#1AFFFFFF</color>
+    <color name="eimzo_ui_field">#1D2733</color>
     <color name="eimzo_ui_grabber">#21F2F7F6</color>
     <color name="eimzo_ui_hairline">#1AFFFFFF</color>
     <color name="eimzo_ui_hash_base">#DCE6E5</color>
     <color name="eimzo_ui_info_amber">#E0A64A</color>
     <color name="eimzo_ui_keypad_key">#212D3B</color>
     <color name="eimzo_ui_label">#8798A2</color>
+    <color name="eimzo_ui_note">#1AFFFFFF</color>
     <color name="eimzo_ui_on_accent">#08251E</color>
     <color name="eimzo_ui_on_accent_disabled">#8C08251E</color>
     <color name="eimzo_ui_option_row">#212D3B</color>
     <color name="eimzo_ui_pill_bg">#2900C68E</color>
+    <color name="eimzo_ui_pill_text">#00C68E</color>
+    <color name="eimzo_ui_pin_dot_filled">#F2F7F6</color>
     <color name="eimzo_ui_pin_dot_idle">#3DFFFFFF</color>
     <color name="eimzo_ui_receipt">#0DFFFFFF</color>
     <color name="eimzo_ui_row_icon">#B9C7C6</color>
@@ -36,6 +42,8 @@
     <color name="eimzo_ui_text_on_wallpaper">#B9C7C6</color>
     <color name="eimzo_ui_text_on_wallpaper_dim">#8798A2</color>
     <color name="eimzo_ui_text_secondary">#DCE6E5</color>
+    <color name="eimzo_ui_warning_10">#26C08532</color>
+    <color name="eimzo_ui_warning_text">#E0A64A</color>
     <color name="eimzo_ui_well">#1D2733</color>
     <style name="Theme.Eimzo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/eimzo_ui_accent</item>

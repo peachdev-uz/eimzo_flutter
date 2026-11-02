@@ -1,56 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  3d / C7 — the key list: the app's DsPage. Back, the title in the middle,
+  and "⋯" for "Hammasini o'chirish" — in place of a trash icon that deleted
+  whichever key happened to be the default.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/eimzo_ui_background">
+    android:background="@color/eimzo_ui_background"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="56dp"
+        android:orientation="horizontal"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/eimzo_ui_background"
-            app:navigationIcon="@drawable/eimzo_ui_ic_back"
-            app:title="@string/eimzo_ui_my_keys_full"
-            app:titleCentered="true"
-            app:titleTextColor="@color/eimzo_ui_text"
-            app:menu="@menu/eimzo_ui_menu_keys" />
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/eimzo_ui_back"
+            android:focusable="true"
+            android:padding="12dp"
+            android:src="@drawable/eimzo_ui_ic_back"
+            app:tint="@color/eimzo_ui_text" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="96dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/eimzo_ui_my_keys_full"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btnMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/eimzo_ui_more_actions"
+            android:focusable="true"
+            android:padding="12dp"
+            android:src="@drawable/eimzo_ui_ic_more_horiz"
+            app:tint="@color/eimzo_ui_text" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvEmpty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/eimzo_ui_no_keys_yet"
-        android:textColor="@color/eimzo_ui_text_hint"
-        android:textSize="14sp"
-        android:visibility="gone" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="24dp"
-        android:src="@drawable/eimzo_ui_ic_add"
-        app:backgroundTint="@color/eimzo_ui_accent"
-        app:tint="@color/eimzo_ui_on_accent" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="20dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="24dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+</LinearLayout>

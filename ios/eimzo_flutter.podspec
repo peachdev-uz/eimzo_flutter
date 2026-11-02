@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'eimzo_flutter'
-  s.version          = '2.3.0-dev.6'
+  s.version          = '2.3.0-dev.7'
   s.summary          = 'Flutter plugin wrapping the E-IMZO Mobile SDK (iOS).'
   s.description      = <<-DESC
     Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
@@ -35,8 +35,8 @@ Pod::Spec.new do |s|
   # ID karta kelmasa card_timeout.
   # 2.3.0-dev.5: ekranlar landscape'da va klaviatura chiqqanda xavfsiz zonadan
   # chiqmaydi.
-  # 2.3.0-dev.6: gateway manzili o'rniga EImzoConfig.environment (prod/dev).
-  EIMZO_SDK_VERSION = '2.3.0-dev.6'
+  # 2.3.0-dev.7: SDK ekranlari E-IMZO ilovasidagidek, uz/ru/en matnlar (ichida .lproj).
+  EIMZO_SDK_VERSION = '2.3.0-dev.7'
   EIMZO_SDK_URL  = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/EimzoSDK.xcframework.zip"
   PFX2QR_URL     = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/Pfx2qr.xcframework.zip"
 

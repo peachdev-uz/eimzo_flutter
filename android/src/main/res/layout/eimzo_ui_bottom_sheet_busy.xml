@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- C8 — work the user waits on, in words: "Kalit qo'shilmoqda" under an arc
+     turning round the E-IMZO logo — the app's BusyCardSheet. It replaces a
+     full-screen overlay with a spinner and nothing else. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/eimzo_ui_bg_sheet"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="40dp">
+
+    <View
+        android:layout_width="44dp"
+        android:layout_height="5dp"
+        android:background="@drawable/eimzo_ui_sheet_grabber" />
+
+    <FrameLayout
+        android:layout_width="104dp"
+        android:layout_height="104dp"
+        android:layout_marginTop="32dp"
+        android:importantForAccessibility="noHideDescendants">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminate="true"
+            app:indicatorColor="@color/eimzo_ui_accent"
+            app:indicatorSize="104dp"
+            app:trackColor="@color/eimzo_ui_accent_12"
+            app:trackThickness="4dp" />
+
+        <ImageView
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            android:src="@drawable/eimzo_ui_ic_eimzo_mark" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/busyLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:accessibilityLiveRegion="polite"
+        android:gravity="center"
+        android:textColor="@color/eimzo_ui_text"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+</LinearLayout>

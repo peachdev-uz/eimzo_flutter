@@ -1,93 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  3c — the add-key method picker.
-
-  Five routes now: file, QR, NFC, USB, and the BAIK token after it — a USB
-  token too, but one with its own protocol and certificate, so its own row. The
-  USB row was the previous addition — the SDK used to hide it here and offer USB only as a sign-only
-  button on Home, which is why an Android integrator could not save a token as a
-  key while an iOS one could.
-
-  Rows are <include>d so all of them share one definition. Each include needs its
-  own id, and ids inside an included layout are addressed through it
-  (`binding.optionUsb.optionTitle`), which is what keeps the bindings apart.
+  3c / C9 — the add-key method picker: the title, the question, the one
+  routes list the empty Home shows too, and «Bekor qilish». Scrolls when it
+  does not fit — sideways, or at a large font size.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/eimzo_ui_bg_sheet"
-    android:orientation="vertical"
+    android:fillViewport="true"
     android:paddingStart="20dp"
     android:paddingTop="12dp"
     android:paddingEnd="20dp"
-    android:paddingBottom="34dp">
+    android:paddingBottom="24dp">
 
-    <View
-        android:layout_width="44dp"
-        android:layout_height="5dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/eimzo_ui_sheet_grabber" />
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="@string/eimzo_ui_add_key_sheet_title"
-        android:textColor="@color/eimzo_ui_text"
-        android:textSize="21sp"
-        android:textStyle="bold" />
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:gravity="center"
-        android:text="@string/eimzo_ui_add_key_sheet_subtitle"
-        android:textColor="@color/eimzo_ui_text_hint"
-        android:textSize="13.5sp" />
+        <View
+            android:layout_width="44dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/eimzo_ui_sheet_grabber" />
 
-    <include
-        android:id="@+id/optionFile"
-        layout="@layout/eimzo_ui_item_option_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp" />
+        <TextView
+            android:id="@+id/addTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/eimzo_ui_add_key_sheet_title"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="21sp"
+            android:textStyle="bold" />
 
-    <include
-        android:id="@+id/optionQr"
-        layout="@layout/eimzo_ui_item_option_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="@string/eimzo_ui_add_key_sheet_subtitle"
+            android:textColor="@color/eimzo_ui_text_muted"
+            android:textSize="13.5sp" />
 
-    <include
-        android:id="@+id/optionNfc"
-        layout="@layout/eimzo_ui_item_option_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        <include
+            android:id="@+id/routes"
+            layout="@layout/eimzo_ui_view_add_key_routes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp" />
 
-    <include
-        android:id="@+id/optionUsb"
-        layout="@layout/eimzo_ui_item_option_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
-
-    <include
-        android:id="@+id/optionBaik"
-        layout="@layout/eimzo_ui_item_option_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnCancel"
-        style="@style/Widget.Eimzo.Button.Secondary"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/eimzo_ui_cancel" />
-
-</LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/Widget.Eimzo.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:minHeight="52dp"
+            android:text="@string/eimzo_ui_cancel" />
+    </LinearLayout>
+</ScrollView>

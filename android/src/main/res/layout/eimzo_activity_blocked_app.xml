@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  B6 — the SDK is refused in this app: the same screen on Android and iOS.
+
+  A lock in a tinted tile, "E-IMZO bu ilovada ishlamaydi", and one sentence
+  for the reason — the app is not registered or was suspended, or the device
+  could not be verified. Under "Ishlab chiquvchi uchun", folded away, what the
+  integrator needs: the package name, the technical reason, "Nusxalash", and
+  info@yt.uz with a mail button. ✕ closes.
+
+  It used to tell every user — the one with a rooted phone included — to
+  register as an integrator, under a toolbar with an untinted system ✕ and
+  hardcoded Uzbek throughout.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/eimzoBlockedRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/eimzo_ui_background">
+    android:background="@color/eimzo_ui_background"
+    android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/eimzoBlockedToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/eimzo_ui_background"
-        app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
-        app:titleTextColor="@color/eimzo_ui_text" />
+    <ImageView
+        android:id="@+id/btnBlockedClose"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@string/eimzo_ui_close"
+        android:focusable="true"
+        android:padding="12dp"
+        android:src="@drawable/eimzo_ui_ic_close"
+        app:tint="@color/eimzo_ui_text" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,79 +43,194 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="32dp"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="24dp"
             android:paddingBottom="32dp">
 
-            <ImageView
+            <FrameLayout
                 android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:src="@android:drawable/ic_lock_lock"
-                app:tint="@color/eimzo_ui_danger"
-                android:contentDescription="@null" />
+                android:background="@drawable/eimzo_ui_bg_badge_danger">
+
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/eimzo_ui_ic_lock"
+                    app:tint="@color/eimzo_ui_danger" />
+            </FrameLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tvBlockedTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Ruxsat berilmagan"
+                android:layout_marginTop="22dp"
+                android:gravity="center"
+                android:text="@string/eimzo_ui_blocked_title"
                 android:textColor="@color/eimzo_ui_text"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                android:gravity="center" />
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvBlockedBody"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Ushbu ilova E-IMZO modulidan foydalanishga ruxsat etilmagan.\n\nIntegrator sifatida ro'yxatdan o'tish uchun biz bilan bog'laning."
-                android:textColor="@color/eimzo_ui_text_secondary"
-                android:textSize="14sp"
-                android:lineSpacingExtra="4dp"
-                android:gravity="center" />
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.3"
+                android:textColor="@color/eimzo_ui_text_muted"
+                android:textSize="14.5sp"
+                tools:text="@string/eimzo_ui_blocked_body_app" />
 
-            <!-- Package Name card -->
-            <include
-                android:id="@+id/cardPackage"
-                layout="@layout/eimzo_blocked_info_card"
+            <!-- "Ishlab chiquvchi uchun" — folded until asked for. -->
+            <LinearLayout
+                android:id="@+id/developerCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp" />
+                android:layout_marginTop="28dp"
+                android:background="@drawable/eimzo_ui_bg_card"
+                android:orientation="vertical">
 
-            <!-- Error card (visible only if error message is present) -->
-            <include
-                android:id="@+id/cardError"
-                layout="@layout/eimzo_blocked_info_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp" />
+                <LinearLayout
+                    android:id="@+id/developerToggle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="56dp"
+                    android:orientation="horizontal"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="14dp">
 
-            <!-- Request access button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRequestAccess"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="32dp"
-                android:text="Ruxsat so'rash"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:cornerRadius="14dp"
-                app:backgroundTint="@color/eimzo_ui_accent" />
+                    <TextView
+                        android:id="@+id/tvDeveloper"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/eimzo_ui_blocked_developer"
+                        android:textColor="@color/eimzo_ui_text"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
-            <!-- Contact email (fallback) -->
-            <TextView
-                android:id="@+id/tvContactEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="12dp"
-                android:text="info@yt.uz"
-                android:textColor="@color/eimzo_ui_accent"
-                android:textSize="14sp"
-                android:background="@drawable/eimzo_blocked_email_border" />
+                    <ImageView
+                        android:id="@+id/developerChevron"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:importantForAccessibility="no"
+                        android:rotation="90"
+                        android:src="@drawable/eimzo_ui_ic_chevron_right"
+                        app:tint="@color/eimzo_ui_chevron" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/developerDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp"
+                    android:paddingBottom="18dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.06"
+                        android:text="@string/eimzo_ui_blocked_package"
+                        android:textColor="@color/eimzo_ui_text_muted"
+                        android:textSize="11.5sp" />
+
+                    <TextView
+                        android:id="@+id/tvPackage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:fontFamily="monospace"
+                        android:textColor="@color/eimzo_ui_text"
+                        android:textIsSelectable="true"
+                        android:textSize="13sp"
+                        tools:text="uz.example.app" />
+
+                    <TextView
+                        android:id="@+id/lblReason"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:letterSpacing="0.06"
+                        android:text="@string/eimzo_ui_blocked_reason"
+                        android:textColor="@color/eimzo_ui_text_muted"
+                        android:textSize="11.5sp" />
+
+                    <TextView
+                        android:id="@+id/tvReason"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/eimzo_ui_text"
+                        android:textIsSelectable="true"
+                        android:textSize="13sp"
+                        tools:text="Ilova E-IMZO gateway'ida ro'yxatdan o'tmagan." />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCopyDetails"
+                        style="@style/Widget.Eimzo.Button.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:minHeight="48dp"
+                        android:text="@string/eimzo_ui_copy"
+                        android:textSize="15sp"
+                        app:icon="@drawable/eimzo_ui_ic_copy"
+                        app:iconGravity="textStart"
+                        app:iconSize="18dp"
+                        app:iconTint="@color/eimzo_ui_text_secondary" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@color/eimzo_ui_divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvContactEmail"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/eimzo_ui_contact_email"
+                            android:textColor="@color/eimzo_ui_text"
+                            android:textIsSelectable="true"
+                            android:textSize="14.5sp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMail"
+                            style="@style/Widget.Eimzo.Button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minHeight="44dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="@string/eimzo_ui_blocked_mail"
+                            android:textSize="14sp"
+                            app:icon="@drawable/eimzo_ui_ic_mail"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/eimzo_ui_button_text" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

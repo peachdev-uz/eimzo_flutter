@@ -1,57 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  C1 — the scanner, the app's: the camera full screen under a #060A0B scrim at
+  60% with a 266dp window at 46% of the height; accent corner brackets and a
+  scan line; ✕, the title and the torch along the top; the hint under the
+  window; "Kod qayerda?" along the bottom. Dark in both themes — it is a
+  camera.
+
+  B3 — when the camera cannot be used, the same screen says why in place:
+  permission refused (with the way to the app's settings), or no camera.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scannerRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="#0C1113">
 
-    <com.journeyapps.barcodescanner.DecoratedBarcodeView
-        android:id="@+id/barcodeScanner"
+    <com.journeyapps.barcodescanner.BarcodeView
+        android:id="@+id/barcodeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:zxing_viewfinder_laser_visibility="false"
-        app:zxing_viewfinder_mask="@android:color/transparent"
-        app:zxing_use_texture_view="true">
-    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
+        app:zxing_use_texture_view="true" />
 
     <uz.eimzo.sdk.fullui.scanner.ScannerOverlayView
         android:id="@+id/overlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no" />
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="start|top"
-        android:src="@drawable/eimzo_ui_ic_back"
-        android:background="@drawable/eimzo_ui_bg_scanner_button"
-        app:tint="#FFFFFF"
-        android:contentDescription="@string/eimzo_ui_cancel" />
+    <!-- Placed under the window by the activity, once the window is known. -->
+    <TextView
+        android:id="@+id/scanHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginEnd="34dp"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.3"
+        android:text="@string/eimzo_ui_scan_hint"
+        android:textColor="#B3FFFFFF"
+        android:textSize="14.5sp" />
 
-    <ImageButton
-        android:id="@+id/btnFlash"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="80dp"
-        android:src="@drawable/eimzo_ui_ic_flash"
-        android:background="@drawable/eimzo_ui_bg_scanner_button"
-        android:contentDescription="Flash" />
+    <!-- ✕ · title · torch. Each circle is 42 drawn, 48 to the finger. -->
+    <LinearLayout
+        android:id="@+id/scannerTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="11dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="11dp">
 
-    <!-- 3e. The code is not something the phone can make; a user pointed at a
-         scanner with nowhere to get one needs this more than a flash toggle. -->
-    <com.google.android.material.button.MaterialButton
+        <FrameLayout
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/eimzo_ui_close"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:background="@drawable/eimzo_ui_bg_scanner_circle"
+                android:importantForAccessibility="no"
+                android:padding="10dp"
+                android:src="@drawable/eimzo_ui_ic_close"
+                app:tint="#FFFFFF" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/scanTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="QR kodni skanerlang" />
+
+        <FrameLayout
+            android:id="@+id/btnFlash"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/eimzo_ui_torch"
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/flashIcon"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:background="@drawable/eimzo_ui_bg_scanner_circle"
+                android:duplicateParentState="true"
+                android:importantForAccessibility="no"
+                android:padding="10dp"
+                android:src="@drawable/eimzo_ui_ic_flash_off"
+                app:tint="#FFFFFF" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- "Kod qayerda?" — there is no gallery button: a sign request's code
+         is on a computer screen, not in the phone's photos. -->
+    <LinearLayout
         android:id="@+id/btnWhereIsCode"
-        style="@style/Widget.Eimzo.Button.Secondary"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="40dp"
-        android:text="@string/eimzo_ui_qr_guide_entry"
-        android:textColor="#FFFFFF"
-        app:strokeColor="#66FFFFFF" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="34dp"
+        android:background="@drawable/eimzo_ui_bg_scanner_pill"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:minHeight="52dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/eimzo_ui_ic_help"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="9dp"
+            android:text="@string/eimzo_ui_qr_guide_entry"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <!-- B3: the camera cannot be used — said here, not as a black screen. -->
+    <LinearLayout
+        android:id="@+id/cameraPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/eimzo_ui_bg_scanner_tile">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:src="@drawable/eimzo_ui_ic_camera"
+                app:tint="#FFFFFF" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/cameraPanelTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            tools:text="Kameraga ruxsat berilmagan" />
+
+        <TextView
+            android:id="@+id/cameraPanelBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.3"
+            android:text="@string/eimzo_ui_camera_denied_body"
+            android:textColor="#B3FFFFFF"
+            android:textSize="14sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCameraSettings"
+            style="@style/Widget.Eimzo.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:minHeight="52dp"
+            android:text="@string/eimzo_ui_open_settings"
+            android:textSize="16sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCameraClose"
+            style="@style/Widget.Eimzo.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minHeight="52dp"
+            android:text="@string/eimzo_ui_close"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#1FFFFFFF" />
+    </LinearLayout>
 </FrameLayout>

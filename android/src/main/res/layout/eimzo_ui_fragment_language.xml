@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/eimzo_ui_background"
+        app:navigationContentDescription="@string/eimzo_ui_back"
         app:navigationIcon="@drawable/eimzo_ui_ic_back"
         app:title="@string/eimzo_ui_language"
-        app:titleCentered="true"
         app:titleTextColor="@color/eimzo_ui_text" />
 
     <LinearLayout

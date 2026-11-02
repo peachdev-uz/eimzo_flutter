@@ -6,10 +6,23 @@
     android:layout_height="match_parent"
     android:background="@color/eimzo_ui_background">
 
+    <!-- C8: the licence and gateway check, said in words under the spinner. -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:accessibilityLiveRegion="polite"
+        android:gravity="center"
+        android:text="@string/eimzo_ui_checking"
+        android:textColor="@color/eimzo_ui_text_muted"
+        android:textSize="14sp" />
+
     <FrameLayout
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:importantForAccessibility="noHideDescendants">
 
         <com.airbnb.lottie.LottieAnimationView
             android:layout_width="match_parent"

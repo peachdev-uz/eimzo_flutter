@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The top banner (B1): #16302F in both themes, radius 16 — the app's
+     DsSystemBanner. Dark on a light page and on a dark one alike, so a
+     message never blends into the screen it is about. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_banner" />
+    <corners android:radius="16dp" />
+</shape>

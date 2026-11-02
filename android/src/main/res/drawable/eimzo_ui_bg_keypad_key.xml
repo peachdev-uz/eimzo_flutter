@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- A 64dp round key. The design gives it a soft drop shadow in light mode;
-     that is carried by the view's elevation rather than redrawn here, because a
-     shape drawable cannot cast one. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <solid android:color="@color/eimzo_ui_keypad_key" />
-</shape>
+<!-- A keypad key (C4): a rounded square at radius 14, white on the light
+     sheet and the sheet's own tone on the dark one — the app's keys. No
+     shadow: the old round, elevated keys were the design's first draft. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/eimzo_ui_accent_26">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/eimzo_ui_keypad_key" />
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+</ripple>

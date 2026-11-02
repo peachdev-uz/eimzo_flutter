@@ -6,6 +6,8 @@
     <uses-sdk android:minSdkVersion="24" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- The SDK's "Internet aloqasi yo‘q" banner watches the connection. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission

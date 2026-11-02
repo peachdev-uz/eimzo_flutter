@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  3c — the PIN sheet, for the two routes whose secret is a PIN.
+  3c / C4 — the PIN sheet, for the routes whose secret is a PIN: the ID card,
+  the USB token and the BAIK token.
 
   A card and a token both take eight digits, so both get digits to press:
   typing them on a text keyboard is worse in every way, and the dots make the
   fixed length visible instead of leaving the user to count. A .pfx file and a
-  QR key take a real password and keep the text dialog.
+  QR key take a real password and get the password sheet.
 
-  This replaces the system AlertDialog the SDK used before. The reason is the
-  error: an alert has nowhere to put "wrong PIN, 3 attempts left" without
-  stacking a second dialog on top, so the count was simply never shown.
+  The app's keypad: header tile 42, eight 13dp dots 10 apart, an error slot
+  that shakes, a 3×4 grid of rounded-square keys 52 high at radius 14 with 8
+  between them, the save switch only when adding a key, "Davom etish" 56 high.
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -45,7 +46,7 @@
             <FrameLayout
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@drawable/eimzo_ui_bg_icon_tile">
+                android:background="@drawable/eimzo_ui_bg_icon_tile_sm">
 
                 <ImageView
                     android:id="@+id/pinIcon"
@@ -78,40 +79,47 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
-                    android:textColor="@color/eimzo_ui_text_hint"
+                    android:textColor="@color/eimzo_ui_text_muted"
                     android:textSize="12.5sp"
                     tools:text="USB-tokenda o‘rnatilgan PIN kodni kiriting" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Eight dots. Filled in code so the count stays tied to kPinLength. -->
+        <!-- Eight dots. Filled in code so the count stays tied to PIN_LENGTH.
+             Read out as one progress line rather than eight silent views. -->
         <LinearLayout
             android:id="@+id/pinDots"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="22dp"
+            android:accessibilityLiveRegion="polite"
+            android:focusable="true"
             android:gravity="center"
             android:orientation="horizontal" />
 
+        <!-- The error slot: always there, so a rejection does not push the
+             keys down under the finger. Never capped: at a large font size
+             the ID card's text needs three lines, and two cut off "keyin
+             karta bloklanadi" — the part that matters (D1). -->
         <TextView
             android:id="@+id/pinError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:accessibilityLiveRegion="assertive"
             android:gravity="center"
-            android:textColor="@color/eimzo_ui_danger"
+            android:minHeight="18dp"
+            android:textColor="@color/eimzo_ui_danger_text"
             android:textSize="12.5sp"
-            android:visibility="gone"
-            tools:text="Parol noto‘g‘ri. Yana 3 ta imkoniyat bor."
-            tools:visibility="visible" />
+            tools:text="PIN-kod noto‘g‘ri. Yana 3 ta imkoniyat bor." />
 
         <!-- Keypad: 1-9, then blank / 0 / backspace. -->
         <LinearLayout
             android:id="@+id/keypad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:orientation="vertical" />
 
         <LinearLayout
@@ -119,7 +127,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
+            android:minHeight="48dp"
             android:orientation="horizontal"
             android:visibility="gone"
             tools:visibility="visible">
@@ -131,18 +141,20 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/saveLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/eimzo_ui_save_password"
+                    android:text="@string/eimzo_ui_save_pin"
                     android:textColor="@color/eimzo_ui_text"
                     android:textSize="14.5sp" />
 
                 <TextView
+                    android:id="@+id/saveHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="@string/eimzo_ui_save_password_hint"
-                    android:textColor="@color/eimzo_ui_text_hint"
+                    android:textColor="@color/eimzo_ui_text_muted"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -150,6 +162,7 @@
                 android:id="@+id/switchSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 android:checked="true" />
         </LinearLayout>
 
