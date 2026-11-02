@@ -232,8 +232,11 @@ class _AppState extends State<App> {
 
 When another app or website sends an `eimzo://sign?qc=...` URL, route it
 straight into the native sign flow. The UI opens a confirmation screen
-showing what is about to be signed and starts a 103-second session; the
-user still has to tap IMZOLASH, and can add a key first if they have none.
+showing what is about to be signed — the site, the hash and the key — and
+signs only when the user taps IMZOLASH there. With no key yet, the request
+waits on the home screen and opens as soon as the first key is added. There
+is no timer on the phone: if the site's request has expired, the server says
+so and the SDK shows it.
 
 Earlier versions signed the moment the deeplink arrived. That was removed
 in 1.1.4 — hosts were importing a key on the same screen and never got to
