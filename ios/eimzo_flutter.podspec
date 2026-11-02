@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'eimzo_flutter'
-  s.version          = '2.3.0-dev.3'
+  s.version          = '2.3.0-dev.4'
   s.summary          = 'Flutter plugin wrapping the E-IMZO Mobile SDK (iOS).'
   s.description      = <<-DESC
     Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
@@ -31,7 +31,9 @@ Pod::Spec.new do |s|
   # 2.3.0-dev.2: xatolar va crash'lar gateway'ga yuboriladi.
   # 2.3.0-dev.3: karta va token egasining ismi UTF-8 bilan o'qiladi, USB token
   # keyingi imzoda qotmaydi, privacy manifest qo'shildi.
-  EIMZO_SDK_VERSION = '2.3.0-dev.3'
+  # 2.3.0-dev.4: USB token 20 soniya javob bermasa token_timeout xatosi,
+  # ID karta kelmasa card_timeout.
+  EIMZO_SDK_VERSION = '2.3.0-dev.4'
   EIMZO_SDK_URL  = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/EimzoSDK.xcframework.zip"
   PFX2QR_URL     = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/Pfx2qr.xcframework.zip"
 

@@ -78,6 +78,7 @@
     <string name="eimzo_ui_my_keys">My keys</string>
     <string name="eimzo_ui_my_keys_full">My keys</string>
     <string name="eimzo_ui_new_key_add">Add a new key</string>
+    <string name="eimzo_ui_nfc_card_timeout">No ID card was found. Check that NFC is on, hold the card against the back of the phone and try again.</string>
     <string name="eimzo_ui_night_dark">Dark</string>
     <string name="eimzo_ui_night_light">Light</string>
     <string name="eimzo_ui_night_mode">Dark mode</string>

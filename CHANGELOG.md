@@ -1,3 +1,11 @@
+## 2.3.0-dev.4
+
+Sinov versiyasi: ID karta bir daqiqada o'qilmasa (Android) yoki USB token
+20 soniya javob bermasa (iOS) imzo qotib qolmaydi — xato chiqadi va
+gateway'ga hisobot ketadi (`card_timeout`, `token_timeout`). Android'da
+Kalitlar ekrani fondan qaytgach ID kartani o'qiydi, imzo ekrani esa
+yopilgan PIN oynasini va ko'rsatilgan xatoni qayta ochmaydi.
+
 ## 2.3.0-dev.3
 
 Sinov versiyasi: ID karta va USB token bilan imzolash, karta egasining ismi

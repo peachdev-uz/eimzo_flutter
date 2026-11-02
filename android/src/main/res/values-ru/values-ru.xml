@@ -78,6 +78,7 @@
     <string name="eimzo_ui_my_keys">Мои ключи</string>
     <string name="eimzo_ui_my_keys_full">Мои ключи</string>
     <string name="eimzo_ui_new_key_add">Добавить новый ключ</string>
+    <string name="eimzo_ui_nfc_card_timeout">ID-карта не найдена. Проверьте, что NFC включён, поднесите карту к задней стороне телефона и попробуйте ещё раз.</string>
     <string name="eimzo_ui_night_dark">Тёмный</string>
     <string name="eimzo_ui_night_light">Светлый</string>
     <string name="eimzo_ui_night_mode">Ночной режим</string>
