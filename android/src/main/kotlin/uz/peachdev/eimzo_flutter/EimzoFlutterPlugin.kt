@@ -12,7 +12,9 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 import uz.eimzo.sdk.EImzoConfig
+import uz.eimzo.sdk.EImzoEnvironment
 import uz.eimzo.sdk.EImzoSDK
+import uz.eimzo.sdk.EImzoTesting
 import uz.eimzo.sdk.fullui.EImzoActivity
 
 class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware,
@@ -82,26 +84,27 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
         }
     }
 
+    @OptIn(EImzoTesting::class)
     private fun handleInit(call: MethodCall, result: MethodChannel.Result) {
         val act = requireActivity(result) ?: return
-        val isTestMode = call.argument<Boolean>("isTestMode") ?: false
+        val environment =
+            if (call.argument<String>("environment") == "dev") EImzoEnvironment.DEV else EImzoEnvironment.PROD
         val prodUrl = call.argument<String>("productionApiUrl")
         val testUrl = call.argument<String>("testApiUrl")
         val license = call.argument<String>("license")
-        val testGateway = call.argument<String>("testGatewayUrl")
-        val prodGateway = call.argument<String>("productionGatewayUrl")
         val debugLogging = call.argument<Boolean>("debugLogging") ?: false
         val config = EImzoConfig().let { defaults ->
             EImzoConfig(
-                isTestMode,
-                prodUrl ?: defaults.productionApiUrl,
-                testUrl ?: defaults.testApiUrl,
+                environment = environment,
+                productionApiUrl = prodUrl ?: defaults.productionApiUrl,
+                testApiUrl = testUrl ?: defaults.testApiUrl,
                 debugLogging = debugLogging,
                 license = license,
-                productionGatewayUrl = prodGateway ?: defaults.productionGatewayUrl,
-                testGatewayUrl = testGateway,
             )
         }
+            // YT's own testing: --dart-define=EIMZO_GATEWAY_URL=…, which the
+            // SDK takes in a debuggable build only.
+            .withGatewayOverride(act, call.argument<String>("gatewayOverride"))
         // checkLicenseAndInit invokes its callback on Dispatchers.Main, so the
         // MethodChannel result can be completed directly.
         EImzoSDK.checkLicenseAndInit(act, config) { allowed -> result.success(allowed) }

@@ -1,3 +1,18 @@
+## Keyingi versiya (chiqmagan)
+
+Sinov versiyasi: gateway manzili endi berilmaydi. `EimzoConfig`ga
+`environment` maydoni qo'shildi: `EimzoEnvironment.prod` (sukut bo'yicha)
+yoki `EimzoEnvironment.dev` — YT test muhiti, test.e-imzo.uz, unda faqat test
+kalitlari imzolaydi. SDK har ikkala muhitning manzillarini o'zi biladi:
+litsenziyali ilova uchun E-IMZO'nikini, litsenziyasiz ilova uchun
+gateway'nikini.
+
+- `testGatewayUrl` va `productionGatewayUrl` olib tashlandi (ular faqat
+  2.3.0-dev versiyalarida bor edi). `isTestMode: true, testGatewayUrl: …`
+  o'rniga `environment: EimzoEnvironment.dev` yozing.
+- `isTestMode` ishlashda davom etadi (`true` — `dev`), lekin eskirgan deb
+  belgilandi.
+
 ## 2.3.0-dev.5
 
 Sinov versiyasi: SDK ekranlari tizim zonalariga tegmaydi. Android 15/16 da

@@ -2,9 +2,33 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
+/// Which E-IMZO the SDK works with — see [EimzoConfig.environment].
+enum EimzoEnvironment {
+  /// E-IMZO itself, m.e-imzo.uz: real keys and real documents. The default.
+  prod,
+
+  /// YT's test environment, in front of test.e-imzo.uz, for development and
+  /// QA builds. Only test keys sign there, and a QR code from one
+  /// environment does not work in the other.
+  dev,
+}
+
+/// For YT's own testing: a gateway to use instead of the environment's, given
+/// at build time with `--dart-define=EIMZO_GATEWAY_URL=…`. Empty otherwise.
+/// The native SDKs take it in a debuggable (Android) or development-signed
+/// (iOS) build only, so it can never reach a published app.
+const _gatewayOverride = String.fromEnvironment('EIMZO_GATEWAY_URL');
+
 /// SDK configuration passed to [EimzoFlutter.init].
 class EimzoConfig {
-  final bool isTestMode;
+  /// Production E-IMZO or YT's test environment; [EimzoEnvironment.prod] by
+  /// default.
+  ///
+  /// It picks E-IMZO for an app with a licence and the YT gateway for one
+  /// without. The SDK carries both addresses, so nothing else is configured
+  /// for it.
+  final EimzoEnvironment environment;
+
   final String? productionApiUrl;
   final String? testApiUrl;
 
@@ -29,39 +53,33 @@ class EimzoConfig {
   /// does not need to be kept secret.
   final String? license;
 
-  /// The YT gateway to use in test mode, e.g.
-  /// `http://10.0.2.2:8080/mobile/gateway` from the Android emulator.
-  ///
-  /// Since 2.3 an app without a licence signs through the gateway, which
-  /// knows registered apps by their package name and signing identity. In
-  /// production the SDK has the address built in; in test mode it has none,
-  /// and without this the SDK says the gateway is not configured.
-  final String? testGatewayUrl;
-
-  /// Replaces the production gateway address built into the SDK. Leave null.
-  final String? productionGatewayUrl;
-
   /// Logs the SDK's steps to the console — never keys, PINs or signatures.
   /// For debug builds, e.g. `debugLogging: kDebugMode`.
   final bool debugLogging;
 
+  /// [isTestMode] is the flag the environment was until 2.3: `true` is
+  /// [EimzoEnvironment.dev]. It still works, so configurations written for
+  /// 2.2 build unchanged; [environment], when given, wins.
   const EimzoConfig({
-    this.isTestMode = false,
+    EimzoEnvironment? environment,
+    @Deprecated('environment: EimzoEnvironment.dev yoki EimzoEnvironment.prod bilan almashtiring')
+    bool isTestMode = false,
     this.productionApiUrl,
     this.testApiUrl,
     this.license,
-    this.testGatewayUrl,
-    this.productionGatewayUrl,
     this.debugLogging = false,
-  });
+  }) : environment = environment ??
+            (isTestMode ? EimzoEnvironment.dev : EimzoEnvironment.prod);
+
+  @Deprecated('environment ni ishlating')
+  bool get isTestMode => environment == EimzoEnvironment.dev;
 
   Map<String, dynamic> toMap() => {
-        'isTestMode': isTestMode,
+        'environment': environment.name,
         if (productionApiUrl != null) 'productionApiUrl': productionApiUrl,
         if (testApiUrl != null) 'testApiUrl': testApiUrl,
         if (license != null) 'license': license,
-        if (testGatewayUrl != null) 'testGatewayUrl': testGatewayUrl,
-        if (productionGatewayUrl != null) 'productionGatewayUrl': productionGatewayUrl,
+        if (_gatewayOverride.isNotEmpty) 'gatewayOverride': _gatewayOverride,
         'debugLogging': debugLogging,
       };
 }
