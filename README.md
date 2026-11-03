@@ -237,8 +237,8 @@ shows it.
   development and QA builds. Only test keys sign there.
 
 A QR code from one environment only works in that environment. Nothing else
-needs configuring: the SDK knows where each environment is, both for an app
-with a licence and for one without.
+needs configuring: the SDK knows each environment's gateway, which every app
+goes through.
 
 A key remembers the environment it was added in. In the other one it stays in
 the list, marked «Boshqa server», and cannot sign. Keys added before
@@ -258,23 +258,30 @@ deprecated.
 
 ### YT gateway (2.3 pre-release)
 
-From 2.3 an app **without** a licence signs through the YT gateway instead.
-The gateway knows registered apps by their package name and signing
-certificate on Android, and by bundle id and Team ID on iOS — the same second
-factors as a licence, but there is no token to ship. To register, email
-**info@yt.uz** with them and say which environment the app is for: `dev`
-while you test, `prod` for release. An app that has a licence keeps working
-as before, straight to E-IMZO.
+From 2.3 every app signs through the YT gateway. An app **without** a licence
+is known by its package name and signing certificate on Android, and by
+bundle id and Team ID on iOS — the same second factors as a licence, but
+there is no token to ship. To register, email **info@yt.uz** with them and
+say which environment the app is for: `dev` while you test, `prod` for
+release.
+
+An app **with** a licence (from 2.3.0-dev.10) opens its gateway session with
+the licence instead, so it also works on phones that cannot attest, such as
+Huawei phones without Google services. The SDK still checks the licence on
+the device first; the gateway then checks that YT has it on record and has
+not revoked it. A licence the gateway does not know gets the blocked screen:
+ask info@yt.uz to register it.
 
 `environment` decides which gateway the app uses; there is nothing to set
-for it. The `prod` gateway **is not live yet**. Until it is, a release build
-without a licence cannot sign, so keep using a licence in production for now.
+for it. The `prod` gateway **is not live yet**. Until it is, no 2.3
+pre-release signs in production, with a licence or without, so keep 2.2 in
+production for now.
 
 ### Error and crash reports (2.3)
 
-In gateway mode the SDK sends its errors and crashes to the YT gateway, so
-YT sees what goes wrong on real phones. It is always on, and only in gateway
-mode: an app with a licence sends nothing.
+The SDK sends its errors and crashes to the YT gateway, so YT sees what goes
+wrong on real phones. It is always on, for every app — since 2.3.0-dev.10 for
+an app with a licence too.
 
 - **Sent:** the action (adding a key, signing, scanning a QR, deleting a key),
   an error code, the message the user was shown, the kind of key, the SDK and

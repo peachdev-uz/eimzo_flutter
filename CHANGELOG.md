@@ -1,3 +1,15 @@
+## 2.3.0-dev.10
+
+Litsenziyali ilova ham endi E-IMZO bilan YT gateway orqali ishlaydi:
+sessiyani attestatsiya o'rniga litsenziyasi bilan ochadi, shuning uchun
+attestatsiyadan o'tmaydigan telefonlarda ham (masalan, Google xizmatlarisiz
+Huawei) ishlaydi. Uning imzolari, xatolari va crash'lari ham YT'ga boradi.
+Litsenziya YT gateway'ida ro'yxatda bo'lishi kerak — bo'lmasa, bekor
+qilingan yoki muddati o'tgan bo'lsa, bloklangan ekran chiqadi. `prod`
+gateway hali ishga tushmagan: u ishga tushguncha 2.3 sinov versiyalari
+production'da litsenziya bilan ham imzolamaydi, production'da 2.2 ni
+qoldiring.
+
 ## 2.3.0-dev.9
 
 Kalit qaysi muhitda (`EimzoEnvironment.prod`/`dev`) qo'shilganini eslab
