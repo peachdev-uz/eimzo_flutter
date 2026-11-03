@@ -22,8 +22,8 @@ class EimzoConfig {
   /// Production E-IMZO or YT's test environment; [EimzoEnvironment.prod] by
   /// default.
   ///
-  /// It picks E-IMZO for an app with a licence and the YT gateway for one
-  /// without. The SDK carries both addresses, so nothing else is configured
+  /// It picks the YT gateway the app goes through, with a licence or
+  /// without. The SDK carries the addresses, so nothing else is configured
   /// for it.
   final EimzoEnvironment environment;
 
