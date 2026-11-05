@@ -1,3 +1,13 @@
+## 2.3.0-dev.11
+
+SDK bekor qilingan litsenziyalar ro'yxatini (`revoked.txt`) endi o'zi
+yuklab olmaydi. Litsenziyali ilova har safar sessiyani YT gateway'ida
+ochadi, gateway esa bekor qilingan, ro'yxatda yo'q yoki muddati o'tgan
+litsenziyani shu zahoti rad etadi va bloklangan ekran gateway xabari bilan
+chiqadi. Litsenziyaning qurilmadagi tekshiruvi (imzo, ilova ID, muddat)
+avvalgidek. `prod` gateway hali ishga tushmagan: production'da 2.2 ni
+qoldiring.
+
 ## 2.3.0-dev.10
 
 Litsenziyali ilova ham endi E-IMZO bilan YT gateway orqali ishlaydi:
