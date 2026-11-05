@@ -269,8 +269,10 @@ An app **with** a licence (from 2.3.0-dev.10) opens its gateway session with
 the licence instead, so it also works on phones that cannot attest, such as
 Huawei phones without Google services. The SDK still checks the licence on
 the device first; the gateway then checks that YT has it on record and has
-not revoked it. A licence the gateway does not know gets the blocked screen:
-ask info@yt.uz to register it.
+not revoked it. Since 2.3.0-dev.11 the SDK no longer downloads the list of
+revoked licences itself: the gateway's answer is the one that counts, from
+the moment a licence is revoked. A licence the gateway does not know gets
+the blocked screen: ask info@yt.uz to register it.
 
 `environment` decides which gateway the app uses; there is nothing to set
 for it. The `prod` gateway **is not live yet**. Until it is, no 2.3

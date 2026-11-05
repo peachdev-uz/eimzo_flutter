@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'eimzo_flutter'
-  s.version          = '2.3.0-dev.10'
+  s.version          = '2.3.0-dev.11'
   s.summary          = 'Flutter plugin wrapping the E-IMZO Mobile SDK (iOS).'
   s.description      = <<-DESC
     Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
@@ -40,7 +40,9 @@ Pod::Spec.new do |s|
   # ID-karta va token muddati va JSHSHIR to'g'ri o'qiladi.
   # 2.3.0-dev.10: litsenziyali ilova ham gateway orqali, sessiya litsenziya
   # bilan ochiladi.
-  EIMZO_SDK_VERSION = '2.3.0-dev.10'
+  # 2.3.0-dev.11: SDK revoked.txt'ni o'qimaydi, bekor qilingan litsenziyani
+  # gateway rad etadi.
+  EIMZO_SDK_VERSION = '2.3.0-dev.11'
   EIMZO_SDK_URL  = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/EimzoSDK.xcframework.zip"
   PFX2QR_URL     = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/Pfx2qr.xcframework.zip"
 
