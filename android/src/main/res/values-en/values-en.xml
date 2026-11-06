@@ -13,8 +13,8 @@
         <item quantity="other">Wrong PIN. %d attempts left.</item>
     </plurals>
     <plurals name="eimzo_ui_return_countdown">
-        <item quantity="one">Opens automatically in %d second</item>
-        <item quantity="other">Opens automatically in %d seconds</item>
+        <item quantity="one">Returns automatically in %d second</item>
+        <item quantity="other">Returns automatically in %d seconds</item>
     </plurals>
     <plurals name="eimzo_ui_saved_passwords_count">
         <item quantity="one">For %d key</item>
@@ -186,7 +186,7 @@
     <string name="eimzo_ui_request_waiting">A signing request is waiting</string>
     <string name="eimzo_ui_request_waiting_no_key">Add a key — the request opens right away</string>
     <string name="eimzo_ui_retry">Try again</string>
-    <string name="eimzo_ui_return_to_site">Return to the site</string>
+    <string name="eimzo_ui_return_to_app">Return to the app</string>
     <string name="eimzo_ui_sample_name">NAME SURNAME</string>
     <string name="eimzo_ui_save_password">Save password</string>
     <string name="eimzo_ui_save_password_hint">You will not be asked next time</string>
@@ -211,11 +211,10 @@
     <string name="eimzo_ui_sign_guide_step3">Scan the QR code that appears, here</string>
     <string name="eimzo_ui_sign_guide_title">Where does the QR code appear?</string>
     <string name="eimzo_ui_sign_request_title">Signing request</string>
-    <string name="eimzo_ui_signed_deeplink_body">The signature was sent to the site. You can return to %1$s now.</string>
+    <string name="eimzo_ui_signed_deeplink_body">The signature was sent. You can return to the app now.</string>
     <string name="eimzo_ui_signed_scan_body">The signature was sent to the site.</string>
     <string name="eimzo_ui_signed_title">Signed</string>
     <string name="eimzo_ui_signing">Signing…</string>
-    <string name="eimzo_ui_stay_in_app">Stay in the app</string>
     <string name="eimzo_ui_theme">Theme</string>
     <string name="eimzo_ui_theme_dark_note">Dark mode uses its own background.</string>
     <string name="eimzo_ui_time_label">Time</string>

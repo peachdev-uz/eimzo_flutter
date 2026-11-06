@@ -1,6 +1,9 @@
 # eimzo_flutter
 
-Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.3.0-dev.9` bundled inside) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it and opens it — with a sign request the app makes itself, or without one.
+Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.3.0` bundled inside) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it and opens it — with a sign request the app makes itself, or without one.
+
+Every app signs through the YT gateway and has to be registered with YT
+first — see [Registration](#8-registration).
 
 ## Platform support
 
@@ -14,12 +17,10 @@ Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://git
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^2.2.1
+  eimzo_flutter: ^2.3.0
 ```
 
-`2.3.0-dev.9` is a pre-release with the [YT gateway](#yt-gateway-23-pre-release).
-`^2.2.1` does not pick it up; to try it, pin it exactly:
-`eimzo_flutter: 2.3.0-dev.9`.
+Coming from 2.2? See [Upgrading from 2.2](#upgrading-from-22).
 
 ### 2. Android — `android/app/build.gradle`
 
@@ -62,7 +63,7 @@ app's: an app that claims it opens its SDK for any page or app that sends
 one. A sign request is made inside your app — see
 [Open with a sign request](#open-with-a-sign-request-made-in-your-app). If
 the SDK finds the filter, it logs a warning; remove it when upgrading from
-2.3.0-dev.7 or earlier.
+2.2.
 
 ### 4. Android — theme
 
@@ -113,63 +114,97 @@ Add to `Runner.entitlements` (create the file if missing and link it via Xcode �
 
 Apple requires a one-time NFC entitlement approval on your Developer Portal account for production builds.
 
-### 8. Licence
+### 8. Registration
 
-Since 2.0 the SDK verifies a **signed offline licence** and refuses to run
-without one. There is no registration list and no network call behind it —
-the licence travels inside your own app and is checked against a public key
-compiled into the SDK.
+The SDK reaches E-IMZO only through the YT gateway, and the gateway lets in
+the apps YT has registered. It recognises an app by the platform's
+attestation, so there is no licence file to ship:
 
-Email **info@yt.uz** with your package name / bundle id and the second
-factor for each platform you ship:
+- **Android** — key attestation proves the package name and the signing
+  certificate.
+- **iOS** — App Attest proves the bundle id and the Team ID.
 
-- **Android** — the **release** APK's signing certificate SHA-256:
+Email **info@yt.uz** with, for each platform you ship:
+
+- **Android** — the package name and the SHA-256 of the certificate the app
+  is signed with:
 
   ```
   apksigner verify --print-certs app-release.apk | grep -i "SHA-256"
   ```
 
-- **iOS** — your Team ID:
+  A debug build signed with another certificate needs its own SHA-256. If
+  Google Play signs your app (Play App Signing), the copies installed from
+  Play carry Google's app signing certificate: send its SHA-256, from Play
+  Console, as well.
+
+- **iOS** — the bundle id and your Team ID:
 
   ```
   codesign -dvvv YourApp.app 2>&1 | grep TeamIdentifier
   ```
 
-You get back an `EIMZO1.…` token. Supply it in whichever way suits you.
+Say which [environment](#environment) each is for: `dev` while you test,
+`prod` for release. The two are registered separately. An app that is not
+registered for its environment gets the SDK's blocked screen.
 
-**As a file**
+**Test on real phones.** In production an Android phone needs hardware-backed
+key attestation and a locked bootloader with an unmodified system, as
+Google-certified phones have; rooted or unlocked phones and Huawei phones
+without Google services get the blocked screen. On iOS, App Attest needs a
+real iPhone or iPad: the iOS Simulator cannot attest.
 
-- Android: `android/app/src/main/assets/eimzo-license.txt`
-- iOS: add `eimzo-license.txt` to the **Runner** target, then check it is in
-  *Build Phases → Copy Bundle Resources*. Xcode happily shows a file in the
-  navigator without copying it into the bundle, and the app then fails at
-  runtime with "Litsenziya topilmadi" — the single most common setup mistake.
-  Verify before you ship:
+#### Apps that already ship a licence
 
-  ```
-  unzip -l build/ios/ipa/*.ipa | grep -i eimzo-license
-  ```
+An app with an `EIMZO1.…` licence from 2.0–2.2 opens its gateway session
+with the licence instead of attestation. The SDK still checks the licence on
+the phone, and the gateway must have it on record — otherwise the blocked
+screen. The SDK no longer downloads the list of revoked licences: the gateway
+refuses a revoked, unknown or expired licence.
 
-**From Dart** — 2.1.2 and later, no Xcode work at all:
+**Write to info@yt.uz before upgrading such an app, and keep 2.2 until YT
+confirms.**
+
+The licence is supplied as before, from Dart:
 
 ```dart
 final token = await rootBundle.loadString('assets/eimzo-license.txt');
 await EimzoFlutter.instance.init(config: EimzoConfig(license: token));
 ```
 
-The licence is bound to your package name **and** your signing identity, so
-it does not work in anyone else's app and does not need to be kept secret.
+or as an `eimzo-license.txt` file: in `android/app/src/main/assets/` on
+Android; on iOS in the Runner target, checked under *Build Phases → Copy
+Bundle Resources* (Xcode can show a file in the navigator without copying it
+into the bundle). If the SDK finds no licence, that is no longer an error in
+itself: the app is attested like any other, and blocked unless it is
+registered.
 
-Debug builds are signed with a different certificate than release ones, so a
-release licence will not validate a debug build — ask for a second licence if
-you need to test against debug builds.
+## Upgrading from 2.2
+
+`^2.2.1` resolves to 2.3.0 on the next `flutter pub upgrade`, so pin
+`eimzo_flutter: 2.2.1` until the app is registered. An app that ships a
+licence: write to **info@yt.uz** first and keep 2.2 until YT confirms — see
+[Apps that already ship a licence](#apps-that-already-ship-a-licence).
+
+1. Register the app for each environment it uses — see
+   [Registration](#8-registration).
+2. Remove the `eimzo` intent-filter from `AndroidManifest.xml` and the `eimzo`
+   entry from `CFBundleURLTypes` in `Info.plist`.
+3. Make each sign request in the app with `EimzoSignLink.create` and pass it
+   to `openSignUi(deepLink:)`, in place of `getInitialDeeplink()`,
+   `onNewDeeplink()` and `launchDeeplink()` — see
+   [Open with a sign request](#open-with-a-sign-request-made-in-your-app).
+4. Replace `isTestMode` with `environment` (`EimzoEnvironment.dev` or
+   `EimzoEnvironment.prod`).
+5. iOS: declare **Crash Data** and **Other Diagnostic Data** in App Store
+   Connect → App Privacy — see [Error and crash reports](#error-and-crash-reports).
 
 ## Usage
 
 The plugin's job is to launch the bundled native SDK UI. All key
 management, password prompts, NFC waiting screens and HTTP signing
-round-trips live inside the native UI — the Flutter side just hands
-it a deep link (if any) and listens for new links while the app runs.
+round-trips live inside the native UI — the Flutter side just opens it,
+with a sign request the app made or without one.
 
 ### Open the SDK from a button
 
@@ -180,14 +215,14 @@ class _AppState extends State<App> {
   final _eimzo = EimzoFlutter.instance;
 
   Future<void> _openSdk() async {
-    // Applies the config on both platforms and runs the licence check.
-    // Android answers here; iOS returns true and checks inside the UI.
+    // Applies the config. Android also checks the app with the gateway
+    // here; iOS returns true and checks when the UI opens.
     final allowed = await _eimzo.init(
       config: const EimzoConfig(environment: EimzoEnvironment.prod),
     );
     if (!allowed) return; // native SDK is showing its blocked screen
 
-    // Present the full native UI (Home + Cards + Sign flow).
+    // Present the full native UI (Home + Keys + Sign flow).
     // User taps IMZOLASH inside → scans QR → confirms → signs.
     await _eimzo.openSignUi();
   }
@@ -214,7 +249,9 @@ Future<void> signDocument(String siteId, String documentId, String hash) async {
     documentId: documentId,  // 8, 10, 12, 14 or 16 hex characters
     hash: hash,              // 64 hex characters
   );
-  final allowed = await EimzoFlutter.instance.init();
+  final allowed = await EimzoFlutter.instance.init(
+    config: const EimzoConfig(environment: EimzoEnvironment.prod), // the same config every time
+  );
   if (!allowed) return;
   await EimzoFlutter.instance.openSignUi(deepLink: link);
 }
@@ -223,10 +260,11 @@ Future<void> signDocument(String siteId, String documentId, String hash) async {
 `EimzoSignLink.create` adds the CRC32 the SDK checks and throws an
 `ArgumentError` when a value is not in that form. The UI then shows what
 is about to be signed — the site, the hash and the key — and signs only when
-the user taps IMZOLASH there. With no key yet, the request waits on the home
-screen and opens as soon as the first key is added. There is no timer on
-the phone: if the site's request has expired, the server says so and the SDK
-shows it.
+the user taps IMZOLASH there. After signing, the SDK shows «Ilovaga qaytish»
+(*Return to the app*) and goes back to your app by itself after about 3
+seconds. With no key yet, the request waits on the home screen and opens as
+soon as the first key is added. There is no timer on the phone: if the
+site's request has expired, the server says so and the SDK shows it.
 
 ### Environment
 
@@ -242,7 +280,7 @@ goes through.
 
 A key remembers the environment it was added in. In the other one it stays in
 the list, marked «Boshqa server», and cannot sign. Keys added before
-2.3.0-dev.9 have no mark and sign in either.
+2.3 have no mark and sign in either.
 
 ```dart
 await _eimzo.init(
@@ -256,34 +294,23 @@ await _eimzo.init(
 Up to 2.2 this was `isTestMode`. It still works (`true` is `dev`), but it is
 deprecated.
 
-### YT gateway (2.3 pre-release)
+### YT gateway
 
-From 2.3 every app signs through the YT gateway. An app **without** a licence
-is known by its package name and signing certificate on Android, and by
-bundle id and Team ID on iOS — the same second factors as a licence, but
-there is no token to ship. To register, email **info@yt.uz** with them and
-say which environment the app is for: `dev` while you test, `prod` for
-release.
+Every app signs through the YT gateway; `environment` decides which one, and
+there is nothing else to set for it. The gateway lets in a registered app
+(see [Registration](#8-registration)) on the phone's attestation: key
+attestation on Android, App Attest on iOS. An app that ships a licence opens
+its session with the licence instead.
 
-An app **with** a licence (from 2.3.0-dev.10) opens its gateway session with
-the licence instead, so it also works on phones that cannot attest, such as
-Huawei phones without Google services. The SDK still checks the licence on
-the device first; the gateway then checks that YT has it on record and has
-not revoked it. Since 2.3.0-dev.11 the SDK no longer downloads the list of
-revoked licences itself: the gateway's answer is the one that counts, from
-the moment a licence is revoked. A licence the gateway does not know gets
-the blocked screen: ask info@yt.uz to register it.
+A refused app or phone gets the SDK's blocked screen, whose details tell the
+developer why. No connection is not a refusal: the SDK says so when it needs
+the network.
 
-`environment` decides which gateway the app uses; there is nothing to set
-for it. The `prod` gateway **is not live yet**. Until it is, no 2.3
-pre-release signs in production, with a licence or without, so keep 2.2 in
-production for now.
-
-### Error and crash reports (2.3)
+### Error and crash reports
 
 The SDK sends its errors and crashes to the YT gateway, so YT sees what goes
-wrong on real phones. It is always on, for every app — since 2.3.0-dev.10 for
-an app with a licence too.
+wrong on real phones. It is always on, for every app, with a licence or
+without.
 
 - **Sent:** the action (adding a key, signing, scanning a QR, deleting a key),
   an error code, the message the user was shown, the kind of key, the SDK and
@@ -296,7 +323,8 @@ A crash is sent on the next start; your own crash reporter still gets it.
 
 **iOS — App Store privacy.** In App Store Connect → App Privacy, declare
 **Crash Data** and **Other Diagnostic Data**: not linked to the user, not
-used for tracking, purpose *App Functionality*.
+used for tracking, purpose *App Functionality*. The iOS SDK's privacy
+manifest (`PrivacyInfo.xcprivacy`) declares the same.
 
 The gateway counts signatures per app and per kind of key (PFX file, QR code,
 ID card, USB token, BAIK token). It never stores what was signed or by whom.
@@ -304,30 +332,49 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
 ## API
 
 - **`EimzoFlutter.instance.init({EimzoConfig config})`** → `Future<bool>`
-  Applies the configuration and runs the licence check. Returns `true` if
-  the app is licensed, `false` if the native SDK is now showing its blocked
-  screen. On iOS it always returns `true` and stores the config — the check
-  itself runs inside `openSignUi` and surfaces as a blocked screen there.
-  Call it before `openSignUi` on both platforms.
+  Applies the configuration. Call it before `openSignUi`, with the same
+  config every time: iOS uses the last one it was given, Android keeps the
+  one the SDK started with.
+  - **Android** checks the app here: the SDK's device checks (root, hooking
+    tools, an attached debugger), the licence if the app ships one, and the
+    gateway session, opened by key attestation or with the licence. Returns
+    `true` when the app may sign, `false` when the app or the phone was
+    refused — the SDK has then opened its blocked screen over your app, and
+    closing it comes back to your app. No connection is not a refusal:
+    `init` returns `true`, and the SDK says so when it needs the network.
+  - **iOS** stores the config and returns `true`. The same checks — the
+    licence if there is one, then the gateway session by App Attest or with
+    the licence — run each time `openSignUi` presents the UI, and a refusal
+    shows the blocked screen there.
 
 - **`EimzoFlutter.instance.openSignUi({String? deepLink})`** → `Future<void>`
-  Presents the full native UI (Home / Cards / sign flow). `deepLink` is a
-  sign request made with `EimzoSignLink.create`; the UI shows it and signs
-  when the user taps IMZOLASH. Returns when the UI is presented.
+  Presents the full native UI (Home / Keys / sign flow). `deepLink` is a
+  sign request made with `EimzoSignLink.create`; the UI shows it, signs
+  when the user taps IMZOLASH and then goes back to your app. Returns when
+  the UI is presented — it does not wait for the signature.
 
 - **`EimzoSignLink.create({siteId, documentId, hash})`** → `String`
   Makes the `eimzo://sign?qc=…` link for `openSignUi` from a document's
   values, with the CRC32 the SDK checks. Throws `ArgumentError` on a value
   out of form.
 
-`getInitialDeeplink()`, `onNewDeeplink()` and `launchDeeplink()` were
-removed after 2.3.0-dev.7: the plugin no longer listens for `eimzo://` links.
+**Removed in 2.3:** `getInitialDeeplink()`, `onNewDeeplink()` and
+`launchDeeplink()`. The plugin no longer takes `eimzo://` links from
+outside; the app makes the request with `EimzoSignLink.create`.
 
-`EimzoConfig` accepts `environment` (default `EimzoEnvironment.prod`, see
-[Environment](#environment)), `license` (the `EIMZO1.…` token — see
-[Licence](#8-licence)), optional `productionApiUrl` / `testApiUrl` overrides
-and, since 2.3, `debugLogging`. The 2.2 `isTestMode` still works and is
-deprecated.
+`EimzoConfig`:
+
+- `environment` — `EimzoEnvironment.prod` (the default) or
+  `EimzoEnvironment.dev`; see [Environment](#environment).
+- `debugLogging` — the SDK's steps to the console, never keys, PINs or
+  signatures. Off by default.
+- `license` — the `EIMZO1.…` token, only for an app that already ships one;
+  see [Apps that already ship a licence](#apps-that-already-ship-a-licence).
+- `isTestMode` — the 2.2 flag. It still works (`true` is `dev`) and is
+  deprecated.
+- `productionApiUrl` / `testApiUrl` — still accepted, so 2.2 code builds,
+  but they have no effect: every call goes through the gateway, which knows
+  E-IMZO's address.
 
 > Before 2.1.2 the iOS side discarded this config entirely: `init` ignored
 > its arguments and the UI opened with defaults. If you are on an earlier
@@ -342,5 +389,5 @@ The plugin code in this package is MIT — see `LICENSE`.
 
 The bundled E-IMZO Mobile SDK binaries (`android/libs/eimzo-sdk-*.jar`, the
 iOS `EimzoSDK.xcframework`) are **proprietary** to "Yangi texnologiyalar"
-and are not covered by MIT. Their use is governed by the licence you obtain
-from **info@yt.uz** — see [Licence](#8-licence) above.
+and are not covered by MIT. To use them, register your app with YT at
+**info@yt.uz** — see [Registration](#8-registration) above.
