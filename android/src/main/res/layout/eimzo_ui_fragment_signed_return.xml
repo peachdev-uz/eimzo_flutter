@@ -258,14 +258,14 @@
                         android:layout_width="21dp"
                         android:layout_height="21dp"
                         android:importantForAccessibility="no"
-                        android:src="@drawable/eimzo_ui_ic_open_in_new"
+                        android:src="@drawable/eimzo_ui_ic_back"
                         app:tint="#08251E" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="9dp"
-                        android:text="@string/eimzo_ui_return_to_site"
+                        android:text="@string/eimzo_ui_return_to_app"
                         android:textColor="#08251E"
                         android:textSize="17sp"
                         android:textStyle="bold" />
@@ -295,38 +295,7 @@
                     android:layout_marginStart="6dp"
                     android:textColor="@color/eimzo_ui_signed_muted"
                     android:textSize="12.5sp"
-                    tools:text="3 soniyadan so‘ng avtomatik ochiladi" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btnStay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/eimzo_ui_bg_stay_button"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:gravity="center"
-                android:minHeight="52dp"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
-
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/eimzo_ui_ic_back"
-                    app:tint="#DCE6E5" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="9dp"
-                    android:text="@string/eimzo_ui_stay_in_app"
-                    android:textColor="#DCE6E5"
-                    android:textSize="15.5sp" />
+                    tools:text="3 soniyadan so‘ng avtomatik qaytadi" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

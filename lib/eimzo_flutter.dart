@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 
 /// Which E-IMZO the SDK works with — see [EimzoConfig.environment].
 enum EimzoEnvironment {
-  /// E-IMZO itself, m.e-imzo.uz: real keys and real documents. The default.
+  /// E-IMZO itself: real keys and real documents. The default.
   prod,
 
   /// YT's test environment, in front of test.e-imzo.uz, for development and
@@ -30,12 +30,14 @@ class EimzoConfig {
   final String? productionApiUrl;
   final String? testApiUrl;
 
-  /// The `EIMZO1.…` licence issued by YT.
+  /// The `EIMZO1.…` licence issued by YT, for an app that already ships one.
   ///
-  /// Optional in the sense that a file is the other way to supply it: leave
-  /// this null and the SDK looks for an `eimzo-license.txt` resource in the
-  /// app bundle (iOS) or in `android/app/src/main/assets/` (Android). One of
-  /// the two must be present.
+  /// Since 2.3 an app needs no licence: YT registers it and the gateway
+  /// knows it by attestation. An app that has a licence opens its gateway
+  /// session with it instead, and the gateway must have that licence on
+  /// record. It can come from here or from a file: leave this null and the
+  /// SDK looks for an `eimzo-license.txt` resource in the app bundle (iOS) or
+  /// in `android/app/src/main/assets/` (Android).
   ///
   /// Pass it here when the file placement is awkward — on iOS it has to sit in
   /// the Runner target's *Copy Bundle Resources*, which is easy to miss and
@@ -103,9 +105,12 @@ class EimzoFlutter {
 
   static const _channel = MethodChannel('uz.peachdev/eimzo_flutter');
 
-  /// Initialize the SDK and run its license check on the host activity.
-  /// Returns `true` if the app is licensed and may proceed, `false` if the
-  /// SDK has shown its blocked-app screen.
+  /// Applies [config] and, on Android, checks the app: the device checks, the
+  /// licence if the app ships one, and the gateway session. Returns `false`
+  /// when the app or the phone was refused — the SDK has then shown its
+  /// blocked screen over the app, and closing it comes back to the app — and
+  /// `true` otherwise. On iOS it stores the config and returns `true`; the
+  /// same checks run when [openSignUi] presents the UI.
   Future<bool> init({EimzoConfig config = const EimzoConfig()}) async {
     try {
       final allowed = await _channel.invokeMethod<bool>('init', config.toMap());
@@ -126,8 +131,8 @@ class EimzoFlutter {
   /// E-IMZO app's. Do not declare it in AndroidManifest.xml or Info.plist —
   /// the SDK logs a warning when it finds it there.
   ///
-  /// The native UI handles license check, password prompts, NFC waiting
-  /// animations, and the network round-trip to `m.e-imzo.uz`.
+  /// The native UI handles the gateway session, password prompts, NFC
+  /// waiting and the round-trip to E-IMZO through the YT gateway.
   ///
   /// Returns when the native UI is up — it does not wait for the signature.
   Future<void> openSignUi({String? deepLink}) async {

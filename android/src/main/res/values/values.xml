@@ -97,7 +97,7 @@
         <item quantity="other">PIN-kod noto‘g‘ri. Yana %d ta imkoniyat bor.</item>
     </plurals>
     <plurals name="eimzo_ui_return_countdown">
-        <item quantity="other">%d soniyadan so‘ng avtomatik ochiladi</item>
+        <item quantity="other">%d soniyadan so‘ng avtomatik qaytadi</item>
     </plurals>
     <plurals name="eimzo_ui_saved_passwords_count">
         <item quantity="other">%d ta kalit uchun</item>
@@ -275,7 +275,7 @@
     <string name="eimzo_ui_request_waiting">Imzo so‘rovi kutmoqda</string>
     <string name="eimzo_ui_request_waiting_no_key">Kalit qo‘shing — so‘rov shu zahoti ochiladi</string>
     <string name="eimzo_ui_retry">Qayta urinish</string>
-    <string name="eimzo_ui_return_to_site">Saytga qaytish</string>
+    <string name="eimzo_ui_return_to_app">Ilovaga qaytish</string>
     <string name="eimzo_ui_sample_expiry" translatable="false">••.••.••••</string>
     <string name="eimzo_ui_sample_name">ISM FAMILIYA</string>
     <string name="eimzo_ui_sample_pinfl" translatable="false">••••••••••••••</string>
@@ -302,11 +302,10 @@
     <string name="eimzo_ui_sign_guide_step3">Ekranda chiqqan QR kodni shu yerda skanerlang</string>
     <string name="eimzo_ui_sign_guide_title">QR kod qayerdan chiqadi?</string>
     <string name="eimzo_ui_sign_request_title">Imzolash so‘rovi</string>
-    <string name="eimzo_ui_signed_deeplink_body">Imzo saytga yuborildi. Endi %1$s sahifasiga qaytishingiz mumkin.</string>
+    <string name="eimzo_ui_signed_deeplink_body">Imzo yuborildi. Endi ilovaga qaytishingiz mumkin.</string>
     <string name="eimzo_ui_signed_scan_body">Imzo saytga yuborildi.</string>
     <string name="eimzo_ui_signed_title">Imzolandi</string>
     <string name="eimzo_ui_signing">Imzolanmoqda…</string>
-    <string name="eimzo_ui_stay_in_app">Ilovada qolish</string>
     <string name="eimzo_ui_theme">Mavzu</string>
     <string name="eimzo_ui_theme_dark_note">Tungi rejimda o‘z foni ishlatiladi.</string>
     <string name="eimzo_ui_time_label">Vaqt</string>

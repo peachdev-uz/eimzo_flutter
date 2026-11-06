@@ -19,10 +19,10 @@
         <item quantity="other">Неверный PIN-код. Осталось попыток: %d.</item>
     </plurals>
     <plurals name="eimzo_ui_return_countdown">
-        <item quantity="one">Откроется автоматически через %d секунду</item>
-        <item quantity="few">Откроется автоматически через %d секунды</item>
-        <item quantity="many">Откроется автоматически через %d секунд</item>
-        <item quantity="other">Откроется автоматически через %d секунды</item>
+        <item quantity="one">Автоматический возврат через %d секунду</item>
+        <item quantity="few">Автоматический возврат через %d секунды</item>
+        <item quantity="many">Автоматический возврат через %d секунд</item>
+        <item quantity="other">Автоматический возврат через %d секунды</item>
     </plurals>
     <plurals name="eimzo_ui_saved_passwords_count">
         <item quantity="one">Для ключей: %d</item>
@@ -196,7 +196,7 @@
     <string name="eimzo_ui_request_waiting">Ожидает запрос на подпись</string>
     <string name="eimzo_ui_request_waiting_no_key">Добавьте ключ — запрос откроется сразу</string>
     <string name="eimzo_ui_retry">Повторить</string>
-    <string name="eimzo_ui_return_to_site">Вернуться на сайт</string>
+    <string name="eimzo_ui_return_to_app">Вернуться в приложение</string>
     <string name="eimzo_ui_sample_name">ИМЯ ФАМИЛИЯ</string>
     <string name="eimzo_ui_save_password">Сохранить пароль</string>
     <string name="eimzo_ui_save_password_hint">В следующий раз не спросим</string>
@@ -221,11 +221,10 @@
     <string name="eimzo_ui_sign_guide_step3">Отсканируйте появившийся QR-код здесь</string>
     <string name="eimzo_ui_sign_guide_title">Откуда берётся QR-код?</string>
     <string name="eimzo_ui_sign_request_title">Запрос на подпись</string>
-    <string name="eimzo_ui_signed_deeplink_body">Подпись отправлена на сайт. Теперь можно вернуться на страницу %1$s.</string>
+    <string name="eimzo_ui_signed_deeplink_body">Подпись отправлена. Теперь можно вернуться в приложение.</string>
     <string name="eimzo_ui_signed_scan_body">Подпись отправлена на сайт.</string>
     <string name="eimzo_ui_signed_title">Подписано</string>
     <string name="eimzo_ui_signing">Подписание…</string>
-    <string name="eimzo_ui_stay_in_app">Остаться в приложении</string>
     <string name="eimzo_ui_theme">Тема</string>
     <string name="eimzo_ui_theme_dark_note">В ночном режиме используется собственный фон.</string>
     <string name="eimzo_ui_time_label">Время</string>
