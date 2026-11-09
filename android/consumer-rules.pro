@@ -7,7 +7,6 @@
 -keep public interface uz.eimzo.sdk.CertInfoCallback { *; }
 # «Kalitlar API» (2.4): getKeys / sign answer through it.
 -keep public interface uz.eimzo.sdk.EImzoResultCallback { *; }
--keep public class uz.eimzo.sdk.models.PfxKey { *; }
 -keep public class uz.eimzo.sdk.models.CertInfo { *; }
 -keep public class uz.eimzo.sdk.models.QrHashData { *; }
 -keep public enum uz.eimzo.sdk.models.KeyType { *; }

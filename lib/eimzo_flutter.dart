@@ -153,13 +153,12 @@ class EimzoFlutter {
   /// «Kalitlar API» (2.4): the keys the user has added to the SDK on this
   /// phone, as the native SDK's JSON, unchanged.
   ///
-  /// Only for an integrator YT has registered for it. The permission — the
-  /// integrator's «Kalitlar API» in YT's gateway admin panel — is off by
-  /// default; YT turns it on at the integrator's request, once there is a
-  /// contract, for all of the integrator's apps, and the SDK reads it from
-  /// the gateway session: turned on, it reaches the app with the next
-  /// session — within the hour, at once when the app restarts. Without it
-  /// this and [sign] answer `api_not_allowed`. [openSignUi] stays open to
+  /// Only for an integrator YT has registered for it. The permission, the
+  /// integrator's «Kalitlar API», is off by default: YT turns it on at the
+  /// integrator's request, once there is a contract, for all of the
+  /// integrator's apps. Turned on, it takes effect when the app restarts, or
+  /// within the hour; turned off, [sign] stops within a few seconds. Without
+  /// it this and [sign] answer `api_not_allowed`. [openSignUi] stays open to
   /// every registered app, and it is where users add their keys: the API
   /// lists them and signs, it does not add any.
   ///

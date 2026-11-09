@@ -1,4 +1,4 @@
-## 2.4.0
+## 2.4.0 - 2026-11-09
 
 **Kalitlar API** — YT ruxsat bergan integrator uchun ikkita yangi metod:
 
@@ -13,14 +13,13 @@ exception tashlamaydi. JSON va xato kodlari Android (`EImzoSDK.getKeys` /
 `EImzoSDK.sign`) va iOS (`EImzoAPI`) SDK'laridagi bilan bir xil. Batafsil —
 README'ning «Keys API («Kalitlar API»)» bo'limida.
 
-Ruxsat integratorniki: YT gateway admin panelidagi «Kalitlar API». U
-sukut bo'yicha o'chiq, shartnoma tuzilgach so'rov bo'yicha yoqiladi
-(info@yt.uz) va integratorning barcha ilovalariga tegishli. SDK uni gateway
-sessiyasidan biladi: yoqilgan ruxsat keyingi sessiyada — bir soat ichida,
-ilova qayta ishga tushsa darhol — keladi. Ruxsatsiz ikkala metod ham hech
-narsa ko'rsatmay `api_not_allowed` qaytaradi. `openSignUi` har bir
-ro'yxatdan o'tgan ilova uchun avvalgidek ochiq, kalitlar esa faqat unda
-qo'shiladi.
+Ruxsat — integratorning «Kalitlar API»si. U sukut bo'yicha o'chiq,
+shartnoma tuzilgach so'rov bo'yicha yoqiladi (info@yt.uz) va integratorning
+barcha ilovalariga tegishli. Yoqilgan ruxsat ilova qayta ishga tushganda
+(yoki bir soat ichida) kuchga kiradi; o'chirilsa, `sign()` bir necha
+soniyada to'xtaydi. Ruxsatsiz ikkala metod ham hech narsa ko'rsatmay
+`api_not_allowed` qaytaradi. `openSignUi` har bir ro'yxatdan o'tgan ilova
+uchun avvalgidek ochiq, kalitlar esa faqat unda qo'shiladi.
 
 - `getKeys`: `{"status":"ok","keys":[…]}`, har bir kalitda faqat `id`,
   `pinfl`, `name`, `validFrom` va `validTo` (`yyyy-MM-dd`). Joriy
@@ -45,9 +44,8 @@ qo'shiladi.
 - Imzo avvalgidek YT gateway orqali E-IMZO'ga boradi, imzolangan hujjatni
   E-IMZO integratorning backend'iga beradi: ilova PKCS#7 olmaydi.
 
-Android: SDK'ning imzo oynasi `uz.eimzo.sdk.api.EImzoSignActivity`
-(`exported="false"`) plagin manifestida e'lon qilindi va ilovaga avtomatik
-birlashtiriladi — ilova manifestiga hech narsa qo'shilmaydi.
+Android: SDK'ning imzo oynasi plagin manifestida e'lon qilingan va ilovaga
+avtomatik birlashtiriladi — ilova manifestiga hech narsa qo'shilmaydi.
 
 Bundlangan SDK — Android 2.4.0, iOS 2.4.0. Example'ga «Kalitlar ro'yxati» va
 «Tanlangan kalit bilan imzolash» tugmalari qo'shildi.
