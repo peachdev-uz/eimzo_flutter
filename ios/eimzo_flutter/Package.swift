@@ -32,13 +32,13 @@ let package = Package(
         // recompute BOTH checksums (also update EIMZO_SDK_VERSION in the podspec).
         .binaryTarget(
             name: "EimzoSDK",
-            url: "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/2.4.0/EimzoSDK.xcframework.zip",
-            checksum: "c69f46853cc2f8a0e1580a1d459930c0d7bdcdbbee279d47e7c18e9fbea937c0"
+            url: "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/2.4.1/EimzoSDK.xcframework.zip",
+            checksum: "81ed44da9990340471115240101edf8fc749d4883243cfe9707fb3f01476ce10"
         ),
         .binaryTarget(
             name: "Pfx2qr",
-            url: "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/2.4.0/Pfx2qr.xcframework.zip",
-            checksum: "1c0eb9e02b6f8d02bc9b52f897198c9c7074a206508884908adc36da51f9d934"
+            url: "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/2.4.1/Pfx2qr.xcframework.zip",
+            checksum: "82075fa2951c4c8fa342e5c37024fdd93a974299abd7e2d3ce941fef6e3c595e"
         ),
         .target(
             name: "eimzo_flutter",

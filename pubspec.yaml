@@ -3,7 +3,7 @@ description: >-
   Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
   electronic signatures: PFX, QR, ID card and USB token keys, signing
   through the YT gateway.
-version: 2.4.0
+version: 2.4.1
 homepage: https://github.com/peachdev-uz/eimzo_flutter
 
 environment:

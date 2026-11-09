@@ -1,3 +1,12 @@
+## 2.4.1 - 2026-11-09
+
+- iOS'da EimzoSDK 2.4.1: framework'ning Info.plist'idagi versiya endi SDK
+  versiyasi (avval 1.1.7 bo'lib qolgan edi). Kod o'zgarmagan.
+- Android'da ichidagi SDK avvalgidek 2.4.0.
+- Misol ilova Flutter 3.47 talabiga moslandi: Gradle 8.14, Android Gradle
+  Plugin 8.11.1, Kotlin 2.2.20. Ilovangizda ham Flutter 3.47 shularni yoki
+  yangisini so'raydi.
+
 ## 2.4.0 - 2026-11-09
 
 **Kalitlar API** — YT ruxsat bergan integrator uchun ikkita yangi metod:
