@@ -266,6 +266,140 @@ seconds. With no key yet, the request waits on the home screen and opens as
 soon as the first key is added. There is no timer on the phone: if the
 site's request has expired, the server says so and the SDK shows it.
 
+### Keys API («Kalitlar API»)
+
+Since 2.4 an integrator YT has registered for it can list the keys the user
+has added to the SDK and sign with one of them in the SDK's own sheet,
+without opening the full UI:
+
+- `getKeys()` — the keys, as JSON;
+- `sign(keyId:, deepLink:)` — signs a sign request with the chosen key.
+
+Both return the native SDK's JSON as a `String`, once, and never throw. The
+JSON and the codes are the same as in the Android (`EImzoSDK.getKeys` /
+`EImzoSDK.sign`) and iOS (`EImzoAPI`) SDKs.
+
+**The permission** is the integrator's «Kalitlar API», set in YT's gateway
+admin panel. It is off by default; YT turns it on at the integrator's
+request once there is a contract — write to **info@yt.uz**. It covers all
+of the integrator's apps. The SDK learns it from its gateway session, so a
+permission turned on reaches the app with the next session: within the
+hour, or at once when the app restarts. Turned off, `sign` stops within
+about 10 seconds. Without it both methods answer `api_not_allowed`;
+`openSignUi` stays open to every registered app.
+
+**Keys are added in the SDK's UI**, as before: `openSignUi`, by file, QR
+code, ID card, USB token or BAIK token. The API lists keys and signs with
+them; it does not add any. No method takes a password or returns key
+material: the password or PIN is typed only in the SDK's sheet.
+
+Call `init` first, with the usual config. On Android the API works once
+`init` has returned `true` in the process; on iOS it runs on the config
+`init` stored.
+
+```dart
+import 'dart:convert';
+
+final eimzo = EimzoFlutter.instance;
+await eimzo.init(config: const EimzoConfig(environment: EimzoEnvironment.prod));
+
+final reply = jsonDecode(await eimzo.getKeys()) as Map<String, dynamic>;
+if (reply['status'] != 'ok') return showError(reply['code']); // see the codes below
+final keys = (reply['keys'] as List).cast<Map<String, dynamic>>();
+```
+
+```json
+{"status":"ok","keys":[
+  {"id":"7a3f…","pinfl":"31234567890123","name":"ALIYEV VALI ALIYEVICH",
+   "validFrom":"2025-03-01","validTo":"2027-03-01"}
+]}
+```
+
+| Field | Meaning |
+|---|---|
+| `id` | The certificate's serial number as the SDK stores it. Opaque: pass it to `sign` unchanged |
+| `pinfl` | The holder's PINFL (JShShIR); `null` when the certificate has none |
+| `name` | The certificate holder's name |
+| `validFrom`, `validTo` | The certificate's validity, `yyyy-MM-dd` without the time; `null` when the SDK cannot read it |
+
+Nothing else leaves the SDK: not the STIR, the organization, the kind of
+key, the key itself or a saved password. The list has every kind of key
+that can sign in the configured `environment`, expired ones too — tell them
+by `validTo` — in the SDK's own order, the default key first. A key added in
+the other environment is left out. No keys: `{"status":"ok","keys":[]}`.
+
+```dart
+// siteId, documentId and hash come from your backend, keyId from getKeys()
+Future<void> signDocument(String siteId, String documentId, String hash, String keyId) async {
+  final link = EimzoSignLink.create(siteId: siteId, documentId: documentId, hash: hash);
+  final reply = jsonDecode(
+    await EimzoFlutter.instance.sign(keyId: keyId, deepLink: link),
+  ) as Map<String, dynamic>;
+  switch (reply['status']) {
+    case 'signed':
+      await refreshDocument(); // the result is on your backend, from E-IMZO
+    case 'cancelled':
+      break; // the user closed the sheet
+    case 'error':
+      showError(reply['code']);
+  }
+}
+```
+
+`sign` checks first, in this order, and answers without opening anything
+when a check fails: the permission, the sign request, the key here, the key
+not expired, no other `sign` open. Then the SDK opens its sign sheet over
+your app — its own activity on Android, a sheet over the top-most view
+controller on iOS:
+
+- the site (from E-IMZO), the hash and the key, which cannot be changed;
+- the password for a file or QR key (a saved password works as in the full
+  UI), the PIN and a card tap for an ID card, the PIN and the token for a
+  USB or BAIK token;
+- nothing is signed until the user taps «Imzolash»;
+- after a signature, «Imzolandi», which returns to your app by itself after
+  3 seconds. Then the call returns.
+
+Any site's request can be signed, as with `openSignUi`; the sheet shows
+which site it is. The answer:
+
+- `{"status":"signed"}` — E-IMZO accepted the signature.
+- `{"status":"cancelled"}` — the user closed the sheet without signing, also
+  after an error they could act on there: a wrong password or PIN, no
+  network, the card or token missing.
+- `{"status":"error","code":"…","message":"…"}` — a check failed, or the
+  flow ended by itself: the gateway refused, the key expired, E-IMZO refused
+  the signature, a PIN got blocked.
+
+One `sign` at a time: a second one while the sheet is open gets `busy`. The
+future completes once, also when Android recreates your activity meanwhile
+(on rotation, say).
+
+The signature goes to E-IMZO through the YT gateway, as every signature
+does, and E-IMZO hands the signed document (PKCS#7) to your backend. The app
+never gets it: after `signed`, ask your backend for the document's state.
+
+| `code` | When |
+|---|---|
+| `api_not_allowed` | The integrator has no «Kalitlar API» permission |
+| `not_initialized` | Android: `init` has not returned `true` in this process. iOS: `init` has not been called |
+| `blocked` | The licence check or the gateway turned the app or the phone away; `message` starts with their code, e.g. `app_blocked`. The blocked screen is not shown |
+| `network` | The gateway could not be reached, or did not answer in time |
+| `invalid_request` | `deepLink` is not a sign request, or E-IMZO does not know its site |
+| `key_not_found` | No key with this `id` can sign in this environment |
+| `key_expired` | The key's certificate has expired |
+| `busy` | Another `sign` is still open |
+| `sign_failed` | E-IMZO refused the signature, or anything else ended the flow. When E-IMZO refused, `message` is its own answer; a blocked card or token PIN is `pin_blocked` |
+
+`message` is for the developer: English, except E-IMZO's own answer, which
+may be in Russian or Uzbek. It never holds a key, a password or a hash. Show
+users your own text for the `code`.
+
+A failure in the plugin itself comes back in the same shape, not as an
+exception: with no Android activity to open the sheet over, `sign` answers
+`sign_failed` with the message `no_activity`; any other platform error is
+`sign_failed` with that error's message.
+
 ### Environment
 
 `environment` picks which E-IMZO the SDK works with:
@@ -358,6 +492,17 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
   values, with the CRC32 the SDK checks. Throws `ArgumentError` on a value
   out of form.
 
+- **`EimzoFlutter.instance.getKeys()`** → `Future<String>`
+  «Kalitlar API» (2.4), for an integrator with the permission: the keys the
+  user has added to the SDK, as JSON. Never throws — see
+  [Keys API](#keys-api-kalitlar-api).
+
+- **`EimzoFlutter.instance.sign({required String keyId, required String deepLink})`** → `Future<String>`
+  «Kalitlar API» (2.4): signs a sign request made with
+  `EimzoSignLink.create` with the key `keyId` from `getKeys`, in the SDK's
+  own sheet, and returns how it ended as JSON — `signed`, `cancelled` or an
+  error. Never throws.
+
 **Removed in 2.3:** `getInitialDeeplink()`, `onNewDeeplink()` and
 `launchDeeplink()`. The plugin no longer takes `eimzo://` links from
 outside; the app makes the request with `EimzoSignLink.create`.
@@ -381,7 +526,8 @@ outside; the app makes the request with `EimzoSignLink.create`.
 > version, `isTestMode` and `license` never reached the iOS SDK.
 
 `EimzoException(code, message)` wraps `PlatformException` errors from
-the native side.
+the native side for `init` and `openSignUi`. `getKeys` and `sign` never
+throw: they answer in their JSON.
 
 ## Licence
 

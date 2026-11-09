@@ -51,6 +51,21 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.Eimzo"
             android:windowSoftInputMode="adjustResize" />
+        <!--
+            The Keys API's sign sheet (2.4), as the SDK declares it: opened
+            only by EImzoSDK.sign — Dart's sign(keyId:, deepLink:) — for an
+            integrator with the «Kalitlar API». Not exported, no filters.
+            singleTop, as EImzoActivity, so the ID card's foreground dispatch
+            reaches it. The plugin bundles the SDK as a jar, so the SDK's own
+            manifest is not merged: without this entry the sheet cannot start
+            (ActivityNotFoundException) and every sign() ends in sign_failed.
+        -->
+        <activity
+            android:name="uz.eimzo.sdk.api.EImzoSignActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Eimzo"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="uz.eimzo.sdk.fullui.scanner.QrScannerActivity"
             android:exported="false"

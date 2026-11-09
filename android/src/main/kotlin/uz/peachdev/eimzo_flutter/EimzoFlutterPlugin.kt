@@ -8,8 +8,10 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.util.concurrent.atomic.AtomicBoolean
 import uz.eimzo.sdk.EImzoConfig
 import uz.eimzo.sdk.EImzoEnvironment
+import uz.eimzo.sdk.EImzoResultCallback
 import uz.eimzo.sdk.EImzoSDK
 import uz.eimzo.sdk.EImzoTesting
 import uz.eimzo.sdk.fullui.EImzoActivity
@@ -39,7 +41,39 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
         when (call.method) {
             "init" -> handleInit(call, result)
             "openSignUi" -> handleOpenSignUi(call, result)
+            "getKeys" -> EImzoSDK.getKeys(answerOnce(result))
+            "sign" -> handleSign(call, result)
             else -> result.notImplemented()
+        }
+    }
+
+    /**
+     * «Kalitlar API» (2.4): signs `deepLink` with the key `keyId` in the SDK's
+     * own sheet, opened over the host activity. The SDK keeps the call across
+     * the activity's recreation and answers it once, when the sheet closes.
+     *
+     * No activity is `NO_ACTIVITY`, which Dart turns into the API's own
+     * `sign_failed` / `no_activity` JSON.
+     */
+    private fun handleSign(call: MethodCall, result: MethodChannel.Result) {
+        val act = requireActivity(result) ?: return
+        EImzoSDK.sign(
+            act,
+            call.argument<String>("keyId").orEmpty(),
+            call.argument<String>("deepLink").orEmpty(),
+            answerOnce(result),
+        )
+    }
+
+    /**
+     * Hands the SDK's JSON to Dart as it is. The SDK answers each Keys API
+     * call once, on the main thread; this keeps [result] to a single reply
+     * even if it did not, since a second one would throw in the app.
+     */
+    private fun answerOnce(result: MethodChannel.Result): EImzoResultCallback {
+        val answered = AtomicBoolean(false)
+        return EImzoResultCallback { json ->
+            if (answered.compareAndSet(false, true)) result.success(json)
         }
     }
 

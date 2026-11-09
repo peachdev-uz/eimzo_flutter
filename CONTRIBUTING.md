@@ -100,7 +100,10 @@ Uch fayl, uchtasi ham qurilmasiz ishlaydi:
 - `test/bundled_sdk_test.dart` — navigatsiya grafi va manifest nomlagan har
   bir klass bundlangan jar ichida borligini tekshiradi. 2.0.0 da R8 to'rtta
   ekranni AAR'dan o'chirib yuborgan va bu faqat foydalanuvchi tugmani
-  bosganda bilingan edi. `unzip` kerak; bo'lmasa o'zini o'tkazib yuboradi.
+  bosganda bilingan edi. Teskarisini ham: jar'dagi har bir SDK activity'si
+  plagin manifestida e'lon qilingan bo'lishi kerak — SDK'ning o'z manifesti
+  birlashtirilmaydi (2.4 dagi `EImzoSignActivity` kabi yangisi qo'lda
+  qo'shiladi). `unzip` kerak; bo'lmasa o'zini o'tkazib yuboradi.
 
 Native tomonda:
 

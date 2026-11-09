@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eimzo_flutter/eimzo_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Checks that both native sides actually implement what Dart sends.
@@ -101,6 +102,58 @@ void main() {
       expect(swiftSource, contains('"$key"'),
           reason: 'iOS plagini "$key" ni o\'qimaydi');
     }
+  });
+
+  test('every argument sign() sends is read on both platforms', () async {
+    // Taken from the call itself rather than listed by hand: a key renamed on
+    // one side only would reach the SDK as an empty string, and the app would
+    // hear key_not_found or invalid_request for a key and a link that are
+    // fine.
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const channel = MethodChannel('uz.peachdev/eimzo_flutter');
+    final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    MethodCall? sent;
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      sent = call;
+      return '{"status":"cancelled"}';
+    });
+    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+
+    await EimzoFlutter.instance.sign(keyId: 'k', deepLink: 'eimzo://sign?qc=00');
+
+    final keys = Map<String, dynamic>.from(sent!.arguments as Map).keys;
+    expect(keys, containsAll(['keyId', 'deepLink']));
+    for (final key in keys) {
+      expect(kotlinSource, contains('"$key"'),
+          reason: 'Android plagini sign() ning "$key" argumentini o\'qimaydi');
+      expect(swiftSource, contains('"$key"'),
+          reason: 'iOS plagini sign() ning "$key" argumentini o\'qimaydi');
+    }
+  });
+
+  test('the Keys API reaches the SDK on both platforms', () {
+    // A handler that answers without calling the SDK would compile and pass
+    // every Dart test.
+    expect(kotlinSource, contains('EImzoSDK.getKeys('),
+        reason: 'Android plagini EImzoSDK.getKeys ni chaqirmaydi');
+    expect(kotlinSource, contains('EImzoSDK.sign('),
+        reason: 'Android plagini EImzoSDK.sign ni chaqirmaydi');
+    // On iOS with the config init stored — the same rule as EImzoView.
+    expect(swiftSource, contains('EImzoAPI.getKeys(config: config)'),
+        reason: 'iOS plagini getKeys ga saqlangan konfiguratsiyani bermayapti');
+    expect(swiftSource, matches(RegExp(r'EImzoAPI\.sign\([^)]*config: config\)')),
+        reason: 'iOS plagini sign ga saqlangan konfiguratsiyani bermayapti');
+  });
+
+  test('the plugin errors Dart maps are the ones the platforms send', () {
+    // Dart turns these two codes into the API's own JSON. Renamed on the
+    // native side, they would fall through to a generic sign_failed.
+    expect(dartSource, contains("'NO_ACTIVITY'"));
+    expect(kotlinSource, contains('"NO_ACTIVITY"'),
+        reason: 'Android plagini activity yo\'qligini boshqa kod bilan aytyapti');
+    expect(dartSource, contains("'NOT_INITIALIZED'"));
+    expect(swiftSource, contains('"NOT_INITIALIZED"'),
+        reason: 'iOS plagini init chaqirilmaganini boshqa kod bilan aytyapti');
   });
 
   test('iOS passes the stored config into the SDK view', () {

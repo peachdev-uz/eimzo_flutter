@@ -10,6 +10,8 @@ import SwiftUI
 ///                              `true`; the actual license check runs
 ///                              inside `EImzoView` when `openSignUi` fires)
 ///   - `openSignUi(deepLink)` → void (presents `EImzoView` over Flutter UI)
+///   - `getKeys`             → String (`EImzoAPI.getKeys`'s JSON, as it is)
+///   - `sign(keyId, deepLink)` → String (`EImzoAPI.sign`'s JSON, as it is)
 ///
 /// The plugin does not listen for URLs. `eimzo://` is the E-IMZO app's
 /// scheme, and a host that takes it from outside would open its SDK for any
@@ -42,18 +44,26 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             handleInit(call: call, result: result)
         case "openSignUi":
             handleOpenSignUi(call: call, result: result)
+        case "getKeys":
+            handleGetKeys(result: result)
+        case "sign":
+            handleSign(call: call, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
     }
 
-    /// The configuration Dart handed us in `init`, kept for `openSignUi`.
+    /// The configuration Dart handed us in `init`, kept for `openSignUi` and
+    /// the Keys API. Nil until `init` has run: `openSignUi` then opens with
+    /// the SDK's defaults, as it always has, while the Keys API answers
+    /// `not_initialized` — it would otherwise ask the gateway on a config the
+    /// app never chose, `prod` for a `dev` build.
     ///
     /// Until 2.1.2 this plugin dropped it on the floor: `init` returned true
     /// without reading its arguments and `openSignUi` built `EImzoView` with a
     /// default config. Everything the host configured — test mode, API URLs,
     /// the licence — stopped at the platform channel.
-    private var config = EImzoConfig()
+    private var config: EImzoConfig?
 
     /// On Android, `init` performs the license check up front so the host
     /// app can show a blocked banner if needed. On iOS, the SDK runs the
@@ -102,7 +112,7 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
 
         let host = UIHostingController(
             rootView: EImzoView(
-                config: config,
+                config: config ?? EImzoConfig(),
                 deepLink: deepLink,
                 onSignComplete: { [weak self] _ in
                     DispatchQueue.main.async {
@@ -117,6 +127,45 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
         top.present(host, animated: true) {
             result(nil)
         }
+    }
+
+    // MARK: - Kalitlar API (2.4)
+
+    /// The keys the user has added to the SDK, as `EImzoAPI.getKeys` gives
+    /// them. The SDK runs the licence and gateway check itself, on the
+    /// config `init` stored.
+    private func handleGetKeys(result: @escaping FlutterResult) {
+        guard let config else {
+            result(Self.notInitialized())
+            return
+        }
+        Task { @MainActor in
+            result(await EImzoAPI.getKeys(config: config))
+        }
+    }
+
+    /// Signs `deepLink` with the key `keyId` in the SDK's sheet, which
+    /// `EImzoAPI.sign` presents over the top-most view controller; the JSON
+    /// comes back once the sheet has closed.
+    private func handleSign(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let config else {
+            result(Self.notInitialized())
+            return
+        }
+        let args = (call.arguments as? [String: Any]) ?? [:]
+        let keyId = args["keyId"] as? String ?? ""
+        let deepLink = args["deepLink"] as? String ?? ""
+        Task { @MainActor in
+            result(await EImzoAPI.sign(keyId: keyId, deepLink: deepLink, config: config))
+        }
+    }
+
+    /// `init` has not run, so there is no config to call the SDK with. Dart
+    /// turns this into the API's own `not_initialized` JSON.
+    private static func notInitialized() -> FlutterError {
+        FlutterError(code: "NOT_INITIALIZED",
+                     message: "EimzoFlutter.instance.init has not been called yet.",
+                     details: nil)
     }
 }
 

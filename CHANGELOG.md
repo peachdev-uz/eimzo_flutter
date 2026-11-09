@@ -1,3 +1,57 @@
+## 2.4.0
+
+**Kalitlar API** — YT ruxsat bergan integrator uchun ikkita yangi metod:
+
+- `EimzoFlutter.instance.getKeys()` — foydalanuvchi SDK'ga qo'shgan
+  kalitlar ro'yxati, JSON'da;
+- `EimzoFlutter.instance.sign(keyId:, deepLink:)` — `EimzoSignLink.create`
+  bilan yasalgan imzo so'rovini tanlangan kalit bilan SDK'ning o'z oynasida
+  imzolaydi.
+
+Ikkalasi ham native SDK'ning JSON'ini (`String`) o'zgartirmay qaytaradi va
+exception tashlamaydi. JSON va xato kodlari Android (`EImzoSDK.getKeys` /
+`EImzoSDK.sign`) va iOS (`EImzoAPI`) SDK'laridagi bilan bir xil. Batafsil —
+README'ning «Keys API («Kalitlar API»)» bo'limida.
+
+Ruxsat integratorniki: YT gateway admin panelidagi «Kalitlar API». U
+sukut bo'yicha o'chiq, shartnoma tuzilgach so'rov bo'yicha yoqiladi
+(info@yt.uz) va integratorning barcha ilovalariga tegishli. SDK uni gateway
+sessiyasidan biladi: yoqilgan ruxsat keyingi sessiyada — bir soat ichida,
+ilova qayta ishga tushsa darhol — keladi. Ruxsatsiz ikkala metod ham hech
+narsa ko'rsatmay `api_not_allowed` qaytaradi. `openSignUi` har bir
+ro'yxatdan o'tgan ilova uchun avvalgidek ochiq, kalitlar esa faqat unda
+qo'shiladi.
+
+- `getKeys`: `{"status":"ok","keys":[…]}`, har bir kalitda faqat `id`,
+  `pinfl`, `name`, `validFrom` va `validTo` (`yyyy-MM-dd`). Joriy
+  `environment`da imzolay oladigan har turdagi kalit — fayl, QR, ID-karta,
+  USB token, BAIK — muddati o'tganlari ham, asosiy kalit birinchi; boshqa
+  muhitda qo'shilgani kirmaydi. STIR, tashkilot, kalit turi, kalitning o'zi
+  va saqlangan parol SDK'da qoladi.
+- `sign`: avval tekshiradi — ruxsat, so'rov, kalit shu yerda, muddati, boshqa
+  `sign` ochiq emasligi — keyin SDK'ning imzo oynasini ilova ustida ochadi:
+  sayt, xesh va kalit (almashtirib bo'lmaydi), parol yoki PIN faqat shu
+  oynada teriladi, «Imzolash» albatta bosiladi; imzodan keyin «Imzolandi»
+  ekrani 3 soniyada o'zi qaytadi. Natija: `{"status":"signed"}`,
+  `{"status":"cancelled"}` yoki `{"status":"error","code":"…","message":"…"}`.
+  Bir vaqtda bitta `sign`; Android'da activity qayta yaratilsa ham javob
+  bir marta keladi.
+- Xato kodlari: `api_not_allowed`, `not_initialized`, `blocked`, `network`,
+  `invalid_request`, `key_not_found`, `key_expired`, `busy`, `sign_failed`.
+  Gateway rad etsa, bloklangan ekran ochilmaydi — `blocked` qaytadi.
+  Plaginning o'z xatosi ham shu shaklda keladi: Android'da activity bo'lmasa
+  `sign_failed` / `no_activity`, iOS'da `init` chaqirilmagan bo'lsa
+  `not_initialized`, boshqa platforma xatosi — `sign_failed` va uning matni.
+- Imzo avvalgidek YT gateway orqali E-IMZO'ga boradi, imzolangan hujjatni
+  E-IMZO integratorning backend'iga beradi: ilova PKCS#7 olmaydi.
+
+Android: SDK'ning imzo oynasi `uz.eimzo.sdk.api.EImzoSignActivity`
+(`exported="false"`) plagin manifestida e'lon qilindi va ilovaga avtomatik
+birlashtiriladi — ilova manifestiga hech narsa qo'shilmaydi.
+
+Bundlangan SDK — Android 2.4.0, iOS 2.4.0. Example'ga «Kalitlar ro'yxati» va
+«Tanlangan kalit bilan imzolash» tugmalari qo'shildi.
+
 ## 2.3.0
 
 Barqaror reliz: 2.2.1 dan keyingi hamma o'zgarish (2.3.0-dev.1 … dev.11)

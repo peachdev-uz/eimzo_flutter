@@ -103,6 +103,27 @@ void main() {
         reason: 'manifest e\'lon qilgan, jar da yo\'q: ${missing.join(", ")}');
   });
 
+  test('every SDK activity in the jar is declared in the manifest', () {
+    if (!canRun) return;
+
+    // The other direction. The plugin carries the SDK as a jar, so the SDK's
+    // own manifest is never merged: an activity it adds — 2.4's Keys API sign
+    // sheet — exists only once it is copied into the plugin's manifest by
+    // hand. Missing, it is ActivityNotFoundException at the moment it opens.
+    final activities = jarClasses
+        .where((c) => c.startsWith('uz.eimzo.sdk.') && !c.contains(r'$'))
+        .where((c) => c.split('.').last.endsWith('Activity'))
+        .toSet();
+    expect(activities, contains('uz.eimzo.sdk.api.EImzoSignActivity'),
+        reason: '$sdkJarName da Kalitlar API oynasi yo\'q — jar eskirgan');
+
+    final declared = namesIn(manifest.readAsStringSync());
+    final undeclared = activities.difference(declared);
+
+    expect(undeclared, isEmpty,
+        reason: 'jar da bor, manifest e\'lon qilmagan: ${undeclared.join(", ")}');
+  });
+
   test('the resources ship alongside the classes that use them', () {
     if (!canRun) return;
 

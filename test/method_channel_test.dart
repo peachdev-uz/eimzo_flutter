@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eimzo_flutter/eimzo_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,7 +25,9 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
       calls.add(call);
-      if (reply is PlatformException) throw reply as PlatformException;
+      // PlatformException and MissingPluginException alike: the binding
+      // turns each into what a real native side would send.
+      if (reply is Exception) throw reply as Exception;
       return reply;
     });
   });
@@ -137,6 +141,112 @@ void main() {
       await EimzoFlutter.instance.openSignUi();
 
       expect(argsOf(calls.single).containsKey('deepLink'), isFalse);
+    });
+  });
+
+  group('Kalitlar API', () {
+    // The native SDKs' JSON, byte for byte: Dart must not re-encode it, and
+    // an app parses the same text on Android, iOS and Flutter.
+    const keysJson = '{"status":"ok","keys":[{"id":"7a3f01","pinfl":null,'
+        '"name":"ALIYEV VALI ALIYEVICH","validFrom":"2025-03-01","validTo":null}]}';
+
+    Map<String, dynamic> decoded(String json) => jsonDecode(json) as Map<String, dynamic>;
+
+    test('getKeys calls getKeys and returns the native JSON unchanged', () async {
+      reply = keysJson;
+
+      final json = await EimzoFlutter.instance.getKeys();
+
+      expect(calls.single.method, 'getKeys');
+      expect(json, keysJson);
+    });
+
+    test('sign passes the key id and the link through as they are', () async {
+      reply = '{"status":"signed"}';
+      const link = 'eimzo://sign?qc=1a4759282737518b';
+
+      await EimzoFlutter.instance.sign(keyId: '7a3f01', deepLink: link);
+
+      expect(calls.single.method, 'sign');
+      expect(argsOf(calls.single), {'keyId': '7a3f01', 'deepLink': link});
+    });
+
+    test('sign returns each native outcome unchanged', () async {
+      for (final outcome in [
+        '{"status":"signed"}',
+        '{"status":"cancelled"}',
+        '{"status":"error","code":"key_expired","message":"The key\'s certificate has expired."}',
+        '{"status":"error","code":"api_not_allowed","message":"No «Kalitlar API» permission."}',
+      ]) {
+        reply = outcome;
+        expect(await EimzoFlutter.instance.sign(keyId: 'k', deepLink: 'l'), outcome);
+      }
+    });
+
+    test('no Android activity is sign_failed / no_activity, not an exception', () async {
+      // What the Kotlin side's requireActivity sends.
+      reply = PlatformException(code: 'NO_ACTIVITY', message: 'Activity not attached');
+
+      expect(await EimzoFlutter.instance.sign(keyId: 'k', deepLink: 'l'),
+          '{"status":"error","code":"sign_failed","message":"no_activity"}');
+    });
+
+    test('iOS without init is not_initialized, with the native words', () async {
+      reply = PlatformException(
+          code: 'NOT_INITIALIZED', message: 'EimzoFlutter.instance.init has not been called yet.');
+
+      for (final call in [
+        () => EimzoFlutter.instance.getKeys(),
+        () => EimzoFlutter.instance.sign(keyId: 'k', deepLink: 'l'),
+      ]) {
+        expect(decoded(await call()), {
+          'status': 'error',
+          'code': 'not_initialized',
+          'message': 'EimzoFlutter.instance.init has not been called yet.',
+        });
+      }
+    });
+
+    test('any other PlatformException is sign_failed with its message', () async {
+      reply = PlatformException(code: 'error', message: 'Reply "already" submitted');
+
+      for (final call in [
+        () => EimzoFlutter.instance.getKeys(),
+        () => EimzoFlutter.instance.sign(keyId: 'k', deepLink: 'l'),
+      ]) {
+        // Valid JSON even when the message has quotes in it.
+        expect(decoded(await call()), {
+          'status': 'error',
+          'code': 'sign_failed',
+          'message': 'Reply "already" submitted',
+        });
+      }
+    });
+
+    test('a message-less PlatformException still says something', () async {
+      reply = PlatformException(code: 'SOME_CODE');
+
+      expect(decoded(await EimzoFlutter.instance.getKeys())['message'], 'SOME_CODE');
+    });
+
+    test('no native side at all is sign_failed, not an exception', () async {
+      // Another platform, or a host whose native build predates 2.4.
+      reply = MissingPluginException('No implementation found for method getKeys');
+
+      final json = decoded(await EimzoFlutter.instance.getKeys());
+
+      expect(json['status'], 'error');
+      expect(json['code'], 'sign_failed');
+      expect(json['message'], contains('No implementation'));
+    });
+
+    test('a null reply is sign_failed rather than a null string', () async {
+      reply = null;
+
+      final json = decoded(await EimzoFlutter.instance.sign(keyId: 'k', deepLink: 'l'));
+
+      expect(json.keys, ['status', 'code', 'message']);
+      expect(json['code'], 'sign_failed');
     });
   });
 

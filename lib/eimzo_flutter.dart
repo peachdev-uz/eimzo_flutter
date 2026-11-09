@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 
 /// Which E-IMZO the SDK works with — see [EimzoConfig.environment].
@@ -98,7 +100,9 @@ class EimzoException implements Exception {
 ///
 /// The native SDK owns all signing / key-management UI — this plugin just
 /// initializes it on the host activity and opens it, with a sign request
-/// the app made ([EimzoSignLink]) or without one.
+/// the app made ([EimzoSignLink]) or without one. For an integrator YT has
+/// registered for the «Kalitlar API» it also lists the user's keys
+/// ([getKeys]) and signs with one of them in the SDK's own sheet ([sign]).
 class EimzoFlutter {
   EimzoFlutter._();
   static final EimzoFlutter instance = EimzoFlutter._();
@@ -110,7 +114,8 @@ class EimzoFlutter {
   /// when the app or the phone was refused — the SDK has then shown its
   /// blocked screen over the app, and closing it comes back to the app — and
   /// `true` otherwise. On iOS it stores the config and returns `true`; the
-  /// same checks run when [openSignUi] presents the UI.
+  /// same checks run when [openSignUi] presents the UI, and when [getKeys] or
+  /// [sign] is called.
   Future<bool> init({EimzoConfig config = const EimzoConfig()}) async {
     try {
       final allowed = await _channel.invokeMethod<bool>('init', config.toMap());
@@ -144,6 +149,140 @@ class EimzoFlutter {
       throw EimzoException(e.code, e.message ?? '');
     }
   }
+
+  /// «Kalitlar API» (2.4): the keys the user has added to the SDK on this
+  /// phone, as the native SDK's JSON, unchanged.
+  ///
+  /// Only for an integrator YT has registered for it. The permission — the
+  /// integrator's «Kalitlar API» in YT's gateway admin panel — is off by
+  /// default; YT turns it on at the integrator's request, once there is a
+  /// contract, for all of the integrator's apps, and the SDK reads it from
+  /// the gateway session: turned on, it reaches the app with the next
+  /// session — within the hour, at once when the app restarts. Without it
+  /// this and [sign] answer `api_not_allowed`. [openSignUi] stays open to
+  /// every registered app, and it is where users add their keys: the API
+  /// lists them and signs, it does not add any.
+  ///
+  /// ```dart
+  /// final reply = jsonDecode(await EimzoFlutter.instance.getKeys());
+  /// ```
+  ///
+  /// ```json
+  /// {"status":"ok","keys":[
+  ///   {"id":"7a3f…","pinfl":"31234567890123","name":"ALIYEV VALI ALIYEVICH",
+  ///    "validFrom":"2025-03-01","validTo":"2027-03-01"}]}
+  /// ```
+  ///
+  /// Every kind of key — file, QR, ID card, USB token, BAIK — that can be used
+  /// in the configured [EimzoConfig.environment], expired ones too, in the
+  /// SDK's own order with the default key first; a key added in the other
+  /// environment is left out. `id` is opaque: hand it to [sign] as it is.
+  /// `pinfl` is null when the certificate has none. `validFrom` and
+  /// `validTo` are `yyyy-MM-dd`, or null when the SDK cannot read them;
+  /// `validTo` is how the app tells an expired key. No keys:
+  /// `{"status":"ok","keys":[]}`.
+  ///
+  /// An error comes as `{"status":"error","code":"…","message":"…"}`, with
+  /// the codes [sign] lists — here `api_not_allowed`, `not_initialized`,
+  /// `blocked`, `network` or `sign_failed`. It never throws.
+  ///
+  /// Call [init] first, with the usual config: on Android the API works once
+  /// [init] has returned `true` in this process, and on iOS it runs on the
+  /// config [init] stored.
+  Future<String> getKeys() =>
+      _keysApi(() => _channel.invokeMethod<String>('getKeys'));
+
+  /// «Kalitlar API» (2.4): signs [deepLink] — a sign request made with
+  /// [EimzoSignLink.create] — with the key [keyId] from [getKeys], and returns
+  /// how it ended as the native SDK's JSON, unchanged. Only for an integrator
+  /// with the permission; see [getKeys].
+  ///
+  /// ```dart
+  /// final link = EimzoSignLink.create(siteId: siteId, documentId: documentId, hash: hash);
+  /// final reply = jsonDecode(await EimzoFlutter.instance.sign(keyId: id, deepLink: link));
+  /// if (reply['status'] == 'signed') { /* your backend has it from E-IMZO */ }
+  /// ```
+  ///
+  /// The SDK checks first and answers without opening anything when a check
+  /// fails: the permission, the request, the key here, the key not expired,
+  /// no other [sign] open. Then it opens its own sign sheet over the app —
+  /// the site, the hash and the key, fixed, with no other to pick. The user
+  /// types the password, or the PIN with the ID card or token, there and
+  /// never in your app, and taps «Imzolash»; after a signature the sheet
+  /// says «Imzolandi», closes by itself after 3 seconds, and the call
+  /// returns. Any site's request can be signed, as in [openSignUi].
+  ///
+  /// The signature goes to E-IMZO through the YT gateway, and E-IMZO hands
+  /// the signed document to your backend, as with [openSignUi]. No signature
+  /// or PKCS#7 comes to the app: `signed` tells it the signing went through,
+  /// and the backend has the result from E-IMZO.
+  ///
+  /// - `{"status":"signed"}` — E-IMZO accepted the signature.
+  /// - `{"status":"cancelled"}` — the user closed the sheet without signing,
+  ///   also after an error they could act on: a wrong password or PIN, the
+  ///   card or token, the network.
+  /// - `{"status":"error","code":"…","message":"…"}` — a check failed, or the
+  ///   flow ended by itself.
+  ///
+  /// The codes, the same on Android and iOS:
+  ///
+  /// - `api_not_allowed` — the integrator has no «Kalitlar API» permission.
+  /// - `not_initialized` — Android: [init] has not returned `true` in this
+  ///   process; iOS: [init] has not been called.
+  /// - `blocked` — the licence check or the gateway turned the app or the
+  ///   phone away; `message` starts with their code, e.g. `app_blocked`. The
+  ///   blocked screen is not shown.
+  /// - `network` — the gateway could not be reached, or did not answer in
+  ///   time.
+  /// - `invalid_request` — [deepLink] is not a valid sign request, or E-IMZO
+  ///   does not know its site.
+  /// - `key_not_found` — no key with that `id` can be used in this
+  ///   environment.
+  /// - `key_expired` — the key's certificate has expired.
+  /// - `busy` — another [sign] is still open; there is one at a time.
+  /// - `sign_failed` — E-IMZO refused the signature, or anything else ended
+  ///   the flow; `message` says what — E-IMZO's own answer when it refused,
+  ///   `pin_blocked` when the card's or token's PIN is blocked.
+  ///
+  /// `message` is for the developer, not the user: English, except E-IMZO's
+  /// own answer, and never a key, a password or a hash. Show the user your
+  /// own words for the `code`.
+  ///
+  /// It never throws. A failure of the plugin itself comes in the same
+  /// shape: with no Android activity to open the sheet over it is
+  /// `sign_failed` with the message `no_activity`, and any other platform
+  /// error is `sign_failed` with that error's message.
+  Future<String> sign({required String keyId, required String deepLink}) =>
+      _keysApi(() => _channel.invokeMethod<String>('sign', {
+            'keyId': keyId,
+            'deepLink': deepLink,
+          }));
+
+  /// Runs a «Kalitlar API» call and gives back the native JSON as it is. A
+  /// failure of the plugin itself — no native side, no activity, no config —
+  /// comes back in the API's own error shape rather than as an exception, so
+  /// an app reads one thing whatever happened.
+  static Future<String> _keysApi(Future<String?> Function() call) async {
+    try {
+      return await call() ?? _apiError('sign_failed', 'The native side returned no result.');
+    } on PlatformException catch (e) {
+      final message = e.message ?? e.code;
+      return switch (e.code) {
+        // Android: no activity to open the sheet over.
+        'NO_ACTIVITY' => _apiError('sign_failed', 'no_activity'),
+        // iOS: init has stored no config to call the SDK with.
+        'NOT_INITIALIZED' => _apiError('not_initialized', message),
+        _ => _apiError('sign_failed', message),
+      };
+    } on MissingPluginException catch (e) {
+      // No native side for the call: another platform, or a host whose
+      // native build predates 2.4.
+      return _apiError('sign_failed', e.message ?? 'No native implementation.');
+    }
+  }
+
+  static String _apiError(String code, String message) =>
+      jsonEncode({'status': 'error', 'code': code, 'message': message});
 }
 
 /// The sign request link the SDK opens — `eimzo://sign?qc=…` — made from the
