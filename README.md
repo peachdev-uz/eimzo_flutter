@@ -273,23 +273,27 @@ has added to the SDK and sign with one of them in the SDK's own sheet,
 without opening the full UI:
 
 - `getKeys()` — the keys, as JSON;
-- `sign(keyId:, deepLink:)` — signs a sign request with the chosen key.
+- `sign(keyId:, deepLink:)` — signs a sign request with the chosen key;
+- since 2.6, `addPfxKey`, `addQrKey`, `addIdCardKey` and `addTokenKey` — add
+  a key your app hands over, with no SDK window; see
+  [Adding a key](#adding-a-key-26).
 
-Both return the native SDK's JSON as a `String`, once, and never throw. The
-JSON and the codes are the same as in the Android (`EImzoSDK.getKeys` /
-`EImzoSDK.sign`) and iOS (`EImzoAPI`) SDKs.
+All of them return the native SDK's JSON as a `String`, once, and never
+throw. The JSON and the codes are the same as in the Android (`EImzoSDK`)
+and iOS (`EImzoAPI`) SDKs.
 
 **The permission** is the integrator's «Kalitlar API». It is off by
 default; YT turns it on at the integrator's request once there is a
 contract — write to **info@yt.uz**. It covers all of the integrator's apps.
 Turned on, it takes effect when the app restarts, or within the hour;
-turned off, `sign` stops within a few seconds. Without it both methods
-answer `api_not_allowed`; `openSignUi` stays open to every registered app.
+turned off, `sign` stops within a few seconds. Without it every method
+answers `api_not_allowed`; `openSignUi` stays open to every registered app.
 
-**Keys are added in the SDK's UI**, as before: `openSignUi`, by file, QR
-code, ID card, USB token or BAIK token. The API lists keys and signs with
-them; it does not add any. No method takes a password or returns key
-material: the password or PIN is typed only in the SDK's sheet.
+**Users add keys in the SDK's UI**, as before: `openSignUi`, by file, QR
+code, ID card, USB token or BAIK token. Since 2.6 your app can add one too
+([Adding a key](#adding-a-key-26)), under the same permission. `getKeys`
+and `sign` take no password: in `sign` the password or PIN is typed only in
+the SDK's sheet. No method returns key material or a saved password.
 
 Call `init` first, with the usual config. On Android the API works once
 `init` has returned `true` in the process; on iOS it runs on the config
@@ -400,7 +404,96 @@ users your own text for the `code`.
 A failure in the plugin itself comes back in the same shape, not as an
 exception: with no Android activity to open the sheet over, `sign` answers
 `sign_failed` with the message `no_activity`; any other platform error is
-`sign_failed` with that error's message.
+`sign_failed` with that error's message (`add_failed` for the add methods).
+
+#### Adding a key (2.6)
+
+Your app hands the SDK a key and its password or PIN, and the SDK adds it as
+its own screens would — no SDK window opens:
+
+| Method | Adds |
+|---|---|
+| `addPfxKey(pfx:, password:, savePassword: false)` | A `.pfx` key file — its bytes, a `Uint8List` |
+| `addQrKey(qrCode:, password:, savePassword: false)` | An E-IMZO key QR code — the code's text |
+| `addIdCardKey(pin:, savePin: false)` | An ID card. Android: the SDK waits up to 60 seconds for the card, showing nothing. iOS: the system's NFC sheet comes up |
+| `addTokenKey(pin:, savePin: false)` | The token plugged in — USB or BAIK, the SDK tells which |
+| `cancelAddKey()` | Android: ends the ID card wait. iOS: nothing — the system's sheet has its own Cancel |
+
+> ⚠️ **Your responsibility.** Here the password, the PIN and the key file
+> pass through your app's code. Your company answers for them under its
+> contract with YT: do not keep, log or send them anywhere, and do not hold
+> the file longer than needed. The SDK uses them only to add the key.
+
+```dart
+final reply = jsonDecode(
+  await EimzoFlutter.instance.addPfxKey(pfx: bytes, password: password),
+) as Map<String, dynamic>;
+switch (reply['status']) {
+  case 'added':
+  case 'exists':
+    onKeyReady((reply['key'] as Map<String, dynamic>)['id'] as String); // for sign()
+  case 'error':
+    if (reply['code'] == 'wrong_password') {
+      askPasswordAgain();
+    } else {
+      showError(reply['code']);
+    }
+}
+```
+
+```dart
+showHoldCardHint(); // Android: your own "hold the card to the phone"
+final reply = jsonDecode(
+  await EimzoFlutter.instance.addIdCardKey(pin: pin),
+) as Map<String, dynamic>;
+hideHoldCardHint();
+if (reply['code'] == 'wrong_pin') askPinAgain(reply['triesLeft'] as int?); // null: the card did not say
+
+// On your Cancel button (Android):
+await EimzoFlutter.instance.cancelAddKey();
+```
+
+The answer — `key` has the six fields `getKeys` lists:
+
+- `{"status":"added","key":{…}}` — the key is added.
+- `{"status":"exists","key":{…}}` — a key with this certificate is in the
+  SDK already. Not an error: nothing changes, its saved password neither,
+  and its `id` signs.
+- `{"status":"cancelled"}` — ID card only: the user closed the NFC sheet
+  (iOS), or `cancelAddKey()` ended the wait or the activity went away
+  (Android).
+- `{"status":"error","code":"…","message":"…"}` — with `wrong_pin`, also
+  `"triesLeft"`: the attempts the card or token says are left, when it says.
+
+Good to know:
+
+- **PIN attempts.** Each wrong PIN takes one of the ID card's or token's
+  attempts, and the last one blocks it (`pin_blocked`); only a service
+  centre unblocks it. The SDK never retries a PIN — and your app must not
+  either: ask the user each time. An empty PIN is not sent
+  (`wrong_pin`, no `triesLeft`).
+- **Saving.** `savePassword` / `savePin` are false by default: the SDK keeps
+  nothing, and `sign` asks for the password or PIN in its sheet. With true,
+  the SDK keeps it encrypted and `sign` signs with this key without asking —
+  as the SDK's «Parolni saqlash» does. Ask the user first.
+- **Checks.** The key is added for the configured `environment`. A key
+  file's or key QR code's certificate is checked with E-IMZO, so it needs
+  the network; an ID card's or token's is read off the card.
+- **One add at a time**: another one meanwhile gets `busy`.
+
+| `code` | When |
+|---|---|
+| `wrong_password` | The key file's or key QR code's password is wrong |
+| `wrong_pin` | The ID card's or token's PIN is wrong, or empty; `triesLeft` when the card or token says |
+| `pin_blocked` | The PIN is blocked: no attempts left |
+| `invalid_key` | Not a key file, not a key QR code, not an E-IMZO card, a token with no key, or a certificate E-IMZO did not accept |
+| `nfc_unavailable` | The phone has no NFC, NFC is off, or (iOS) the app may not use it |
+| `card_read_failed` | The card left the phone before it was read, or none came in time |
+| `token_not_found` | No token plugged in, pulled out, USB access declined, or the token busy |
+| `busy` | Another key is being added |
+| `add_failed` | Anything else; `message` says what — e.g. the key was added in the other environment |
+
+`api_not_allowed`, `not_initialized`, `blocked` and `network` as above.
 
 ### Environment
 
@@ -589,6 +682,17 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
   own sheet, and returns how it ended as JSON — `signed`, `cancelled` or an
   error. Never throws.
 
+- **`addPfxKey({required Uint8List pfx, required String password, bool savePassword = false})`**,
+  **`addQrKey({required String qrCode, required String password, bool savePassword = false})`**,
+  **`addIdCardKey({required String pin, bool savePin = false})`**,
+  **`addTokenKey({required String pin, bool savePin = false})`** → `Future<String>`
+  «Kalitlar API» (2.6): add a key the app hands over, with no SDK window,
+  and return `added`, `exists`, `cancelled` (ID card) or an error as JSON.
+  Never throw — see [Adding a key](#adding-a-key-26).
+
+- **`EimzoFlutter.instance.cancelAddKey()`** → `Future<void>`
+  Android: ends `addIdCardKey`'s wait for the card. Nothing on iOS.
+
 **Removed in 2.3:** `getInitialDeeplink()`, `onNewDeeplink()` and
 `launchDeeplink()`. The plugin no longer takes `eimzo://` links from
 outside; the app makes the request with `EimzoSignLink.create`.
@@ -621,7 +725,7 @@ outside; the app makes the request with `EimzoSignLink.create`.
 > version, `isTestMode` and `license` never reached the iOS SDK.
 
 `EimzoException(code, message)` wraps `PlatformException` errors from
-the native side for `init` and `openSignUi`. `getKeys` and `sign` never
+the native side for `init` and `openSignUi`. The Keys API methods never
 throw: they answer in their JSON.
 
 ## Licence

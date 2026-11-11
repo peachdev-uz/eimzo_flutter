@@ -218,6 +218,52 @@ void main() {
         reason: 'iOS plagini sign ga saqlangan konfiguratsiyani bermayapti');
   });
 
+  test('every argument the add methods send is read on both platforms', () async {
+    // As for sign(): a key spelled differently on one side would reach the
+    // SDK empty — a password that never arrives reads as wrong_password, a
+    // PIN as wrong_pin, and the user is told their secret is wrong.
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const channel = MethodChannel('uz.peachdev/eimzo_flutter');
+    final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    final sent = <MethodCall>[];
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      sent.add(call);
+      return '{"status":"cancelled"}';
+    });
+    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+
+    final eimzo = EimzoFlutter.instance;
+    await eimzo.addPfxKey(pfx: Uint8List.fromList([1]), password: 'p', savePassword: true);
+    await eimzo.addQrKey(qrCode: 'e73101', password: 'p', savePassword: true);
+    await eimzo.addIdCardKey(pin: '1', savePin: true);
+    await eimzo.addTokenKey(pin: '1', savePin: true);
+
+    final keys = {
+      for (final call in sent) ...Map<String, dynamic>.from(call.arguments as Map).keys,
+    };
+    expect(keys, containsAll(['pfx', 'qrCode', 'password', 'savePassword', 'pin', 'savePin']));
+    for (final key in keys) {
+      expect(kotlinSource, contains('"$key"'),
+          reason: 'Android plagini kalit qo\'shishning "$key" argumentini o\'qimaydi');
+      expect(swiftSource, contains('"$key"'),
+          reason: 'iOS plagini kalit qo\'shishning "$key" argumentini o\'qimaydi');
+    }
+  });
+
+  test('the add methods reach the SDK on both platforms', () {
+    for (final method in ['addPfxKey', 'addQrKey', 'addIdCardKey', 'addTokenKey', 'cancelAddKey']) {
+      expect(kotlinSource, contains('EImzoSDK.$method('),
+          reason: 'Android plagini EImzoSDK.$method ni chaqirmaydi');
+    }
+    // The ID card over the plugin's activity: Dart has no NFC tag to give.
+    expect(kotlinSource, matches(RegExp(r'EImzoSDK\.addIdCardKey\(\s*act,')),
+        reason: 'Android plagini ID kartani activity bilan kutmayapti');
+    for (final method in ['addPfxKey', 'addQrKey', 'addIdCardKey', 'addTokenKey']) {
+      expect(swiftSource, matches(RegExp('EImzoAPI\\.$method\\([^)]*config: config\\)')),
+          reason: 'iOS plagini $method ga saqlangan konfiguratsiyani bermayapti');
+    }
+  });
+
   test('the plugin errors Dart maps are the ones the platforms send', () {
     // Dart turns these two codes into the API's own JSON. Renamed on the
     // native side, they would fall through to a generic sign_failed.

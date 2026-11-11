@@ -361,7 +361,9 @@ class EimzoException implements Exception {
 /// initializes it on the host activity and opens it, with a sign request
 /// the app made ([EimzoSignLink]) or without one. For an integrator YT has
 /// registered for the «Kalitlar API» it also lists the user's keys
-/// ([getKeys]) and signs with one of them in the SDK's own sheet ([sign]).
+/// ([getKeys]), signs with one of them in the SDK's own sheet ([sign]) and,
+/// since 2.6, adds a key the app hands over, with no SDK window
+/// ([addPfxKey], [addQrKey], [addIdCardKey], [addTokenKey]).
 class EimzoFlutter {
   EimzoFlutter._();
   static final EimzoFlutter instance = EimzoFlutter._();
@@ -464,9 +466,10 @@ class EimzoFlutter {
   /// integrator's request, once there is a contract, for all of the
   /// integrator's apps. Turned on, it takes effect when the app restarts, or
   /// within the hour; turned off, [sign] stops within a few seconds. Without
-  /// it this and [sign] answer `api_not_allowed`. [openSignUi] stays open to
-  /// every registered app, and it is where users add their keys: the API
-  /// lists them and signs, it does not add any.
+  /// it this, [sign] and the add methods answer `api_not_allowed`.
+  /// [openSignUi] stays open to every registered app, and users add their
+  /// keys there; since 2.6 the app can add one itself too ([addPfxKey],
+  /// [addQrKey], [addIdCardKey], [addTokenKey]).
   ///
   /// ```dart
   /// final reply = jsonDecode(await EimzoFlutter.instance.getKeys());
@@ -566,26 +569,158 @@ class EimzoFlutter {
             'deepLink': deepLink,
           }));
 
+  // ── «Kalitlar API»: adding a key (2.6) ───────────────────────────────────
+  //
+  // The app hands the SDK a key file, a key QR code, an ID card or a token
+  // with its password or PIN, and the SDK adds the key as its own screens
+  // would — no SDK window opens, except iOS's system NFC sheet for an ID
+  // card. Same permission as getKeys() and sign().
+
+  /// «Kalitlar API» (2.6): adds the key file [pfx] — the `.pfx` file's bytes
+  /// — opened with [password], with no SDK window, and returns how it ended
+  /// as the native SDK's JSON, unchanged. Only for an integrator with the
+  /// permission; see [getKeys].
+  ///
+  /// The password and the file pass through your app's code, and your
+  /// company answers for them under its contract with YT: do not keep, log
+  /// or send them anywhere. The SDK uses them only to add the key.
+  ///
+  /// ```dart
+  /// final reply = jsonDecode(
+  ///   await EimzoFlutter.instance.addPfxKey(pfx: bytes, password: password),
+  /// ) as Map<String, dynamic>;
+  /// ```
+  ///
+  /// - `{"status":"added","key":{…}}` — the key, with the six fields
+  ///   [getKeys] lists; its `id` goes to [sign].
+  /// - `{"status":"exists","key":{…}}` — a key with this certificate is in
+  ///   the SDK already: nothing changes, its saved password neither.
+  /// - `{"status":"error","code":"…","message":"…"}`.
+  ///
+  /// With [savePassword] the SDK keeps the password, encrypted, and [sign]
+  /// then signs with this key without asking for it — as the SDK's «Parolni
+  /// saqlash» does; ask the user first. False by default: nothing is kept,
+  /// and [sign] asks in its sheet.
+  ///
+  /// The certificate is checked with E-IMZO through the YT gateway, so this
+  /// needs the network. The key is added for the configured
+  /// [EimzoConfig.environment]. One add at a time: another is `busy`.
+  ///
+  /// Codes: `wrong_password`; `invalid_key` — not a key file the SDK can
+  /// read, or a certificate E-IMZO did not accept; `network`, `busy`,
+  /// `api_not_allowed`, `not_initialized`, `blocked`; `add_failed` —
+  /// anything else, `message` says what. It never throws.
+  Future<String> addPfxKey({
+    required Uint8List pfx,
+    required String password,
+    bool savePassword = false,
+  }) =>
+      _keysApi(
+          () => _channel.invokeMethod<String>('addPfxKey', {
+                'pfx': pfx,
+                'password': password,
+                'savePassword': savePassword,
+              }),
+          failed: 'add_failed');
+
+  /// «Kalitlar API» (2.6): adds the key in an E-IMZO key QR code — [qrCode],
+  /// the code's text as a scanner reads it — opened with [password]. As
+  /// [addPfxKey] otherwise; a code that is not a key's is `invalid_key`.
+  Future<String> addQrKey({
+    required String qrCode,
+    required String password,
+    bool savePassword = false,
+  }) =>
+      _keysApi(
+          () => _channel.invokeMethod<String>('addQrKey', {
+                'qrCode': qrCode,
+                'password': password,
+                'savePassword': savePassword,
+              }),
+          failed: 'add_failed');
+
+  /// «Kalitlar API» (2.6): adds the key on the user's ID card, checking
+  /// [pin] on the card.
+  ///
+  /// - Android: the SDK turns NFC reader mode on over the app's activity and
+  ///   waits up to 60 seconds for the card, showing nothing: tell the user
+  ///   to hold the card to the phone yourself. [cancelAddKey] ends the wait.
+  /// - iOS: the system's NFC sheet comes up, with the SDK's words in the
+  ///   app's language — Core NFC has no other way to read a card. Its
+  ///   Cancel ends the call as `cancelled`.
+  ///
+  /// Each wrong PIN takes one of the card's attempts, and the last one
+  /// blocks it: never retry a PIN by yourself — ask the user again. An empty
+  /// PIN is not sent to the card (`wrong_pin`, no `triesLeft`).
+  ///
+  /// As [addPfxKey], and also:
+  ///
+  /// - `{"status":"cancelled"}` — the wait or the sheet ended without a card;
+  /// - `wrong_pin`, with `"triesLeft"` when the card says how many are left;
+  /// - `pin_blocked`; `invalid_key` — not an E-IMZO card;
+  /// - `nfc_unavailable` — no NFC, NFC off, or NFC not allowed to the app;
+  /// - `card_read_failed` — the card left the phone before it was read, or
+  ///   none came in time.
+  ///
+  /// With [savePin] the SDK keeps the PIN for [sign]; false by default.
+  Future<String> addIdCardKey({required String pin, bool savePin = false}) =>
+      _keysApi(
+          () => _channel.invokeMethod<String>('addIdCardKey', {
+                'pin': pin,
+                'savePin': savePin,
+              }),
+          failed: 'add_failed');
+
+  /// «Kalitlar API» (2.6): adds the key on the USB token plugged in — a USB
+  /// (FEITIAN) or a BAIK token, which the SDK tells apart itself — checking
+  /// [pin] on it. Android may first ask the user to let the app use the USB
+  /// device. As [addIdCardKey] for the PIN: `wrong_pin` with `triesLeft`,
+  /// `pin_blocked`; `token_not_found` — none plugged in, pulled out, USB
+  /// access declined, or the token busy; `invalid_key` — a token with no
+  /// key.
+  Future<String> addTokenKey({required String pin, bool savePin = false}) =>
+      _keysApi(
+          () => _channel.invokeMethod<String>('addTokenKey', {
+                'pin': pin,
+                'savePin': savePin,
+              }),
+          failed: 'add_failed');
+
+  /// Android: ends [addIdCardKey]'s wait for the card, which then returns
+  /// `{"status":"cancelled"}`; a card already being read is read to the end.
+  /// iOS: nothing — the system's NFC sheet has its own Cancel.
+  Future<void> cancelAddKey() async {
+    try {
+      await _channel.invokeMethod<void>('cancelAddKey');
+    } on PlatformException {
+      // Nothing waiting is nothing to cancel.
+    } on MissingPluginException {
+      // A native side from before 2.6 has no wait to end.
+    }
+  }
+
   /// Runs a «Kalitlar API» call and gives back the native JSON as it is. A
   /// failure of the plugin itself — no native side, no activity, no config —
   /// comes back in the API's own error shape rather than as an exception, so
-  /// an app reads one thing whatever happened.
-  static Future<String> _keysApi(Future<String?> Function() call) async {
+  /// an app reads one thing whatever happened: [failed] — `sign_failed` for
+  /// getKeys and sign, `add_failed` for the adds.
+  static Future<String> _keysApi(Future<String?> Function() call,
+      {String failed = 'sign_failed'}) async {
     try {
-      return await call() ?? _apiError('sign_failed', 'The native side returned no result.');
+      return await call() ?? _apiError(failed, 'The native side returned no result.');
     } on PlatformException catch (e) {
       final message = e.message ?? e.code;
       return switch (e.code) {
-        // Android: no activity to open the sheet over.
-        'NO_ACTIVITY' => _apiError('sign_failed', 'no_activity'),
+        // Android: no activity to open the sheet over, or to wait for a card on.
+        'NO_ACTIVITY' => _apiError(failed, 'no_activity'),
         // iOS: init has stored no config to call the SDK with.
         'NOT_INITIALIZED' => _apiError('not_initialized', message),
-        _ => _apiError('sign_failed', message),
+        _ => _apiError(failed, message),
       };
     } on MissingPluginException catch (e) {
       // No native side for the call: another platform, or a host whose
-      // native build predates 2.4.
-      return _apiError('sign_failed', e.message ?? 'No native implementation.');
+      // native build predates the method.
+      return _apiError(failed, e.message ?? 'No native implementation.');
     }
   }
 
