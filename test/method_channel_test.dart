@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eimzo_flutter/eimzo_flutter.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -126,6 +127,81 @@ void main() {
       // read as "licensed".
       reply = null;
       expect(await EimzoFlutter.instance.init(), isFalse);
+    });
+  });
+
+  group('init: appearance, language, hash (2.5.0)', () {
+    test('a 2.4 config sends the defaults and no appearance', () async {
+      // Without an appearance the SDK keeps its own design; the native sides
+      // must not be handed an empty one, which would hide its wallpaper and
+      // dark-mode choice for nothing.
+      reply = true;
+      await EimzoFlutter.instance.init();
+
+      final args = argsOf(calls.single);
+      expect(args.containsKey('appearance'), isFalse);
+      expect(args.containsKey('language'), isFalse);
+      expect(args['showLanguagePicker'], isTrue);
+      expect(args['hashDisplay'], 'visible');
+    });
+
+    test('colours go as 0xAARRGGBB, only the ones given', () async {
+      reply = true;
+      await EimzoFlutter.instance.init(
+        config: const EimzoConfig(
+          appearance: EimzoAppearance(
+            light: EimzoPalette(primary: Color(0xFF0A6CFF), background: Color(0xFFFFFFFF)),
+            dark: EimzoPalette(primary: Color(0xFF4D94FF)),
+            themeMode: ThemeMode.dark,
+            cornerRadius: 12,
+          ),
+        ),
+      );
+
+      final appearance = Map<String, dynamic>.from(argsOf(calls.single)['appearance'] as Map);
+      expect(appearance['light'], {'primary': 0xFF0A6CFF, 'background': 0xFFFFFFFF});
+      expect(appearance['dark'], {'primary': 0xFF4D94FF});
+      expect(appearance['themeMode'], 'dark');
+      expect(appearance['cornerRadius'], 12);
+      expect(appearance.containsKey('fontFamily'), isFalse);
+      expect(appearance.containsKey('fonts'), isFalse);
+    });
+
+    test('the theme mode is the system one unless chosen', () async {
+      reply = true;
+      await EimzoFlutter.instance.init(
+        config: const EimzoConfig(appearance: EimzoAppearance()),
+      );
+      expect((argsOf(calls.single)['appearance'] as Map)['themeMode'], 'system');
+    });
+
+    test('language, its picker and the hash travel by name', () async {
+      reply = true;
+      await EimzoFlutter.instance.init(
+        config: const EimzoConfig(
+          language: EimzoLanguage.ru,
+          showLanguagePicker: false,
+          hashDisplay: EimzoHashDisplay.hidden,
+        ),
+      );
+
+      final args = argsOf(calls.single);
+      expect(args['language'], 'ru');
+      expect(args['showLanguagePicker'], isFalse);
+      expect(args['hashDisplay'], 'hidden');
+    });
+
+    test('a font family with no files in the app is sent by name only', () async {
+      // The test binding has no FontManifest.json for this family: the
+      // native side keeps its own font (Android) or tries the name (iOS).
+      reply = true;
+      await EimzoFlutter.instance.init(
+        config: const EimzoConfig(appearance: EimzoAppearance(fontFamily: 'NoSuchFont')),
+      );
+
+      final appearance = argsOf(calls.single)['appearance'] as Map;
+      expect(appearance['fontFamily'], 'NoSuchFont');
+      expect(appearance.containsKey('fonts'), isFalse);
     });
   });
 

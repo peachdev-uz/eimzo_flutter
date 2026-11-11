@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eimzo_flutter/eimzo_flutter.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -102,6 +103,78 @@ void main() {
       expect(swiftSource, contains('"$key"'),
           reason: 'iOS plagini "$key" ni o\'qimaydi');
     }
+  });
+
+  test('every appearance, language and hash key is read on both platforms', () {
+    // The 2.5.0 options travel as a nested map: a key one side spells
+    // differently would leave that colour, the font or the hash setting at
+    // the SDK's default without a word.
+    const full = EimzoConfig(
+      appearance: EimzoAppearance(
+        light: EimzoPalette(
+          primary: Color(0xFF000001),
+          background: Color(0xFF000002),
+          surface: Color(0xFF000003),
+          text: Color(0xFF000004),
+          textSecondary: Color(0xFF000005),
+          divider: Color(0xFF000006),
+        ),
+        dark: EimzoPalette(primary: Color(0xFF000007)),
+        fontFamily: 'Inter',
+        cornerRadius: 8,
+      ),
+      language: EimzoLanguage.en,
+      showLanguagePicker: false,
+      hashDisplay: EimzoHashDisplay.hidden,
+    );
+    final top = full.toMap();
+    final appearance = Map<String, dynamic>.from(top['appearance'] as Map);
+    final palette = Map<String, dynamic>.from(appearance['light'] as Map);
+    // `fonts` is added by init() from the app's FontManifest.json, with
+    // these three faces.
+    final keys = {
+      ...top.keys,
+      ...appearance.keys,
+      ...palette.keys,
+      'fonts',
+      'regular',
+      'medium',
+      'semibold',
+    };
+    expect(palette.keys, hasLength(6), reason: 'palitra 6 rangni chiqarmayapti');
+    expect(top.keys, containsAll(['appearance', 'language', 'showLanguagePicker', 'hashDisplay']));
+
+    for (final key in keys) {
+      expect(kotlinSource, contains('"$key"'),
+          reason: 'Android plagini "$key" ni o\'qimaydi');
+      expect(swiftSource, contains('"$key"'),
+          reason: 'iOS plagini "$key" ni o\'qimaydi');
+    }
+  });
+
+  test('the theme mode and hash values are the ones the platforms read', () {
+    // Dart sends the enum names. iOS spells them out; Android matches the
+    // SDK's constants by name, ignoring case.
+    expect(ThemeMode.values.map((e) => e.name), ['system', 'light', 'dark']);
+    expect(EimzoHashDisplay.values.map((e) => e.name), ['visible', 'hidden']);
+    expect(EimzoLanguage.values.map((e) => e.name), ['uz', 'ru', 'en']);
+    for (final value in ['"light"', '"dark"', '"hidden"']) {
+      expect(swiftSource, contains(value), reason: 'iOS plagini $value ni tanimaydi');
+    }
+    expect(swiftSource, contains('EImzoLanguage.init(rawValue:)'),
+        reason: 'iOS plagini tilni nomidan o\'qimaydi');
+    expect(kotlinSource, contains('ignoreCase = true'),
+        reason: 'Android plagini enum nomlarini katta-kichik harfga qaramay solishtirmayapti');
+  });
+
+  test('both platforms hand the font files to the SDK', () {
+    expect(kotlinSource, contains('getAssetFilePathByName'),
+        reason: 'Android plagini shrift asset yo\'lini topmayapti');
+    expect(kotlinSource, contains('EImzoFont.assets('));
+    expect(swiftSource, contains('FlutterDartProject.lookupKey(forAsset:'),
+        reason: 'iOS plagini shrift faylini topmayapti');
+    expect(swiftSource, contains('CTFontManagerRegisterFontsForURL'),
+        reason: 'iOS plagini shriftni ro\'yxatdan o\'tkazmayapti');
   });
 
   test('every argument sign() sends is read on both platforms', () async {

@@ -38,8 +38,43 @@ class _HomePageState extends State<HomePage> {
     hash: '518b091cc3878831103872e422ec71d2e6ee501e255dce3290af02042edfcd69',
   );
 
-  /// The same config every time: iOS uses the last one `init` was given.
-  static const _config = EimzoConfig(environment: EimzoEnvironment.dev);
+  /// «Namuna bank»: a made-up bank's theme, to show the SDK in an app's own
+  /// colours (2.5.0). The SDK takes them from the ThemeData.
+  static final _bankLight = ThemeData(
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0A6CFF)),
+    scaffoldBackgroundColor: Colors.white,
+    cardTheme: const CardThemeData(color: Color(0xFFF2F4F7)),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+  );
+  static final _bankDark = ThemeData(
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF0A6CFF), brightness: Brightness.dark),
+    scaffoldBackgroundColor: const Color(0xFF0C111D),
+    cardTheme: const CardThemeData(color: Color(0xFF161B26)),
+  );
+
+  /// Whether the SDK opens in «Namuna bank»'s design: its colours, Russian
+  /// without the SDK's language choice, and no hash on the app's own
+  /// requests.
+  bool _bank = false;
+
+  /// The config for every call: iOS uses the last one `init` was given, so
+  /// a change of design is another `init`.
+  EimzoConfig get _config => _bank
+      ? EimzoConfig(
+          environment: EimzoEnvironment.dev,
+          appearance: EimzoAppearance.fromTheme(_bankLight, dark: _bankDark),
+          language: EimzoLanguage.ru,
+          showLanguagePicker: false,
+          hashDisplay: EimzoHashDisplay.hidden,
+        )
+      : const EimzoConfig(environment: EimzoEnvironment.dev);
 
   final _eimzo = EimzoFlutter.instance;
 
@@ -109,7 +144,17 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton.icon(
             icon: const Icon(Icons.qr_code_2),
             label: const Text('Open with a sign request'),
-            onPressed: () => _eimzo.openSignUi(deepLink: _signLink),
+            onPressed: () async {
+              if (!await _eimzo.init(config: _config)) return;
+              await _eimzo.openSignUi(deepLink: _signLink);
+            },
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('«Namuna bank» dizayni'),
+            subtitle: const Text('Ilova ranglari, ruscha, hash\'siz'),
+            value: _bank,
+            onChanged: (on) => setState(() => _bank = on),
           ),
           const Divider(height: 32),
           Text('Kalitlar API', style: Theme.of(context).textTheme.titleMedium),

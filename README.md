@@ -425,6 +425,89 @@ await _eimzo.init(
 Up to 2.2 this was `isTestMode`. It still works (`true` is `dev`), but it is
 deprecated.
 
+### Appearance, language and the hash (2.5.0)
+
+The SDK's screens can take your app's look: its colours, font and corners,
+light or dark. The quickest way is your own `ThemeData`:
+
+```dart
+await EimzoFlutter.instance.init(
+  config: EimzoConfig(
+    appearance: EimzoAppearance.fromTheme(
+      lightTheme,                  // your app's ThemeData
+      dark: darkTheme,             // optional
+      themeMode: ThemeMode.system, // or the mode your app is in
+    ),
+    language: EimzoLanguage.ru,    // the SDK's language
+    showLanguagePicker: false,     // your app has its own setting
+    hashDisplay: EimzoHashDisplay.hidden,
+  ),
+);
+```
+
+Or set the colours yourself — each one optional, a colour left out stays the
+SDK's:
+
+```dart
+EimzoAppearance(
+  light: EimzoPalette(
+    primary: Color(0xFF0A6CFF),       // buttons, marks, links
+    background: Colors.white,         // the page
+    surface: Color(0xFFF2F4F7),       // cards, sheets, rows, PIN keys
+    text: Color(0xFF101828),
+    textSecondary: Color(0xFF667085), // hints and captions
+    divider: Color(0xFFEAECF0),
+  ),
+  dark: EimzoPalette(primary: Color(0xFF4D94FF)), // null: the SDK's dark colours with your primary
+  fontFamily: 'Inter',  // a font your app bundles; null: the SDK's own
+  cornerRadius: 12,     // the buttons' radius, 0–28; the rest scale with it
+)
+```
+
+What `fromTheme` takes:
+
+| SDK | `ThemeData` |
+|---|---|
+| `primary` | `colorScheme.primary` |
+| `background` | `scaffoldBackgroundColor` |
+| `surface` | `cardTheme.color`, else `cardColor` (drawn a shade darker if it is the page's colour) |
+| `text` | `colorScheme.onSurface` |
+| `textSecondary` | `colorScheme.onSurfaceVariant` |
+| `divider` | `dividerTheme.color`, else `colorScheme.outlineVariant` (Material 3) or `dividerColor` |
+| font | `textTheme.bodyMedium.fontFamily` |
+| corners | the filled or elevated button theme's `RoundedRectangleBorder` |
+
+- **The SDK works out the rest** from the six colours: the link colour, the
+  label on a filled button (white or black, whichever reads), washes, PIN
+  dots. If the text does not read on the background or the cards (under
+  4.5:1), it ignores that mode's colours, keeps its own and logs why.
+- **The font** has to be one your app bundles in `pubspec.yaml`: the plugin
+  finds its files among the app's assets and hands them to the SDK, regular,
+  medium and semibold where the family has them. A font `google_fonts`
+  downloads at run time cannot be handed over; the SDK then keeps its own
+  (the system font on iOS, Montserrat on Android).
+- **With an appearance** the SDK also draws no photo behind its home screen,
+  and on Android stops offering its own wallpaper and dark-mode choices: the
+  look is your app's.
+- **Language:** `language` is the language the SDK starts in; the user can
+  still change it in the SDK's settings. With `showLanguagePicker: false`
+  the choice is gone and the SDK is always in `language` — or, with none,
+  the phone's language. Without either the SDK does what it did before.
+- **To follow a change** in your app — its theme mode, its language — call
+  `init` again with the new config. The next SDK screen takes it.
+- **`hashDisplay: EimzoHashDisplay.hidden`** leaves the hash card out of the
+  sign screen for a request your app made — `openSignUi(deepLink: …)` and
+  the Keys API's `sign`. The user has nothing to compare it with there, and
+  your backend gave the hash. A QR code the user scans with the SDK's own
+  scanner still shows it: that site shows the same hash, and comparing the
+  two protects the user.
+
+**What stays the SDK's**, whatever is set, because it protects the person
+signing: the name of the site asking for the signature, the key's holder,
+the «Imzolash» button's words and place (its colour is your primary), and
+the SDK's own password and PIN entry, which your app never sees. So do the
+error, warning and success colours, the key card and the QR scanner.
+
 ### YT gateway
 
 Every app signs through the YT gateway; `environment` decides which one, and
@@ -465,7 +548,8 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
 - **`EimzoFlutter.instance.init({EimzoConfig config})`** → `Future<bool>`
   Applies the configuration. Call it before `openSignUi`, with the same
   config every time: iOS uses the last one it was given, Android keeps the
-  one the SDK started with.
+  one the SDK started with — except the appearance, language and hash
+  options (2.5.0), which come from the last `init` on both.
   - **Android** checks the app here: the SDK's device checks (root, hooking
     tools, an attached debugger), the licence if the app ships one, and the
     gateway session, opened by key attestation or with the licence. Returns
@@ -517,6 +601,15 @@ outside; the app makes the request with `EimzoSignLink.create`.
 - `productionApiUrl` / `testApiUrl` — still accepted, so 2.2 code builds,
   but they have no effect: every call goes through the gateway, which knows
   E-IMZO's address.
+- `appearance` — `EimzoAppearance` (2.5.0): colours, font, corners, theme
+  mode; null keeps the SDK's design. See
+  [Appearance, language and the hash](#appearance-language-and-the-hash-250).
+- `language` — `EimzoLanguage.uz`, `.ru` or `.en` (2.5.0); null keeps the
+  SDK's own choice, else the phone's.
+- `showLanguagePicker` — false hides the SDK's language choice (2.5.0); true
+  by default.
+- `hashDisplay` — `EimzoHashDisplay.hidden` leaves the hash out of the sign
+  screen for the app's own requests (2.5.0); `visible` by default.
 
 > Before 2.1.2 the iOS side discarded this config entirely: `init` ignored
 > its arguments and the UI opened with defaults. If you are on an earlier

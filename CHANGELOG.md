@@ -1,3 +1,23 @@
+## Keyingi versiya (chiqmagan)
+
+**Dizayn** — SDK ekranlari ilovaning ko'rinishida (native SDK 2.5.0 bilan):
+
+- `EimzoConfig(appearance: EimzoAppearance.fromTheme(lightTheme, dark: darkTheme))` —
+  ranglar, shrift va tugma burchagi ilovaning `ThemeData`'sidan olinadi.
+  Qo'lda ham beriladi: `EimzoAppearance(light: EimzoPalette(primary: …, background: …,
+  surface: …, text: …, textSecondary: …, divider: …), dark: …, themeMode: …,
+  fontFamily: …, cornerRadius: …)`. Har bir rang ixtiyoriy; qolgan ranglarni SDK
+  hisoblaydi, matn o'qilmasa (4.5:1 dan past) o'z ranglariga qaytadi.
+- Shrift ilova `pubspec.yaml`'da bergan bo'lsa, plagin uning fayllarini asset'lardan
+  topib native SDK'ga beradi.
+- `language` (`EimzoLanguage.uz/ru/en`) va `showLanguagePicker: false` — SDK tili
+  ilovaniki bo'ladi, SDK sozlamalarida til tanlash yo'qoladi.
+- `hashDisplay: EimzoHashDisplay.hidden` — ilova o'zi bergan imzo so'rovida hash
+  kartasi ko'rsatilmaydi. SDK skaneri o'qigan QR'da hash doim ko'rinadi.
+- O'zgarmaydi: imzo so'ragan sayt nomi, kalit egasi, «Imzolash» tugmasining
+  matni va joyi, PIN va parol kiritish, xato/ogohlantirish ranglari.
+- Bularsiz konfiguratsiya avvalgidek ishlaydi.
+
 ## 2.4.1 - 2026-11-09
 
 - iOS'da EimzoSDK 2.4.1: framework'ning Info.plist'idagi versiya endi SDK

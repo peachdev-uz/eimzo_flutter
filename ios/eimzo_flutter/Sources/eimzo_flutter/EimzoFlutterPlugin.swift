@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import SwiftUI
+import CoreText
 @_spi(EImzoTesting) import EimzoSDK
 
 /// Flutter ↔ EimzoSDK bridge. Mirrors the Android `EimzoFlutterPlugin`.
@@ -79,7 +80,11 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             productionApiUrl: args["productionApiUrl"] as? String ?? defaults.productionApiUrl,
             testApiUrl: args["testApiUrl"] as? String ?? defaults.testApiUrl,
             license: args["license"] as? String,
-            debugLogging: args["debugLogging"] as? Bool ?? defaults.debugLogging
+            debugLogging: args["debugLogging"] as? Bool ?? defaults.debugLogging,
+            appearance: (args["appearance"] as? [String: Any]).map(Self.appearance(from:)),
+            language: (args["language"] as? String).flatMap(EImzoLanguage.init(rawValue:)),
+            showsLanguagePicker: args["showLanguagePicker"] as? Bool ?? true,
+            hashDisplay: args["hashDisplay"] as? String == "hidden" ? .hidden : .visible
         )
         // YT's own testing: --dart-define=EIMZO_GATEWAY_URL=…, which the SDK
         // takes in a development-signed build only.
@@ -158,6 +163,67 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
         Task { @MainActor in
             result(await EImzoAPI.sign(keyId: keyId, deepLink: deepLink, config: config))
         }
+    }
+
+    // MARK: - Appearance (2.5.0)
+
+    /// The appearance Dart sent: colours as `0xAARRGGBB`, the theme mode by
+    /// name, and the font as the app's own asset files, registered here for
+    /// this process so the SDK can find the family by name.
+    static func appearance(from map: [String: Any]) -> EImzoAppearance {
+        let fonts = map["fonts"] as? [String: String]
+        let registered = fonts.flatMap { registerFonts($0) }
+        return EImzoAppearance(
+            light: (map["light"] as? [String: Any]).map(palette(from:)),
+            dark: (map["dark"] as? [String: Any]).map(palette(from:)),
+            themeMode: themeMode(map["themeMode"] as? String),
+            // The family the files declare: the pubspec may name it otherwise.
+            fontFamily: registered ?? map["fontFamily"] as? String,
+            cornerRadius: (map["cornerRadius"] as? NSNumber).map { CGFloat($0.doubleValue) }
+        )
+    }
+
+    private static func palette(from map: [String: Any]) -> EImzoPalette {
+        func color(_ key: String) -> Color? {
+            guard let argb = (map[key] as? NSNumber)?.uint32Value else { return nil }
+            return Color(.sRGB,
+                         red: Double((argb >> 16) & 0xFF) / 255,
+                         green: Double((argb >> 8) & 0xFF) / 255,
+                         blue: Double(argb & 0xFF) / 255,
+                         opacity: Double((argb >> 24) & 0xFF) / 255)
+        }
+        return EImzoPalette(primary: color("primary"), background: color("background"),
+                            surface: color("surface"), text: color("text"),
+                            textSecondary: color("textSecondary"), divider: color("divider"))
+    }
+
+    private static func themeMode(_ name: String?) -> EImzoThemeMode {
+        switch name {
+        case "light": return .light
+        case "dark": return .dark
+        default: return .system
+        }
+    }
+
+    /// Registers the app's font files (`regular`, `medium`, `semibold`) with
+    /// Core Text for this process and returns the family the regular face
+    /// declares; nil when its file is not in the app.
+    private static func registerFonts(_ files: [String: String]) -> String? {
+        var family: String?
+        for weight in ["regular", "medium", "semibold"] {
+            guard let asset = files[weight],
+                  let path = Bundle.main.path(forResource: FlutterDartProject.lookupKey(forAsset: asset), ofType: nil)
+            else { continue }
+            let url = URL(fileURLWithPath: path) as CFURL
+            // A second init registers the same files again; Core Text says
+            // they already are, and the family is still read below.
+            CTFontManagerRegisterFontsForURL(url, .process, nil)
+            if weight == "regular",
+               let descriptor = (CTFontManagerCreateFontDescriptorsFromURL(url) as? [CTFontDescriptor])?.first {
+                family = CTFontDescriptorCopyAttribute(descriptor, kCTFontFamilyNameAttribute) as? String
+            }
+        }
+        return family
     }
 
     /// `init` has not run, so there is no config to call the SDK with. Dart

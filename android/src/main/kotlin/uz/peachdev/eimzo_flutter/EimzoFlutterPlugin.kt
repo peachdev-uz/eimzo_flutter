@@ -3,17 +3,25 @@ package uz.peachdev.eimzo_flutter
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterAssets
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.concurrent.atomic.AtomicBoolean
+import uz.eimzo.sdk.EImzoAppearance
 import uz.eimzo.sdk.EImzoConfig
 import uz.eimzo.sdk.EImzoEnvironment
+import uz.eimzo.sdk.EImzoFont
+import uz.eimzo.sdk.EImzoHashDisplay
+import uz.eimzo.sdk.EImzoLanguage
+import uz.eimzo.sdk.EImzoPalette
 import uz.eimzo.sdk.EImzoResultCallback
 import uz.eimzo.sdk.EImzoSDK
 import uz.eimzo.sdk.EImzoTesting
+import uz.eimzo.sdk.EImzoThemeMode
 import uz.eimzo.sdk.fullui.EImzoActivity
 
 /**
@@ -28,13 +36,18 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
     private lateinit var methodChannel: MethodChannel
     private var activity: Activity? = null
 
+    /** Where the app's Flutter assets sit in its APK — for the appearance's font. */
+    private var flutterAssets: FlutterAssets? = null
+
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         methodChannel = MethodChannel(binding.binaryMessenger, CHANNEL_METHOD)
         methodChannel.setMethodCallHandler(this)
+        flutterAssets = binding.flutterAssets
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         methodChannel.setMethodCallHandler(null)
+        flutterAssets = null
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -107,6 +120,11 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
                 testApiUrl = testUrl ?: defaults.testApiUrl,
                 debugLogging = debugLogging,
                 license = license,
+                appearance = call.argument<Map<String, Any?>>("appearance")?.let(::appearanceOf),
+                language = call.argument<String>("language")?.let { enumOf<EImzoLanguage>(it) },
+                showLanguagePicker = call.argument<Boolean>("showLanguagePicker") ?: true,
+                hashDisplay = call.argument<String>("hashDisplay")?.let { enumOf<EImzoHashDisplay>(it) }
+                    ?: EImzoHashDisplay.VISIBLE,
             )
         }
             // YT's own testing: --dart-define=EIMZO_GATEWAY_URL=…, which the
@@ -116,6 +134,50 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
         // MethodChannel result can be completed directly.
         EImzoSDK.checkLicenseAndInit(act, config) { allowed -> result.success(allowed) }
     }
+
+    /**
+     * The appearance Dart sent (2.5.0): colours as `0xAARRGGBB` — over
+     * 2^31, so they come as Long and are narrowed back to the same 32 bits —
+     * and the font as the app's own asset files, which the SDK loads from
+     * the APK by the path Flutter gives them.
+     */
+    private fun appearanceOf(map: Map<String, Any?>): EImzoAppearance {
+        fun color(value: Any?): Int? = (value as? Number)?.toInt()
+        fun palette(value: Any?): EImzoPalette? = (value as? Map<*, *>)?.let {
+            EImzoPalette(
+                primary = color(it["primary"]),
+                background = color(it["background"]),
+                surface = color(it["surface"]),
+                text = color(it["text"]),
+                textSecondary = color(it["textSecondary"]),
+                divider = color(it["divider"]),
+            )
+        }
+        val fonts = map["fonts"] as? Map<*, *>
+        if (fonts == null) (map["fontFamily"] as? String)?.let { family ->
+            // Dart found no files for it in the app's FontManifest.json — a
+            // google_fonts download, say. Android needs the files.
+            Log.w(TAG, "fontFamily \"$family\": ilova asset'larida shrift fayli yo'q — SDK o'z shriftida qoladi")
+        }
+        val path = { asset: Any? -> (asset as? String)?.let { a -> flutterAssets?.getAssetFilePathByName(a) } }
+        return EImzoAppearance(
+            light = palette(map["light"]),
+            dark = palette(map["dark"]),
+            themeMode = (map["themeMode"] as? String)?.let { enumOf<EImzoThemeMode>(it) } ?: EImzoThemeMode.SYSTEM,
+            font = path(fonts?.get("regular"))?.let { regular ->
+                EImzoFont.assets(
+                    regular = regular,
+                    medium = path(fonts?.get("medium")),
+                    semibold = path(fonts?.get("semibold")),
+                )
+            },
+            cornerRadius = (map["cornerRadius"] as? Number)?.toFloat(),
+        )
+    }
+
+    /** Dart's enum name (`dark`, `ru`, `hidden`) as the SDK's constant, or null. */
+    private inline fun <reified T : Enum<T>> enumOf(name: String): T? =
+        enumValues<T>().firstOrNull { it.name.equals(name, ignoreCase = true) }
 
     /**
      * Returns the bound activity or completes [result] with `NO_ACTIVITY` and
@@ -148,5 +210,6 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
 
     private companion object {
         const val CHANNEL_METHOD = "uz.peachdev/eimzo_flutter"
+        const val TAG = "EimzoFlutter"
     }
 }

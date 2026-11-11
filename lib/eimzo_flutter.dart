@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// Which E-IMZO the SDK works with — see [EimzoConfig.environment].
@@ -11,6 +12,235 @@ enum EimzoEnvironment {
   /// QA builds. Only test keys sign there, and a QR code from one
   /// environment does not work in the other.
   dev,
+}
+
+/// The languages the SDK's screens come in — see [EimzoConfig.language].
+enum EimzoLanguage {
+  /// O‘zbekcha (lotin).
+  uz,
+
+  /// Русский.
+  ru,
+
+  /// English.
+  en,
+}
+
+/// Whether the sign screen shows the hash — see [EimzoConfig.hashDisplay].
+enum EimzoHashDisplay {
+  /// The hash card as always: the hash, «Nusxa» and the advice to compare it
+  /// with the site's. The default.
+  visible,
+
+  /// No hash card on a request the app made itself — the `deepLink` of
+  /// [EimzoFlutter.openSignUi], and [EimzoFlutter.sign]. The user has nothing
+  /// to compare it with there, and the app gave the hash in the first place.
+  ///
+  /// A request the user scans with the SDK's own QR scanner keeps it: that
+  /// site shows the same hash on its own screen, and comparing the two is
+  /// what protects the user from a substituted document.
+  hidden,
+}
+
+/// The six colours of one of the SDK's modes, light or dark — see
+/// [EimzoAppearance].
+///
+/// Each one is optional: a colour left out stays the SDK's own for that mode.
+/// The SDK works out the rest of its colours from these — the link colour,
+/// the label on a filled button (white or black, whichever reads), the
+/// washes, the PIN dots — so they keep holding together.
+@immutable
+class EimzoPalette {
+  /// Filled buttons, switches, marks, links.
+  final Color? primary;
+
+  /// The page behind everything.
+  final Color? background;
+
+  /// Cards, rows, the sheets that come up from the bottom, the PIN keys.
+  final Color? surface;
+
+  /// Body text and titles.
+  final Color? text;
+
+  /// Hints, captions, subtitles.
+  final Color? textSecondary;
+
+  /// Dividers and hairlines.
+  final Color? divider;
+
+  const EimzoPalette({
+    this.primary,
+    this.background,
+    this.surface,
+    this.text,
+    this.textSecondary,
+    this.divider,
+  });
+
+  /// The colours given, as `0xAARRGGBB` — the form both native sides read.
+  Map<String, int> toMap() => {
+        if (primary != null) 'primary': _argb(primary!),
+        if (background != null) 'background': _argb(background!),
+        if (surface != null) 'surface': _argb(surface!),
+        if (text != null) 'text': _argb(text!),
+        if (textSecondary != null) 'textSecondary': _argb(textSecondary!),
+        if (divider != null) 'divider': _argb(divider!),
+      };
+
+  /// `Color.value` is deprecated from Flutter 3.27 in favour of
+  /// `toARGB32()`, which 3.10 — the oldest Flutter this plugin supports —
+  /// does not have. Both give the same 32 bits.
+  // ignore: deprecated_member_use
+  static int _argb(Color color) => color.value;
+
+  @override
+  bool operator ==(Object other) =>
+      other is EimzoPalette &&
+      other.primary == primary &&
+      other.background == background &&
+      other.surface == surface &&
+      other.text == text &&
+      other.textSecondary == textSecondary &&
+      other.divider == divider;
+
+  @override
+  int get hashCode => Object.hash(primary, background, surface, text, textSecondary, divider);
+}
+
+/// How the SDK's screens look in the app: colours, font, corners and
+/// light or dark — see [EimzoConfig.appearance]. Since 2.5.0.
+///
+/// The fastest way is the app's own theme:
+///
+/// ```dart
+/// EimzoConfig(appearance: EimzoAppearance.fromTheme(lightTheme, dark: darkTheme))
+/// ```
+///
+/// Some things stay the SDK's whatever is set, because they protect the
+/// person signing: the name of the site asking for the signature, the key's
+/// holder, the «Imzolash» button's words and place (its colour is
+/// [EimzoPalette.primary]), and the SDK's own password and PIN entry. So do
+/// the error, warning and success colours, the key card and the QR scanner.
+/// If the text would not read on the background or the cards (under 4.5:1),
+/// the SDK ignores that mode's colours, keeps its own and logs why.
+@immutable
+class EimzoAppearance {
+  /// Colours in light mode. Null keeps the SDK's.
+  final EimzoPalette? light;
+
+  /// Colours in dark mode. Null keeps the SDK's dark colours, with
+  /// [light]'s primary.
+  final EimzoPalette? dark;
+
+  /// Light, dark or the phone's setting on the SDK's screens;
+  /// [ThemeMode.system] by default. With an appearance set the SDK also stops
+  /// offering its own wallpaper and dark-mode choices (Android), and draws no
+  /// photo behind its home screen.
+  final ThemeMode themeMode;
+
+  /// A font family the app bundles, as its pubspec names it (`Inter`). The
+  /// plugin finds its files among the app's assets and hands them to the
+  /// SDK, regular, medium and semibold where the family has them. Not found
+  /// — a font the `google_fonts` package downloads at run time, say — the
+  /// SDK keeps its own font. Null keeps it too: the system font on iOS,
+  /// Montserrat on Android.
+  final String? fontFamily;
+
+  /// The corner radius of the SDK's buttons, in logical pixels, from 0 to
+  /// 28; 16 by default. Cards, sheets and the rest scale with it, and round
+  /// things stay round.
+  final double? cornerRadius;
+
+  const EimzoAppearance({
+    this.light,
+    this.dark,
+    this.themeMode = ThemeMode.system,
+    this.fontFamily,
+    this.cornerRadius,
+  });
+
+  /// The appearance of an app themed with [light] (and [dark], when it has a
+  /// dark theme):
+  ///
+  /// | SDK | ThemeData |
+  /// |---|---|
+  /// | primary | `colorScheme.primary` |
+  /// | background | `scaffoldBackgroundColor` |
+  /// | surface | `cardTheme.color`, else `cardColor` |
+  /// | text | `colorScheme.onSurface` |
+  /// | textSecondary | `colorScheme.onSurfaceVariant` |
+  /// | divider | `dividerTheme.color`, else `colorScheme.outlineVariant` (Material 3) or `dividerColor` |
+  /// | font | `textTheme.bodyMedium.fontFamily` |
+  /// | corners | the filled or elevated button theme's `RoundedRectangleBorder` |
+  ///
+  /// Where the cards are the colour of the page — Material 3's defaults,
+  /// where a card is only told apart by its elevation — the SDK's cards are
+  /// drawn a shade toward the text colour, or they would not show.
+  factory EimzoAppearance.fromTheme(
+    ThemeData light, {
+    ThemeData? dark,
+    ThemeMode themeMode = ThemeMode.system,
+  }) =>
+      EimzoAppearance(
+        light: _paletteOf(light),
+        dark: dark == null ? null : _paletteOf(dark),
+        themeMode: themeMode,
+        fontFamily: light.textTheme.bodyMedium?.fontFamily,
+        cornerRadius: _radiusOf(light),
+      );
+
+  static EimzoPalette _paletteOf(ThemeData theme) {
+    final scheme = theme.colorScheme;
+    final background = theme.scaffoldBackgroundColor;
+    var surface = theme.cardTheme.color ?? theme.cardColor;
+    if (surface == background) {
+      surface = Color.lerp(background, scheme.onSurface, 0.05)!;
+    }
+    return EimzoPalette(
+      primary: scheme.primary,
+      background: background,
+      surface: surface,
+      text: scheme.onSurface,
+      textSecondary: scheme.onSurfaceVariant,
+      divider: theme.dividerTheme.color ??
+          (theme.useMaterial3 ? scheme.outlineVariant : theme.dividerColor),
+    );
+  }
+
+  /// The button theme's corner radius, when it is a rounded rectangle with
+  /// one. A stadium — Material 3's default — or anything else gives null,
+  /// the SDK's own 16.
+  static double? _radiusOf(ThemeData theme) {
+    final style = theme.filledButtonTheme.style ?? theme.elevatedButtonTheme.style;
+    final shape = style?.shape?.resolve(const {});
+    if (shape is RoundedRectangleBorder) {
+      return shape.borderRadius.resolve(TextDirection.ltr).topLeft.x;
+    }
+    return null;
+  }
+
+  /// What the native sides read. The font files are added by
+  /// [EimzoFlutter.init], which looks them up in the app's assets.
+  Map<String, dynamic> toMap() => {
+        if (light != null) 'light': light!.toMap(),
+        if (dark != null) 'dark': dark!.toMap(),
+        'themeMode': themeMode.name,
+        if (fontFamily != null) 'fontFamily': fontFamily,
+        if (cornerRadius != null) 'cornerRadius': cornerRadius,
+      };
+
+  @override
+  bool operator ==(Object other) =>
+      other is EimzoAppearance &&
+      other.light == light &&
+      other.dark == dark &&
+      other.themeMode == themeMode &&
+      other.fontFamily == fontFamily &&
+      other.cornerRadius == cornerRadius;
+
+  @override
+  int get hashCode => Object.hash(light, dark, themeMode, fontFamily, cornerRadius);
 }
 
 /// For YT's own testing: a gateway to use instead of the environment's, given
@@ -59,6 +289,27 @@ class EimzoConfig {
   /// For debug builds, e.g. `debugLogging: kDebugMode`.
   final bool debugLogging;
 
+  /// The SDK's screens in the app's colours, font and corners (2.5.0). Null —
+  /// the default — keeps the SDK's own design. See [EimzoAppearance].
+  final EimzoAppearance? appearance;
+
+  /// The language of the SDK's screens (2.5.0). Null — the default — keeps
+  /// what the SDK did before: the language the user picked in its settings,
+  /// else the phone's. Given, it is the language the SDK starts in; the
+  /// user can still change it there, unless [showLanguagePicker] is false.
+  final EimzoLanguage? language;
+
+  /// Whether the SDK's settings offer a language (2.5.0); true by default.
+  /// False hides the choice, and the SDK is always in [language] — or, with
+  /// none, the phone's. For an app with its own language setting: pass its
+  /// current language here, and call [EimzoFlutter.init] again when it
+  /// changes.
+  final bool showLanguagePicker;
+
+  /// Whether the sign screen shows the hash of a request the app made itself
+  /// (2.5.0); [EimzoHashDisplay.visible] by default.
+  final EimzoHashDisplay hashDisplay;
+
   /// [isTestMode] is the flag the environment was until 2.3: `true` is
   /// [EimzoEnvironment.dev]. It still works, so configurations written for
   /// 2.2 build unchanged; [environment], when given, wins.
@@ -70,6 +321,10 @@ class EimzoConfig {
     this.testApiUrl,
     this.license,
     this.debugLogging = false,
+    this.appearance,
+    this.language,
+    this.showLanguagePicker = true,
+    this.hashDisplay = EimzoHashDisplay.visible,
   }) : environment = environment ??
             (isTestMode ? EimzoEnvironment.dev : EimzoEnvironment.prod);
 
@@ -83,6 +338,10 @@ class EimzoConfig {
         if (license != null) 'license': license,
         if (_gatewayOverride.isNotEmpty) 'gatewayOverride': _gatewayOverride,
         'debugLogging': debugLogging,
+        if (appearance != null) 'appearance': appearance!.toMap(),
+        if (language != null) 'language': language!.name,
+        'showLanguagePicker': showLanguagePicker,
+        'hashDisplay': hashDisplay.name,
       };
 }
 
@@ -116,13 +375,60 @@ class EimzoFlutter {
   /// `true` otherwise. On iOS it stores the config and returns `true`; the
   /// same checks run when [openSignUi] presents the UI, and when [getKeys] or
   /// [sign] is called.
+  ///
+  /// The config's [EimzoConfig.appearance] and language take effect on the
+  /// SDK's next screen. To follow a change in the app — its theme, its
+  /// language — call this again with the new config.
   Future<bool> init({EimzoConfig config = const EimzoConfig()}) async {
+    final arguments = config.toMap();
+    final family = config.appearance?.fontFamily;
+    if (family != null) {
+      final fonts = await fontAssetsOf(family);
+      if (fonts.isNotEmpty) {
+        (arguments['appearance'] as Map<String, dynamic>)['fonts'] = fonts;
+      }
+    }
     try {
-      final allowed = await _channel.invokeMethod<bool>('init', config.toMap());
+      final allowed = await _channel.invokeMethod<bool>('init', arguments);
       return allowed ?? false;
     } on PlatformException catch (e) {
       throw EimzoException(e.code, e.message ?? '');
     }
+  }
+
+  /// The asset files of the font [family] in the app's `FontManifest.json`:
+  /// `regular`, and `medium` and `semibold` where the family has them —
+  /// upright faces only, keyed by weight (400, 500, 600, else 700 for
+  /// semibold). The regular face is the 400, else the weight nearest it.
+  ///
+  /// Empty when the manifest has no such family — a font the app registers
+  /// some other way, such as `google_fonts` at run time, cannot be handed to
+  /// the native SDK, which then keeps its own.
+  @visibleForTesting
+  static Future<Map<String, String>> fontAssetsOf(String family, {AssetBundle? bundle}) async {
+    final List<dynamic> manifest;
+    try {
+      manifest = jsonDecode(await (bundle ?? rootBundle).loadString('FontManifest.json'))
+          as List<dynamic>;
+    } catch (_) {
+      return const {};
+    }
+    final entry = manifest.whereType<Map<String, dynamic>>().where((f) => f['family'] == family);
+    if (entry.isEmpty) return const {};
+    final byWeight = <int, String>{};
+    for (final face in (entry.first['fonts'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()) {
+      final asset = face['asset'];
+      if (asset is! String || face['style'] == 'italic') continue;
+      byWeight.putIfAbsent((face['weight'] as num?)?.toInt() ?? 400, () => asset);
+    }
+    if (byWeight.isEmpty) return const {};
+    final nearest = byWeight.keys.reduce((a, b) => (a - 400).abs() <= (b - 400).abs() ? a : b);
+    return {
+      'regular': byWeight[400] ?? byWeight[nearest]!,
+      if (byWeight[500] != null) 'medium': byWeight[500]!,
+      if ((byWeight[600] ?? byWeight[700]) != null) 'semibold': (byWeight[600] ?? byWeight[700])!,
+    };
   }
 
   /// Opens the full E-IMZO native UI (Home + Keys + AddKey + sign flow).
