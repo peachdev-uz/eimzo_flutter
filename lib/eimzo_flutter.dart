@@ -169,14 +169,17 @@ class EimzoFlutter {
   /// ```json
   /// {"status":"ok","keys":[
   ///   {"id":"7a3f…","pinfl":"31234567890123","name":"ALIYEV VALI ALIYEVICH",
-  ///    "validFrom":"2025-03-01","validTo":"2027-03-01"}]}
+  ///    "type":"pfx","validFrom":"2025-03-01","validTo":"2027-03-01"}]}
   /// ```
   ///
   /// Every kind of key — file, QR, ID card, USB token, BAIK — that can be used
   /// in the configured [EimzoConfig.environment], expired ones too, in the
   /// SDK's own order with the default key first; a key added in the other
   /// environment is left out. `id` is opaque: hand it to [sign] as it is.
-  /// `pinfl` is null when the certificate has none. `validFrom` and
+  /// `pinfl` is null when the certificate has none. `type` (2.5) is `pfx`
+  /// (a key file, from a file or a QR code), `id_card` or `token` (USB or
+  /// BAIK), so one holder's keys can be told apart; show a value you do not
+  /// know as a plain key, since a later version may add one. `validFrom` and
   /// `validTo` are `yyyy-MM-dd`, or null when the SDK cannot read them;
   /// `validTo` is how the app tells an expired key. No keys:
   /// `{"status":"ok","keys":[]}`.

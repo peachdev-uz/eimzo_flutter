@@ -1,3 +1,12 @@
+## 2.5.0 - 2026-11-11
+
+- Kalitlar API: `getKeys` har bir kalitda yangi `type` maydonini beradi —
+  `pfx` (kalit fayli, fayldan yoki QR koddan qo'shilgan), `id_card` (ID
+  karta) yoki `token` (USB yoki BAIK token). Bitta JSHSHIR'da ID karta, token
+  va kalit fayli bo'lsa, ilova ularni shu bilan ajratadi. Qolgan maydonlar,
+  `sign` va xato kodlari o'zgarmagan.
+- Ichida Android SDK 2.5.0 va iOS EimzoSDK 2.5.0.
+
 ## 2.4.1 - 2026-11-09
 
 - iOS'da EimzoSDK 2.4.1: framework'ning Info.plist'idagi versiya endi SDK

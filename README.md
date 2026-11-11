@@ -309,7 +309,7 @@ final keys = (reply['keys'] as List).cast<Map<String, dynamic>>();
 ```json
 {"status":"ok","keys":[
   {"id":"7a3f…","pinfl":"31234567890123","name":"ALIYEV VALI ALIYEVICH",
-   "validFrom":"2025-03-01","validTo":"2027-03-01"}
+   "type":"pfx","validFrom":"2025-03-01","validTo":"2027-03-01"}
 ]}
 ```
 
@@ -318,10 +318,15 @@ final keys = (reply['keys'] as List).cast<Map<String, dynamic>>();
 | `id` | The certificate's serial number as the SDK stores it. Opaque: pass it to `sign` unchanged |
 | `pinfl` | The holder's PINFL (JShShIR); `null` when the certificate has none |
 | `name` | The certificate holder's name |
+| `type` | What the key is (since 2.5.0): `pfx` — a key file, added from a file or a QR code; `id_card` — an ID card; `token` — a USB or BAIK token |
 | `validFrom`, `validTo` | The certificate's validity, `yyyy-MM-dd` without the time; `null` when the SDK cannot read it |
 
-Nothing else leaves the SDK: not the STIR, the organization, the kind of
-key, the key itself or a saved password. The list has every kind of key
+One holder's ID card, token and key file come as separate entries: their
+`id`s differ, `pinfl` and `name` are the same, and `type` tells them apart.
+A later version may add a kind: show a value you do not know as a plain key.
+
+Nothing else leaves the SDK: not the STIR, the organization, the key itself
+or a saved password. The list has every kind of key
 that can sign in the configured `environment`, expired ones too — tell them
 by `validTo` — in the SDK's own order, the default key first. A key added in
 the other environment is left out. No keys: `{"status":"ok","keys":[]}`.
