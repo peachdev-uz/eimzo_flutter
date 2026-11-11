@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'eimzo_flutter'
-  s.version          = '2.4.1'
+  s.version          = '2.5.0'
   s.summary          = 'Flutter plugin wrapping the E-IMZO Mobile SDK (iOS).'
   s.description      = <<-DESC
     Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
@@ -44,7 +44,8 @@ Pod::Spec.new do |s|
   # gateway rad etadi.
   # 2.3.0: barqaror reliz; imzodan keyin bitta «Ilovaga qaytish» tugmasi.
   # 2.4.0: «Kalitlar API» — EImzoAPI.getKeys va EImzoAPI.sign.
-  EIMZO_SDK_VERSION = '2.4.1'
+  # 2.5.0: dizayn sozlamalari (appearance, til, hash); getKeys'da kalit turi.
+  EIMZO_SDK_VERSION = '2.5.0'
   EIMZO_SDK_URL  = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/EimzoSDK.xcframework.zip"
   PFX2QR_URL     = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/Pfx2qr.xcframework.zip"
 
