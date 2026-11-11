@@ -1,4 +1,4 @@
-## Keyingi versiya (chiqmagan)
+## 2.5.0 - 2026-11-11
 
 **Dizayn** — SDK ekranlari ilovaning ko'rinishida (native SDK 2.5.0 bilan):
 
@@ -17,6 +17,20 @@
 - O'zgarmaydi: imzo so'ragan sayt nomi, kalit egasi, «Imzolash» tugmasining
   matni va joyi, PIN va parol kiritish, xato/ogohlantirish ranglari.
 - Bularsiz konfiguratsiya avvalgidek ishlaydi.
+
+**Kalitlar API** — `getKeys` har bir kalitda yangi `type` maydonini beradi:
+`pfx` (kalit fayli, fayldan yoki QR koddan qo'shilgan), `id_card` (ID karta)
+yoki `token` (USB yoki BAIK token). Bitta JSHSHIR'da ID karta, token va kalit
+fayli bo'lsa, ilova ularni shu bilan ajratadi. Qolgan maydonlar, `sign` va
+xato kodlari o'zgarmagan.
+
+**Tuzatish (Android)** — ilova fonda turganida Android jarayonni yopib, keyin
+SDK oynasini tiklasa, oyna yiqilardi yoki tekshiruv ilova bergan muhit va
+litsenziya o'rniga PROD'ga ketardi. Endi SDK ilova bergan config'ni eslab
+qoladi.
+
+Ichida Android SDK 2.5.0 va iOS EimzoSDK 2.5.0.
+
 
 ## 2.4.1 - 2026-11-09
 
