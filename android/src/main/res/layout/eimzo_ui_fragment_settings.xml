@@ -114,6 +114,7 @@
 
             <!-- ── Appearance card ────────────────────────────────────── -->
             <LinearLayout
+                android:id="@+id/cardAppearance"
                 style="@style/Widget.Eimzo.SettingsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -122,13 +123,17 @@
                     android:id="@+id/rowLanguage"
                     layout="@layout/eimzo_ui_item_settings_row" />
 
-                <include layout="@layout/eimzo_ui_item_settings_divider" />
+                <include
+                    android:id="@+id/dividerLanguage"
+                    layout="@layout/eimzo_ui_item_settings_divider" />
 
                 <include
                     android:id="@+id/rowTheme"
                     layout="@layout/eimzo_ui_item_settings_row" />
 
-                <include layout="@layout/eimzo_ui_item_settings_divider" />
+                <include
+                    android:id="@+id/dividerTheme"
+                    layout="@layout/eimzo_ui_item_settings_divider" />
 
                 <include
                     android:id="@+id/rowNight"

@@ -56,6 +56,7 @@
     <color name="eimzo_ui_status_text">#8FF3D4</color>
     <color name="eimzo_ui_stay_button">#12163030</color>
     <color name="eimzo_ui_step_bullet">#2400C68E</color>
+    <color name="eimzo_ui_success">#00C68E</color>
     <color name="eimzo_ui_surface">#F6F6FA</color>
     <color name="eimzo_ui_text">#16302F</color>
     <color name="eimzo_ui_text_hint">#5B7176</color>

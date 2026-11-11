@@ -255,6 +255,7 @@
                     android:paddingEnd="16dp">
 
                     <ImageView
+                        android:id="@+id/ivReturnIcon"
                         android:layout_width="21dp"
                         android:layout_height="21dp"
                         android:importantForAccessibility="no"
@@ -262,6 +263,7 @@
                         app:tint="#08251E" />
 
                     <TextView
+                        android:id="@+id/tvReturnLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="9dp"
