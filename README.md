@@ -313,6 +313,7 @@ final keys = (reply['keys'] as List).cast<Map<String, dynamic>>();
 ```json
 {"status":"ok","keys":[
   {"id":"7a3f…","pinfl":"31234567890123","name":"ALIYEV VALI ALIYEVICH",
+   "tin":"301234567","organization":"\"QUYOSH\" MCHJ",
    "type":"pfx","validFrom":"2025-03-01","validTo":"2027-03-01"}
 ]}
 ```
@@ -321,7 +322,9 @@ final keys = (reply['keys'] as List).cast<Map<String, dynamic>>();
 |---|---|
 | `id` | The certificate's serial number as the SDK stores it. Opaque: pass it to `sign` unchanged |
 | `pinfl` | The holder's PINFL (JShShIR); `null` when the certificate has none |
-| `name` | The certificate holder's name |
+| `name` | The certificate holder's name — the employee's, also on a legal entity's key |
+| `tin` | Since 2.6.0: a legal entity's key's organisation's STIR; `null` on a person's own key. A key with a `tin` is a legal entity's |
+| `organization` | Since 2.6.0: a legal entity's key's organisation name; `null` on a person's own key |
 | `type` | What the key is (since 2.5.0): `pfx` — a key file, added from a file or a QR code; `id_card` — an ID card; `token` — a USB or BAIK token |
 | `validFrom`, `validTo` | The certificate's validity, `yyyy-MM-dd` without the time; `null` when the SDK cannot read it |
 
@@ -329,8 +332,11 @@ One holder's ID card, token and key file come as separate entries: their
 `id`s differ, `pinfl` and `name` are the same, and `type` tells them apart.
 A later version may add a kind: show a value you do not know as a plain key.
 
-Nothing else leaves the SDK: not the STIR, the organization, the key itself
-or a saved password. The list has every kind of key
+An ID card or USB token key added before 2.6.0 has no STIR stored: its
+`tin` and `organization` are `null` until it is added again.
+
+Nothing else leaves the SDK: not the key itself or a saved password. The
+list has every kind of key
 that can sign in the configured `environment`, expired ones too — tell them
 by `validTo` — in the SDK's own order, the default key first. A key added in
 the other environment is left out. No keys: `{"status":"ok","keys":[]}`.
@@ -470,8 +476,13 @@ Good to know:
 - **PIN attempts.** Each wrong PIN takes one of the ID card's or token's
   attempts, and the last one blocks it (`pin_blocked`); only a service
   centre unblocks it. The SDK never retries a PIN — and your app must not
-  either: ask the user each time. An empty PIN is not sent
-  (`wrong_pin`, no `triesLeft`).
+  either: ask the user each time.
+- **The PIN's form.** An ID card's and a USB token's PIN is exactly eight
+  digits 0–9. An empty one, or anything else — a space or a line break
+  pasted on, grouped (`1234 5678`), a digit short or over — is never sent:
+  `wrong_pin` at once, no `triesLeft`, no attempt spent. Nothing is trimmed:
+  pass the PIN as the user typed it. A BAIK token's PIN is whatever it was
+  set up with (not empty).
 - **Saving.** `savePassword` / `savePin` are false by default: the SDK keeps
   nothing, and `sign` asks for the password or PIN in its sheet. With true,
   the SDK keeps it encrypted and `sign` signs with this key without asking —
@@ -484,7 +495,7 @@ Good to know:
 | `code` | When |
 |---|---|
 | `wrong_password` | The key file's or key QR code's password is wrong |
-| `wrong_pin` | The ID card's or token's PIN is wrong, or empty; `triesLeft` when the card or token says |
+| `wrong_pin` | The ID card's or token's PIN is wrong; `triesLeft` when the card or token says. Also, with no `triesLeft` and nothing sent, when the PIN is empty or — for an ID card or USB token — not eight digits |
 | `pin_blocked` | The PIN is blocked: no attempts left |
 | `invalid_key` | Not a key file, not a key QR code, not an E-IMZO card, a token with no key, or a certificate E-IMZO did not accept |
 | `nfc_unavailable` | The phone has no NFC, NFC is off, or (iOS) the app may not use it |

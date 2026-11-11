@@ -14,6 +14,19 @@ kodidan qo'shadi (o'sha «Kalitlar API» ruxsati bilan):
 - `savePassword` / `savePin` sukut bo'yicha `false`: SDK hech narsa saqlamaydi.
 - Parol, PIN va kalit fayli ilova kodidan o'tadi — ular uchun shartnoma
   bo'yicha integrator javob beradi.
+- ID karta va USB token PIN'i aynan 8 ta raqam (0–9) bo'lmasa — `wrong_pin`,
+  kartaga hech narsa yuborilmaydi, urinish sarflanmaydi, hech narsa
+  kesilmaydi. BAIK token PIN'i — u qanday o'rnatilgan bo'lsa shunday.
+
+**Kalitlar ro'yxatida STIR va korxona nomi** — `getKeys` kaliti (va
+`add…Key`'ning `key`i) endi sakkiz maydonli: `name`dan keyin `tin` va
+`organization` — yuridik shaxs kalitida korxonaning STIRi va nomi, jismoniy
+shaxs kalitida ikkalasi `null`. 2.6.0 dan oldin qo'shilgan ID karta va USB
+token kalitlarida STIR qayta qo'shilguncha yo'q.
+
+Native tuzatishlar: raqam bo'lmagan PIN iOS'da kartaga nollar bo'lib ketmaydi;
+iOS'da E-IMZO tanimagan sertifikat kalit bo'lib saqlanmaydi (`invalid_key`);
+Android'da qo'shish tekshiruvda turganda kelgan `cancelAddKey()` yo'qolmaydi.
 
 Ichida Android SDK va iOS EimzoSDK 2.6.0 (chiqarilmagan).
 

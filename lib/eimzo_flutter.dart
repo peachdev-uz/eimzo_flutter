@@ -478,6 +478,7 @@ class EimzoFlutter {
   /// ```json
   /// {"status":"ok","keys":[
   ///   {"id":"7a3f…","pinfl":"31234567890123","name":"ALIYEV VALI ALIYEVICH",
+  ///    "tin":"301234567","organization":"\"QUYOSH\" MCHJ",
   ///    "type":"pfx","validFrom":"2025-03-01","validTo":"2027-03-01"}]}
   /// ```
   ///
@@ -485,7 +486,11 @@ class EimzoFlutter {
   /// in the configured [EimzoConfig.environment], expired ones too, in the
   /// SDK's own order with the default key first; a key added in the other
   /// environment is left out. `id` is opaque: hand it to [sign] as it is.
-  /// `pinfl` is null when the certificate has none. `type` (2.5) is `pfx`
+  /// `pinfl` is null when the certificate has none. `name` is the holder's;
+  /// `tin` and `organization` (2.6) are a legal entity's key's organisation —
+  /// its STIR and name — and both null on a person's own key, so a key with a
+  /// `tin` is a legal entity's (an ID card or USB token key added before 2.6
+  /// has none until it is added again). `type` (2.5) is `pfx`
   /// (a key file, from a file or a QR code), `id_card` or `token` (USB or
   /// BAIK), so one holder's keys can be told apart; show a value you do not
   /// know as a plain key, since a later version may add one. `validFrom` and
@@ -650,8 +655,10 @@ class EimzoFlutter {
   ///   Cancel ends the call as `cancelled`.
   ///
   /// Each wrong PIN takes one of the card's attempts, and the last one
-  /// blocks it: never retry a PIN by yourself — ask the user again. An empty
-  /// PIN is not sent to the card (`wrong_pin`, no `triesLeft`).
+  /// blocks it: never retry a PIN by yourself — ask the user again. The PIN
+  /// is exactly eight digits 0–9: an empty one, or anything else — a space
+  /// pasted on, a digit short — is not sent to the card (`wrong_pin`, no
+  /// `triesLeft`, no attempt spent). Nothing is trimmed.
   ///
   /// As [addPfxKey], and also:
   ///
@@ -674,7 +681,9 @@ class EimzoFlutter {
   /// «Kalitlar API» (2.6): adds the key on the USB token plugged in — a USB
   /// (FEITIAN) or a BAIK token, which the SDK tells apart itself — checking
   /// [pin] on it. Android may first ask the user to let the app use the USB
-  /// device. As [addIdCardKey] for the PIN: `wrong_pin` with `triesLeft`,
+  /// device. A USB token's PIN is eight digits, as an ID card's; a BAIK
+  /// token's whatever it was set up with. As [addIdCardKey] for the PIN:
+  /// `wrong_pin` with `triesLeft`,
   /// `pin_blocked`; `token_not_found` — none plugged in, pulled out, USB
   /// access declined, or the token busy; `invalid_key` — a token with no
   /// key.
