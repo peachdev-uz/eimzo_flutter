@@ -1,6 +1,6 @@
 # eimzo_flutter
 
-Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.5.0` bundled inside on Android, `EimzoSDK` 2.5.0 on iOS) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it and opens it — with a sign request the app makes itself, or without one.
+Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.6.0` bundled inside on Android, `EimzoSDK` 2.6.0 on iOS) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it and opens it — with a sign request the app makes itself, or without one.
 
 Every app signs through the YT gateway and has to be registered with YT
 first — see [Registration](#8-registration).
@@ -17,7 +17,7 @@ first — see [Registration](#8-registration).
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^2.5.0
+  eimzo_flutter: ^2.6.0
 ```
 
 Coming from 2.2? See [Upgrading from 2.2](#upgrading-from-22).
@@ -181,7 +181,7 @@ registered.
 
 ## Upgrading from 2.2
 
-`^2.2.1` resolves to 2.5.0 on the next `flutter pub upgrade`, so pin
+`^2.2.1` resolves to 2.6.0 on the next `flutter pub upgrade`, so pin
 `eimzo_flutter: 2.2.1` until the app is registered. An app that ships a
 licence: write to **info@yt.uz** first and keep 2.2 until YT confirms — see
 [Apps that already ship a licence](#apps-that-already-ship-a-licence).

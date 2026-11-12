@@ -1,4 +1,4 @@
-## 2.6.0 - chiqarilmagan
+## 2.6.0 - 2026-11-12
 
 **Kalitlar API: kalit qo'shish** — ilova kalitni SDK oynasini ochmasdan, o'z
 kodidan qo'shadi (o'sha «Kalitlar API» ruxsati bilan):
@@ -28,7 +28,7 @@ Native tuzatishlar: raqam bo'lmagan PIN iOS'da kartaga nollar bo'lib ketmaydi;
 iOS'da E-IMZO tanimagan sertifikat kalit bo'lib saqlanmaydi (`invalid_key`);
 Android'da qo'shish tekshiruvda turganda kelgan `cancelAddKey()` yo'qolmaydi.
 
-Ichida Android SDK va iOS EimzoSDK 2.6.0 (chiqarilmagan).
+Ichida Android SDK 2.6.0 va iOS EimzoSDK 2.6.0.
 
 
 ## 2.5.0 - 2026-11-11
