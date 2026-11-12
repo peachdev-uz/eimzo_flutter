@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The well the hash sits in (3f) — sunk, so the code reads as data being
+     quoted rather than a control. Radius 14, a shade below the card. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_well" />
+    <corners android:radius="14dp" />
+</shape>

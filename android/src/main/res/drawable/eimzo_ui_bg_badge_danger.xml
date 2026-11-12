@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A destructive or terminal badge: danger at 11%, radius 22 (the app's
+     destructive confirm tile). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_danger_11" />
+    <corners android:radius="22dp" />
+</shape>

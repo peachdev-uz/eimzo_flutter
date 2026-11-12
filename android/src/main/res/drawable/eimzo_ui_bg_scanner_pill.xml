@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "Kod qayerda?" on the scanner (C1): white at 12%, radius 16 — readable
+     white on the dark picture. The old pill was white text on #EDF3F5. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="#33FFFFFF">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#1FFFFFFF" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</ripple>

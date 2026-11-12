@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The site verdict badge on 3f. A pill, not loose icon+text: it is a status
+     stamped on the domain, and the enclosure is what says so. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_pill_bg" />
+    <corners android:radius="999dp" />
+</shape>

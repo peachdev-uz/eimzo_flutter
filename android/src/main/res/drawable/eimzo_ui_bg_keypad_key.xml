@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A keypad key (C4): a rounded square at radius 14, white on the light
+     sheet and the sheet's own tone on the dark one — the app's keys. No
+     shadow: the old round, elevated keys were the design's first draft. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/eimzo_ui_accent_26">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/eimzo_ui_keypad_key" />
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+</ripple>

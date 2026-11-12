@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android 12+ data extraction rules (referenced from the SDK's
+    `android:dataExtractionRules`). Mirrors `eimzo_backup_rules.xml`
+    for the newer two-channel backup format (cloud + device transfer).
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="database" path="eimzo_keys.db" />
+        <exclude domain="database" path="eimzo_keys.db-journal" />
+        <exclude domain="database" path="eimzo_keys.db-wal" />
+        <exclude domain="database" path="eimzo_keys.db-shm" />
+        <exclude domain="sharedpref" path="uz.eimzo.sdk.secure.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="database" path="eimzo_keys.db" />
+        <exclude domain="database" path="eimzo_keys.db-journal" />
+        <exclude domain="database" path="eimzo_keys.db-wal" />
+        <exclude domain="database" path="eimzo_keys.db-shm" />
+        <exclude domain="sharedpref" path="uz.eimzo.sdk.secure.xml" />
+    </device-transfer>
+</data-extraction-rules>

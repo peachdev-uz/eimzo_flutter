@@ -1,0 +1,85 @@
+# Public E-IMZO SDK API used by this plugin
+-keep public class uz.eimzo.sdk.EImzoSDK { public *; }
+-keep public class uz.eimzo.sdk.EImzoSDK$Companion { public *; }
+-keep public class uz.eimzo.sdk.EImzoConfig { *; }
+-keep public interface uz.eimzo.sdk.ImportKeyCallback { *; }
+-keep public interface uz.eimzo.sdk.SignCallback { *; }
+-keep public interface uz.eimzo.sdk.CertInfoCallback { *; }
+# «Kalitlar API» (2.4): getKeys / sign answer through it.
+-keep public interface uz.eimzo.sdk.EImzoResultCallback { *; }
+-keep public class uz.eimzo.sdk.models.CertInfo { *; }
+-keep public class uz.eimzo.sdk.models.QrHashData { *; }
+-keep public enum uz.eimzo.sdk.models.KeyType { *; }
+-keep public class uz.eimzo.sdk.models.SignResult { *; }
+-keep public class uz.eimzo.sdk.models.SignResult$Success { *; }
+-keep public class uz.eimzo.sdk.models.SignResult$Failure { *; }
+-keep public class uz.eimzo.sdk.license.LicenseResult { *; }
+-keep class uz.eimzo.sdk.license.BlockedAppActivity { <init>(...); }
+-keep public class uz.eimzo.sdk.ui.NfcWaitBottomSheet { public *; }
+-keep public class uz.eimzo.sdk.ui.NfcWaitBottomSheet$NfcState { *; }
+-keep public class uz.eimzo.sdk.ui.LoadingOverlay { public *; }
+
+# Plugin itself
+-keep class uz.peachdev.eimzo_flutter.** { *; }
+
+# Bundled pfx2qr Java wrapper + go-mobile JNI bridge classes. libgojni.so
+# looks up go.Seq.getRef etc. by name — R8 must NOT rename/strip them or
+# PFX parsing crashes at runtime with "failed to find method Seq.getRef"
+# (SIGABRT inside Java_go_Seq_init).
+-keep class pfx2qr.** { *; }
+-keep class go.** { *; }
+-keepclassmembers class go.** { *; }
+-dontwarn pfx2qr.**
+-dontwarn go.**
+
+# FEITIAN FTReader (USB token) — libFTReaderPCSC JNI registers callbacks into
+# com.ftsafe classes by name; R8 must not rename or strip them. The ID-card
+# applet jar is driven over the same APDU channel.
+-keep class com.ftsafe.** { *; }
+-keepclassmembers class com.ftsafe.** { *; }
+-keep class uz.yt.idcard.applet.** { *; }
+-dontwarn com.ftsafe.**
+-dontwarn uz.yt.idcard.applet.**
+
+# ── SDK 2.0.0 dan qo'shilgan qoidalar ───────────────────────────────────
+#
+# Bular AAR ichidagi proguard.txt dan olindi. Plaginning o'z qoidalari
+# qo'lda saqlanadi, shuning uchun ular avtomatik kelmaydi — SDK yangilanganda
+# shu ro'yxatni qayta solishtirish kerak.
+#
+# BouncyCastle ayniqsa muhim: litsenziya Ed25519 bilan imzolangan va uni
+# tekshiruvchi shu kutubxonada. R8 uni olib tashlasa, har bir litsenziya
+# tekshiruvdan o'tmaydi — 2.0 da esa orqada zaxira yo'l yo'q, ya'ni ilova
+# butunlay bloklanadi.
+-keep public class uz.eimzo.sdk.EImzoCallback { *; }
+-keep public interface uz.eimzo.sdk.UsbImportKeyCallback { *; }
+-keep public class uz.eimzo.sdk.models.QrHashData {
+    public *;
+    public static *** fromDeepLink(java.lang.String);
+}
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# Gson JSON-RPC modellari. R8 full mode (AGP 8 dan sukut bo'yicha) generic
+# signature'ni faqat keep qoidasi tushgan klasslarda qoldiradi: busiz
+# JsonRpcResponse<T> ning tur parametri o'chadi va release build'da E-IMZO'ning
+# har bir javobi "requires 0 type arguments, but got 1" bilan yiqiladi. Faqat
+# Gson yaratadigan klasslarni R8 abstrakt qilishi yoki konstruktorini olib
+# tashlashi ham mumkin, shuning uchun @SerializedName maydonli SDK klasslari
+# konstruktorlari bilan saqlanadi.
+-keepattributes Signature
+-keepclasseswithmembers class uz.eimzo.sdk.** {
+    @com.google.gson.annotations.SerializedName <fields>;
+    <init>(...);
+}
+-keep class org.bouncycastle.** { *; }
+-dontwarn org.bouncycastle.**
+-dontwarn javax.naming.**
+-dontwarn com.airbnb.lottie.**
+
+# Paket nomlari saqlanadi: crash hisoboti crash SDK'dan chiqqanini stack'dagi
+# "uz.eimzo.sdk." frame'idan taniydi. Busiz minify qilingan build'da paket
+# "a.b" bo'lib qoladi va SDK crash'lari yuborilmaydi (SDK'ning o'z
+# consumer-rules.pro'sidan).
+-keeppackagenames uz.eimzo.sdk.**

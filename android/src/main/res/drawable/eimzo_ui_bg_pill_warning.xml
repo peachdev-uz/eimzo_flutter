@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "Ro'yxatda emas" (A3): the warning at 10%, under #7A5A22 text — the
+     warning colour itself read at 1.5:1 as text on the old pill. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/eimzo_ui_warning_10" />
+    <corners android:radius="999dp" />
+</shape>

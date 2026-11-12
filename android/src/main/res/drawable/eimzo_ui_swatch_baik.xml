@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The baik kind's swatch in the key list (C7): the app's key_kind_style. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="315"
+        android:endColor="#615A86"
+        android:startColor="#3A3357" />
+    <corners android:radius="7dp" />
+</shape>

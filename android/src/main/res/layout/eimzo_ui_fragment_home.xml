@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/eimzo_ui_background">
+
+    <!-- One name, two files: the light wallpaper lives in drawable/ and the
+         design's dark one in drawable-night/, so the header follows the theme
+         without a line of Kotlin. The user picks the light one (3i3). -->
+    <ImageView
+        android:id="@+id/ivHeaderBg"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/eimzo_ui_bg_sakura"
+        android:contentDescription="@null" />
+
+    <!-- The wallpaper is a photograph and the header sits on top of it, so
+         "Mening kalitlarim" and the see-all link had nothing but the picture
+         behind them — measured at 1.9:1 in light and 2.7:1 in dark, well under
+         the 4.5:1 small text needs. The design answers this with a four-stop
+         scrim in the page background colour; the gradient is built in
+         HomeFragment because XML gradients cap at three stops. -->
+    <View
+        android:id="@+id/headerScrim"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:importantForAccessibility="no" />
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp">
+
+            <!-- C5 — the top bar, the app's: "‹" closes the SDK as system
+                 Back does, the E-IMZO mark and word in the middle, ⚙ for
+                 settings. The menu icon and the "?" that opened the key-QR
+                 guide with no scanner in sight are gone. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-14dp"
+                android:layout_marginEnd="-14dp"
+                android:gravity="center_vertical"
+                android:minHeight="56dp"
+                android:orientation="horizontal"
+                android:paddingTop="4dp">
+
+                <ImageView
+                    android:id="@+id/btnClose"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/eimzo_ui_close"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:src="@drawable/eimzo_ui_ic_chevron_left"
+                    app:tint="@color/eimzo_ui_text" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/eimzo_ui_ic_eimzo_mark" />
+
+                    <TextView
+                        android:id="@+id/tvWordmark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:letterSpacing="0.16"
+                        android:text="@string/eimzo_ui_app_name"
+                        android:textColor="@color/eimzo_ui_text"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnSettings"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/eimzo_ui_settings"
+                    android:focusable="true"
+                    android:padding="12dp"
+                    android:src="@drawable/eimzo_ui_ic_settings"
+                    app:tint="@color/eimzo_ui_text" />
+            </LinearLayout>
+
+            <Space
+                android:id="@+id/headerGap"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+
+            <!-- Section header: "Mening kalitlarim" + "hammasi ›" -->
+            <LinearLayout
+                android:id="@+id/headerKeys"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvMyKeys"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/eimzo_ui_my_keys_full"
+                    android:textColor="@color/eimzo_ui_text"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <!-- 48dp tall for the finger; the link itself as drawn. -->
+                <LinearLayout
+                    android:id="@+id/btnSeeAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="-10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/eimzo_ui_see_all"
+                        android:textColor="@color/eimzo_ui_accent_dark"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="2dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/eimzo_ui_ic_chevron_right"
+                        app:tint="@color/eimzo_ui_accent_dark" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- C6 — the primary key, the same card as the key list's. -->
+            <include
+                android:id="@+id/cardKey"
+                layout="@layout/eimzo_ui_item_key"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <!-- A2 — a deep link with no key to open 3f with yet. -->
+            <include
+                android:id="@+id/requestWaiting"
+                layout="@layout/eimzo_ui_view_request_waiting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone" />
+
+            <!-- 3c / C9 — no key yet: the ways to add one. Hidden until the
+                 keys have been read, like the card: shown by default it
+                 flashed "Kalit qo‘shing" at users who have keys. -->
+            <include
+                android:id="@+id/tvNoKey"
+                layout="@layout/eimzo_ui_view_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <!-- IMZOLASH: opens the scanner for a request, or 3f for the one
+                 on screen — never a signature from here (A6). -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSign"
+                style="@style/Widget.Eimzo.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:minHeight="58dp"
+                android:text="@string/eimzo_ui_sign"
+                android:textSize="17sp"
+                android:visibility="gone"
+                app:icon="@drawable/eimzo_ui_ic_sign"
+                app:iconGravity="textStart"
+                app:iconSize="22dp"
+                app:iconTint="@color/eimzo_ui_button_text" />
+
+            <!-- C9 — with a key, the add-key sheet is one tap from Home, as on
+                 iOS: the same routes as the empty state. -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddKey"
+                style="@style/Widget.Eimzo.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:minHeight="54dp"
+                android:text="@string/eimzo_ui_add_key"
+                android:textColor="@color/eimzo_ui_accent_dark"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:backgroundTint="@color/eimzo_ui_option_row"
+                app:icon="@drawable/eimzo_ui_ic_add"
+                app:iconGravity="textStart"
+                app:iconSize="20dp"
+                app:iconTint="@color/eimzo_ui_accent_dark" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="32dp" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

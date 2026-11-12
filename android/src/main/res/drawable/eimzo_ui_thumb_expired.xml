@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- An expired key's thumbnail (3d). Flat grey, no gradient: the card has
+     stopped being a card. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#C6D2D6" />
+    <corners android:radius="8dp" />
+</shape>

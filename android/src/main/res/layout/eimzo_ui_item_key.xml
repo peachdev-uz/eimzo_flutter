@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  C6 — a key, as the app draws it: the teal card. The same card on Home, as
+  the key list's primary, and over the wallpaper preview (KeyCard.bind).
+
+  Top left, one pill with the kind and the status ("ERI · Amal qiladi");
+  top right, the kind's artwork; the holder's name in capitals, two lines at
+  most; along the foot, the identifier on the left — STIR and the TIN for an
+  organisation's key, JSHSHIR and the PINFL otherwise, nothing when unknown —
+  and on the right MUDDATI with the date as dd.MM.yyyy.
+
+  It grows with its text (D1): the old fixed 196/220dp cut the footer off
+  from about 1.5× font size.
+-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="14dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cardBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/eimzo_ui_gradient_card"
+        android:clipChildren="true"
+        android:minHeight="190dp"
+        android:paddingStart="20dp"
+        android:paddingTop="18dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="18dp">
+
+        <!-- Decorative ring bleeding off the top-right corner. Behind
+             everything, and clipped by the card's own bounds. -->
+        <View
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_marginTop="-58dp"
+            android:layout_marginEnd="-58dp"
+            android:background="@drawable/eimzo_ui_card_ring"
+            android:importantForAccessibility="no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- "<kind> · <status>": the dot carries the status's colour, the
+             words stay white so they read on the gradient (D2). -->
+        <LinearLayout
+            android:id="@+id/statusPill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/eimzo_ui_bg_status_pill"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="4dp"
+            app:layout_constraintEnd_toStartOf="@id/ivKindLogo"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/statusDot"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:background="@drawable/eimzo_ui_status_dot" />
+
+            <TextView
+                android:id="@+id/tvKindPill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:letterSpacing="0.02"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                tools:text="ERI · Amal qiladi" />
+        </LinearLayout>
+
+        <!-- The kind's artwork: the card, the file, the USB plug, BAIK's logo. -->
+        <ImageView
+            android:id="@+id/ivKindLogo"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/eimzo_ui_logo_card" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:ellipsize="end"
+            android:letterSpacing="0.06"
+            android:lineSpacingMultiplier="1.2"
+            android:maxLines="2"
+            android:textAllCaps="true"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivKindLogo"
+            tools:text="TOSHMATOV ALISHER BAXTIYOR O‘G‘LI" />
+
+        <!-- The footer's two fields side by side, the second moving under the
+             first when they no longer fit beside each other — at a large font
+             size a 14-digit PINFL and a date ran into each other (D1). -->
+        <LinearLayout
+            android:id="@+id/idField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lblId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.08"
+                android:textColor="@color/eimzo_ui_card_label"
+                android:textSize="10.5sp"
+                tools:text="JSHSHIR" />
+
+            <TextView
+                android:id="@+id/tvId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="12345678901234" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/expiryField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lblExpiry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.08"
+                android:text="@string/eimzo_ui_label_duration"
+                android:textColor="@color/eimzo_ui_card_label"
+                android:textSize="10.5sp" />
+
+            <TextView
+                android:id="@+id/tvExpiry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="31.12.2027" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/footer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            app:constraint_referenced_ids="idField,expiryField"
+            app:flow_horizontalBias="0"
+            app:flow_horizontalGap="16dp"
+            app:flow_horizontalStyle="spread_inside"
+            app:flow_verticalGap="10dp"
+            app:flow_verticalAlign="bottom"
+            app:flow_wrapMode="chain"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvName"
+            app:layout_constraintVertical_bias="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

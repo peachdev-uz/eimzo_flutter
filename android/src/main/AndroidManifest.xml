@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="uz.eimzo.sdk" >
+
+    <uses-sdk android:minSdkVersion="24" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- The SDK's "Internet aloqasi yo‘q" banner watches the connection. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+    <!-- required="false" muhim: usiz Google Play integratorning ilovasini
+         USB host'i yo'q har qanday qurilmadan filtrlab tashlaydi, ko'p
+         telefonlarda esa u yo'q. -->
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
+
+    <!--
+        Exclude the SDK's Room DB (eimzo_keys.db) and encrypted prefs from
+        device-transfer / cloud backup. Consumer apps can keep their own
+        `allowBackup="true"` for their own data — our backup-rules XML
+        files explicitly remove only the SDK's storage paths.
+    -->
+    <application
+        android:dataExtractionRules="@xml/eimzo_data_extraction_rules"
+        android:fullBackupContent="@xml/eimzo_backup_rules"
+        tools:replace="android:fullBackupContent,android:dataExtractionRules" >
+        <activity
+            android:name="uz.eimzo.sdk.license.BlockedAppActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Eimzo" />
+        <!--
+             No eimzo://sign filter here, and not exported: the app declares
+             the filter on its own MainActivity, reads the link from Dart and
+             passes it to openSignUi(deepLink:). A filter in the plugin was
+             merged into every app using it — a second handler next to the
+             app's own, an "Open with" chooser on any phone with two such apps.
+        -->
+        <activity
+            android:name="uz.eimzo.sdk.fullui.EImzoActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Eimzo"
+            android:windowSoftInputMode="adjustResize" />
+        <!--
+            The Keys API's sign sheet (2.4), as the SDK declares it: opened
+            only by EImzoSDK.sign — Dart's sign(keyId:, deepLink:) — for an
+            integrator with the «Kalitlar API». Not exported, no filters.
+            singleTop, as EImzoActivity, so the ID card's foreground dispatch
+            reaches it. The plugin bundles the SDK as a jar, so the SDK's own
+            manifest is not merged: without this entry the sheet cannot start
+            (ActivityNotFoundException) and every sign() ends in sign_failed.
+        -->
+        <activity
+            android:name="uz.eimzo.sdk.api.EImzoSignActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Eimzo"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="uz.eimzo.sdk.fullui.scanner.QrScannerActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Eimzo" />
+    </application>
+
+</manifest>

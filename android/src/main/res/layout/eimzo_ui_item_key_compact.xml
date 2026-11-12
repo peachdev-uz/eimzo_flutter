@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  C7 — a key that is not the primary one, as a row: the app's.
+
+  A 44×32 swatch in the kind's colours with its mark, the name in capitals,
+  and one line under it: "ERI · jismoniy shaxs · 31.12.2027 gacha", or in
+  red "Muddati tugagan · 01.01.2024". A tap makes the key the primary; ⋮
+  offers to delete it. Grows with its text (D1).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rowRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/eimzo_ui_bg_option_row"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="72dp"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="14dp"
+    android:paddingEnd="4dp"
+    android:paddingBottom="14dp">
+
+    <FrameLayout
+        android:id="@+id/thumb"
+        android:layout_width="44dp"
+        android:layout_height="32dp"
+        tools:background="@drawable/eimzo_ui_swatch_file">
+
+        <ImageView
+            android:id="@+id/thumbMark"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_gravity="center"
+            android:alpha="0.88"
+            android:importantForAccessibility="no"
+            app:tint="#FFFFFF"
+            tools:src="@drawable/eimzo_ui_ic_keys" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lineSpacingExtra="1dp"
+            android:maxLines="2"
+            android:textAllCaps="true"
+            android:textColor="@color/eimzo_ui_text"
+            android:textSize="14.5sp"
+            android:textStyle="bold"
+            tools:text="TOSHMATOV ALISHER BAXTIYOR O‘G‘LI" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Only on an expired key: the red line needs a mark so it is not
+                 just "text that happens to be red". -->
+            <ImageView
+                android:id="@+id/ivExpired"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginEnd="5dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/eimzo_ui_ic_error"
+                android:visibility="gone"
+                app:tint="@color/eimzo_ui_danger"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tvMeta"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/eimzo_ui_text_muted"
+                android:textSize="12.5sp"
+                tools:text="ERI · jismoniy shaxs · 31.12.2027 gacha" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ⋮: 48dp to the finger, the 20dp mark where it was drawn. -->
+    <ImageView
+        android:id="@+id/btnMore"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@string/eimzo_ui_key_actions"
+        android:focusable="true"
+        android:padding="14dp"
+        android:src="@drawable/eimzo_ui_ic_more_vert"
+        app:tint="@color/eimzo_ui_chevron" />
+
+</LinearLayout>
