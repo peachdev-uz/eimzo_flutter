@@ -1,3 +1,36 @@
+## 2.6.0 - chiqarilmagan
+
+**Kalitlar API: kalit qo'shish** — ilova kalitni SDK oynasini ochmasdan, o'z
+kodidan qo'shadi (o'sha «Kalitlar API» ruxsati bilan):
+
+- `addPfxKey(pfx:, password:)` — kalit fayli; `addQrKey(qrCode:, password:)` —
+  kalit QR kodi; `addIdCardKey(pin:)` — ID karta (Android'da SDK kartani 60
+  soniya o'zi kutadi, `cancelAddKey()` to'xtatadi; iOS'da tizimning NFC oynasi
+  chiqadi); `addTokenKey(pin:)` — USB yoki BAIK token, SDK o'zi aniqlaydi.
+- Javob: `added` yoki `exists` (kalit `getKeys`'dagi shaklda), ID kartada
+  `cancelled`, yoki `error`. Yangi kodlar: `wrong_password`, `wrong_pin`
+  (`triesLeft` bilan), `pin_blocked`, `invalid_key`, `nfc_unavailable`,
+  `card_read_failed`, `token_not_found`, `add_failed`.
+- `savePassword` / `savePin` sukut bo'yicha `false`: SDK hech narsa saqlamaydi.
+- Parol, PIN va kalit fayli ilova kodidan o'tadi — ular uchun shartnoma
+  bo'yicha integrator javob beradi.
+- ID karta va USB token PIN'i aynan 8 ta raqam (0–9) bo'lmasa — `wrong_pin`,
+  kartaga hech narsa yuborilmaydi, urinish sarflanmaydi, hech narsa
+  kesilmaydi. BAIK token PIN'i — u qanday o'rnatilgan bo'lsa shunday.
+
+**Kalitlar ro'yxatida STIR va korxona nomi** — `getKeys` kaliti (va
+`add…Key`'ning `key`i) endi sakkiz maydonli: `name`dan keyin `tin` va
+`organization` — yuridik shaxs kalitida korxonaning STIRi va nomi, jismoniy
+shaxs kalitida ikkalasi `null`. 2.6.0 dan oldin qo'shilgan ID karta va USB
+token kalitlarida STIR qayta qo'shilguncha yo'q.
+
+Native tuzatishlar: raqam bo'lmagan PIN iOS'da kartaga nollar bo'lib ketmaydi;
+iOS'da E-IMZO tanimagan sertifikat kalit bo'lib saqlanmaydi (`invalid_key`);
+Android'da qo'shish tekshiruvda turganda kelgan `cancelAddKey()` yo'qolmaydi.
+
+Ichida Android SDK va iOS EimzoSDK 2.6.0 (chiqarilmagan).
+
+
 ## 2.5.0 - 2026-11-11
 
 **Dizayn** — SDK ekranlari ilovaning ko'rinishida (native SDK 2.5.0 bilan):

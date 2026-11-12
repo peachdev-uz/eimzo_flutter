@@ -13,6 +13,10 @@ import CoreText
 ///   - `openSignUi(deepLink)` → void (presents `EImzoView` over Flutter UI)
 ///   - `getKeys`             → String (`EImzoAPI.getKeys`'s JSON, as it is)
 ///   - `sign(keyId, deepLink)` → String (`EImzoAPI.sign`'s JSON, as it is)
+///   - `addPfxKey`, `addQrKey`, `addIdCardKey`, `addTokenKey` → String
+///                              (`EImzoAPI`'s add methods' JSON, as it is)
+///   - `cancelAddKey`        → void (nothing to do on iOS: the system's NFC
+///                              sheet has its own Cancel)
 ///
 /// The plugin does not listen for URLs. `eimzo://` is the E-IMZO app's
 /// scheme, and a host that takes it from outside would open its SDK for any
@@ -49,6 +53,12 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             handleGetKeys(result: result)
         case "sign":
             handleSign(call: call, result: result)
+        case "addPfxKey", "addQrKey", "addIdCardKey", "addTokenKey":
+            handleAddKey(call: call, result: result)
+        case "cancelAddKey":
+            // The system's NFC sheet is the only wait on iOS, and its own
+            // Cancel ends `addIdCardKey` as `cancelled`.
+            result(nil)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -162,6 +172,38 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
         let deepLink = args["deepLink"] as? String ?? ""
         Task { @MainActor in
             result(await EImzoAPI.sign(keyId: keyId, deepLink: deepLink, config: config))
+        }
+    }
+
+    /// «Kalitlar API» (2.6): adds a key the app hands over — `EImzoAPI`'s
+    /// add methods, their JSON as it is. Nothing of the SDK's is shown; an ID
+    /// card brings up the system's NFC sheet.
+    private func handleAddKey(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let config else {
+            result(Self.notInitialized())
+            return
+        }
+        let args = (call.arguments as? [String: Any]) ?? [:]
+        let method = call.method
+        let pfx = (args["pfx"] as? FlutterStandardTypedData)?.data ?? Data()
+        let qrCode = args["qrCode"] as? String ?? ""
+        let password = args["password"] as? String ?? ""
+        let savePassword = args["savePassword"] as? Bool ?? false
+        let pin = args["pin"] as? String ?? ""
+        let savePin = args["savePin"] as? Bool ?? false
+        Task { @MainActor in
+            switch method {
+            case "addPfxKey":
+                result(await EImzoAPI.addPfxKey(pfx: pfx, password: password,
+                                                savePassword: savePassword, config: config))
+            case "addQrKey":
+                result(await EImzoAPI.addQrKey(qrCode: qrCode, password: password,
+                                               savePassword: savePassword, config: config))
+            case "addIdCardKey":
+                result(await EImzoAPI.addIdCardKey(pin: pin, savePin: savePin, config: config))
+            default:
+                result(await EImzoAPI.addTokenKey(pin: pin, savePin: savePin, config: config))
+            }
         }
     }
 

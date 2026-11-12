@@ -326,6 +326,100 @@ void main() {
     });
   });
 
+  group('Kalitlar API: kalit qo\'shish (2.6)', () {
+    Map<String, dynamic> decoded(String json) => jsonDecode(json) as Map<String, dynamic>;
+
+    const added = '{"status":"added","key":{"id":"7a3f01","pinfl":"31234567890123",'
+        '"name":"ALIYEV VALI ALIYEVICH","type":"pfx","validFrom":"2025-03-01","validTo":"2027-03-01"}}';
+
+    test('addPfxKey sends the bytes, the password and no save by default', () async {
+      reply = added;
+      final pfx = Uint8List.fromList([0x30, 0x82, 0x01, 0xff]);
+
+      final json = await EimzoFlutter.instance.addPfxKey(pfx: pfx, password: 'parol');
+
+      expect(calls.single.method, 'addPfxKey');
+      expect(argsOf(calls.single), {'pfx': pfx, 'password': 'parol', 'savePassword': false});
+      expect(json, added, reason: 'the native JSON, byte for byte');
+    });
+
+    test('addQrKey sends the code as it is, and the save choice', () async {
+      reply = added;
+      const code = 'E73101AABB';
+
+      await EimzoFlutter.instance.addQrKey(qrCode: code, password: 'p', savePassword: true);
+
+      expect(calls.single.method, 'addQrKey');
+      expect(argsOf(calls.single), {'qrCode': code, 'password': 'p', 'savePassword': true});
+    });
+
+    test('addIdCardKey and addTokenKey send the PIN and no save by default', () async {
+      reply = '{"status":"cancelled"}';
+
+      expect(await EimzoFlutter.instance.addIdCardKey(pin: '12345678'), '{"status":"cancelled"}');
+      await EimzoFlutter.instance.addTokenKey(pin: '1234', savePin: true);
+
+      expect(calls.map((c) => c.method), ['addIdCardKey', 'addTokenKey']);
+      expect(argsOf(calls[0]), {'pin': '12345678', 'savePin': false});
+      expect(argsOf(calls[1]), {'pin': '1234', 'savePin': true});
+    });
+
+    test('each native outcome comes back unchanged', () async {
+      for (final outcome in [
+        added,
+        '{"status":"exists","key":{"id":"7a3f01","pinfl":null,"name":"A","type":"token","validFrom":null,"validTo":null}}',
+        '{"status":"error","code":"wrong_pin","message":"The PIN is wrong.","triesLeft":2}',
+        '{"status":"error","code":"token_not_found","message":"No USB or BAIK token is plugged in."}',
+      ]) {
+        reply = outcome;
+        expect(await EimzoFlutter.instance.addTokenKey(pin: '1'), outcome);
+      }
+    });
+
+    test('no Android activity is add_failed / no_activity, not an exception', () async {
+      reply = PlatformException(code: 'NO_ACTIVITY', message: 'Activity not attached');
+
+      expect(await EimzoFlutter.instance.addIdCardKey(pin: '1'),
+          '{"status":"error","code":"add_failed","message":"no_activity"}');
+    });
+
+    test('iOS without init is not_initialized', () async {
+      reply = PlatformException(
+          code: 'NOT_INITIALIZED', message: 'EimzoFlutter.instance.init has not been called yet.');
+
+      expect(decoded(await EimzoFlutter.instance.addQrKey(qrCode: 'c', password: 'p'))['code'],
+          'not_initialized');
+    });
+
+    test('any other plugin failure is add_failed, never sign_failed or an exception', () async {
+      reply = PlatformException(code: 'error', message: 'Reply "already" submitted');
+      expect(decoded(await EimzoFlutter.instance.addTokenKey(pin: '1')), {
+        'status': 'error',
+        'code': 'add_failed',
+        'message': 'Reply "already" submitted',
+      });
+
+      reply = MissingPluginException('No implementation found for method addPfxKey');
+      final missing = decoded(await EimzoFlutter.instance
+          .addPfxKey(pfx: Uint8List(1), password: 'p'));
+      expect(missing['code'], 'add_failed');
+
+      reply = null;
+      expect(decoded(await EimzoFlutter.instance.addIdCardKey(pin: '1'))['code'], 'add_failed');
+    });
+
+    test('cancelAddKey asks the native side and never throws', () async {
+      reply = null;
+      await EimzoFlutter.instance.cancelAddKey();
+      expect(calls.single.method, 'cancelAddKey');
+
+      reply = PlatformException(code: 'error');
+      await EimzoFlutter.instance.cancelAddKey();
+      reply = MissingPluginException();
+      await EimzoFlutter.instance.cancelAddKey();
+    });
+  });
+
   group('errors', () {
     test('a PlatformException surfaces as EimzoException', () async {
       reply = PlatformException(code: 'NO_VC', message: 'No root controller');

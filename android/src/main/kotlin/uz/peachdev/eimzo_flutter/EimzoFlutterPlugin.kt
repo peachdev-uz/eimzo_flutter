@@ -56,8 +56,49 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
             "openSignUi" -> handleOpenSignUi(call, result)
             "getKeys" -> EImzoSDK.getKeys(answerOnce(result))
             "sign" -> handleSign(call, result)
+            "addPfxKey" -> EImzoSDK.addPfxKey(
+                call.argument<ByteArray>("pfx") ?: ByteArray(0),
+                call.argument<String>("password").orEmpty(),
+                call.argument<Boolean>("savePassword") ?: false,
+                answerOnce(result),
+            )
+            "addQrKey" -> EImzoSDK.addQrKey(
+                call.argument<String>("qrCode").orEmpty(),
+                call.argument<String>("password").orEmpty(),
+                call.argument<Boolean>("savePassword") ?: false,
+                answerOnce(result),
+            )
+            "addIdCardKey" -> handleAddIdCardKey(call, result)
+            "addTokenKey" -> EImzoSDK.addTokenKey(
+                call.argument<String>("pin").orEmpty(),
+                call.argument<Boolean>("savePin") ?: false,
+                answerOnce(result),
+            )
+            "cancelAddKey" -> {
+                EImzoSDK.cancelAddKey()
+                result.success(null)
+            }
             else -> result.notImplemented()
         }
+    }
+
+    /**
+     * «Kalitlar API» (2.6): adds the key on an ID card the SDK waits for
+     * itself — NFC reader mode over the host activity, up to 60 seconds, with
+     * no window of its own. `cancelAddKey` ends the wait; so does the
+     * activity going away. The app passes no NFC tag: Dart has none to give.
+     *
+     * No activity is `NO_ACTIVITY`, which Dart turns into the API's own
+     * `add_failed` / `no_activity` JSON.
+     */
+    private fun handleAddIdCardKey(call: MethodCall, result: MethodChannel.Result) {
+        val act = requireActivity(result) ?: return
+        EImzoSDK.addIdCardKey(
+            act,
+            call.argument<String>("pin").orEmpty(),
+            call.argument<Boolean>("savePin") ?: false,
+            answerOnce(result),
+        )
     }
 
     /**
