@@ -1,3 +1,18 @@
+## 2.6.1 - 2026-11-16
+
+**Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
+ichidagi SDK'lar 2.6.1 ga yangilandi.
+
+- **Android, fayldan kalit qo'shish.** Tanlangan fayl asosiy oqimda
+  butunligicha o'qilardi. Kalit o'rniga katta fayl tanlansa, xotira tugab
+  butun ilova yopilardi. Endi fayl fonda va ko'pi bilan 1 MB o'qiladi.
+  Kattaroq fayl uchun «Faylni ochib bo'lmadi» xabari chiqadi va gateway'ga
+  `file_too_large` hisoboti boradi.
+- **iOS, QR skaner.** Kamera sessiyasi kamera ko'rinishi uni olmasdan ishga
+  tushardi. Ikkisi ustma-ust tushsa, ilova yopilardi yoki qotib qolardi.
+  Endi sessiya ko'rinish uni olgandan keyin ishga tushadi. iOS'da ham katta
+  fayl xuddi shunday rad etiladi.
+
 ## 2.6.0 - 2026-11-12
 
 **Kalitlar API: kalit qo'shish** — ilova kalitni SDK oynasini ochmasdan, o'z
