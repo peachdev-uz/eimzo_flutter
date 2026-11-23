@@ -276,7 +276,9 @@ without opening the full UI:
 - `sign(keyId:, deepLink:)` — signs a sign request with the chosen key;
 - since 2.6, `addPfxKey`, `addQrKey`, `addIdCardKey` and `addTokenKey` — add
   a key your app hands over, with no SDK window; see
-  [Adding a key](#adding-a-key-26).
+  [Adding a key](#adding-a-key-26);
+- since 2.7, `scanAndSign(keyId:)` and `signQrCode(keyId:, qrCode:)` — sign
+  a site's QR code; see [Signing a site's QR code](#signing-a-sites-qr-code-27).
 
 All of them return the native SDK's JSON as a `String`, once, and never
 throw. The JSON and the codes are the same as in the Android (`EImzoSDK`)
@@ -397,11 +399,11 @@ never gets it: after `signed`, ask your backend for the document's state.
 | `not_initialized` | Android: `init` has not returned `true` in this process. iOS: `init` has not been called |
 | `blocked` | The licence check or the gateway turned the app or the phone away; `message` starts with their code, e.g. `app_blocked`. The blocked screen is not shown |
 | `network` | The gateway could not be reached, or did not answer in time |
-| `invalid_request` | `deepLink` is not a sign request, or E-IMZO does not know its site |
+| `invalid_request` | `deepLink` (or `signQrCode`'s `qrCode`) is not a sign request, or E-IMZO does not know its site |
 | `key_not_found` | No key with this `id` can sign in this environment |
 | `key_expired` | The key's certificate has expired |
-| `busy` | Another `sign` is still open |
-| `sign_failed` | E-IMZO refused the signature, or anything else ended the flow. When E-IMZO refused, `message` is its own answer; a blocked card or token PIN is `pin_blocked` |
+| `busy` | Another sign — `sign`, `scanAndSign` or `signQrCode` — is still open |
+| `sign_failed` | E-IMZO refused the signature, or anything else ended the flow. When E-IMZO refused, `message` is its own answer; a blocked card or token PIN is `pin_blocked`. On iOS, `scanAndSign` without `NSCameraUsageDescription` in Info.plist |
 
 `message` is for the developer: English, except E-IMZO's own answer, which
 may be in Russian or Uzbek. It never holds a key, a password or a hash. Show
@@ -411,6 +413,50 @@ A failure in the plugin itself comes back in the same shape, not as an
 exception: with no Android activity to open the sheet over, `sign` answers
 `sign_failed` with the message `no_activity`; any other platform error is
 `sign_failed` with that error's message (`add_failed` for the add methods).
+
+#### Signing a site's QR code (2.7)
+
+A site shows its sign request as an E-IMZO QR code, on a computer's screen
+as a rule. The user reads it with the phone and signs with a key from
+`getKeys()`. Two methods, by who reads the code:
+
+```dart
+// The SDK's own scanner reads it.
+final scanned = jsonDecode(
+  await EimzoFlutter.instance.scanAndSign(keyId: keyId),
+) as Map<String, dynamic>;
+
+// Your app's own scanner read it, and hands over the text.
+final read = jsonDecode(
+  await EimzoFlutter.instance.signQrCode(keyId: keyId, qrCode: scannedText),
+) as Map<String, dynamic>;
+```
+
+Once the code is read it is `sign`: the same sheet with the key fixed, the
+same answers (`signed`, `cancelled`, an error) and the same codes. One sign
+at a time across `sign`, `scanAndSign` and `signQrCode`: another gets
+`busy`.
+
+One difference: the sheet **always** shows the request's hash. The site is
+on another screen, and the user compares the hash on the phone with the
+site's — as for a code `openSignUi`'s scanner reads. `hashDisplay` applies
+only to requests your app makes itself (`sign`, `openSignUi(deepLink:)`).
+
+- **`scanAndSign`** checks before the scanner opens: the permission, the key
+  here, the key not expired, no other sign open. The scanner is
+  `openSignUi`'s: the torch, «Kod qayerda?», and the camera permission asked
+  for — refused, it says so in place, with the way to the settings. A code
+  that is not a sign request (a key's QR code, say) is named in a banner and
+  the scanner keeps looking; the first sign request read closes it and opens
+  the sheet. Closing the scanner is `{"status":"cancelled"}`. On iOS the
+  app's `Info.plist` needs `NSCameraUsageDescription` (as for `openSignUi`'s
+  scanner, see [iOS — Info.plist permissions](#6-ios--infoplist-permissions)):
+  without it the call answers `sign_failed` and opens no camera.
+- **`signQrCode`** checks as `sign` does: the permission, the request (text
+  that is not a sign request's QR code is `invalid_request`), the key, its
+  expiry, `busy`. Pass the code's text as your scanner read it.
+
+To the YT gateway these are ordinary Keys API signatures.
 
 #### Adding a key (2.6)
 
@@ -693,6 +739,14 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
   own sheet, and returns how it ended as JSON — `signed`, `cancelled` or an
   error. Never throws.
 
+- **`EimzoFlutter.instance.scanAndSign({required String keyId})`**,
+  **`signQrCode({required String keyId, required String qrCode})`** → `Future<String>`
+  «Kalitlar API» (2.7): sign a site's QR code with the key `keyId` — read
+  by the SDK's scanner, or the text your scanner read — in the SDK's own
+  sheet, the hash always shown, and return how it ended as JSON, as `sign`
+  does. Never throw — see
+  [Signing a site's QR code](#signing-a-sites-qr-code-27).
+
 - **`addPfxKey({required Uint8List pfx, required String password, bool savePassword = false})`**,
   **`addQrKey({required String qrCode, required String password, bool savePassword = false})`**,
   **`addIdCardKey({required String pin, bool savePin = false})`**,
@@ -729,7 +783,8 @@ outside; the app makes the request with `EimzoSignLink.create`.
 - `showLanguagePicker` — false hides the SDK's language choice (2.5.0); true
   by default.
 - `hashDisplay` — `EimzoHashDisplay.hidden` leaves the hash out of the sign
-  screen for the app's own requests (2.5.0); `visible` by default.
+  screen for the app's own requests (2.5.0); `visible` by default. A QR
+  code always shows it (2.7).
 
 > Before 2.1.2 the iOS side discarded this config entirely: `init` ignored
 > its arguments and the UI opened with defaults. If you are on an earlier

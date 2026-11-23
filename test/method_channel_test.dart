@@ -326,6 +326,62 @@ void main() {
     });
   });
 
+  group('Kalitlar API: QR kod bilan imzolash (2.7)', () {
+    Map<String, dynamic> decoded(String json) => jsonDecode(json) as Map<String, dynamic>;
+    const qrCode = '20e2937e498417055ec4958507c957eba8576c0445a1fd5ac4457a4adaaa0c23c58d02d3153e22b8ea24';
+
+    test('scanAndSign passes only the key id: the SDK reads the code', () async {
+      reply = '{"status":"signed"}';
+
+      final json = await EimzoFlutter.instance.scanAndSign(keyId: '7a3f01');
+
+      expect(calls.single.method, 'scanAndSign');
+      expect(argsOf(calls.single), {'keyId': '7a3f01'});
+      expect(json, '{"status":"signed"}');
+    });
+
+    test('signQrCode passes the key id and the code as they are', () async {
+      reply = '{"status":"signed"}';
+
+      await EimzoFlutter.instance.signQrCode(keyId: '7a3f01', qrCode: ' $qrCode\n');
+
+      expect(calls.single.method, 'signQrCode');
+      expect(argsOf(calls.single), {'keyId': '7a3f01', 'qrCode': ' $qrCode\n'});
+    });
+
+    test('both return each native outcome unchanged', () async {
+      for (final outcome in [
+        '{"status":"signed"}',
+        '{"status":"cancelled"}',
+        '{"status":"error","code":"invalid_request","message":"qrCode is not the QR code of an E-IMZO sign request."}',
+        '{"status":"error","code":"busy","message":"Another sign() is still open."}',
+      ]) {
+        reply = outcome;
+        expect(await EimzoFlutter.instance.scanAndSign(keyId: 'k'), outcome);
+        expect(await EimzoFlutter.instance.signQrCode(keyId: 'k', qrCode: 'q'), outcome);
+      }
+    });
+
+    test('the plugin\'s own failures come in sign\'s shape', () async {
+      reply = PlatformException(code: 'NO_ACTIVITY', message: 'Activity not attached');
+      expect(await EimzoFlutter.instance.scanAndSign(keyId: 'k'),
+          '{"status":"error","code":"sign_failed","message":"no_activity"}');
+      expect(await EimzoFlutter.instance.signQrCode(keyId: 'k', qrCode: 'q'),
+          '{"status":"error","code":"sign_failed","message":"no_activity"}');
+
+      reply = PlatformException(code: 'NOT_INITIALIZED', message: 'init has not been called yet.');
+      expect(decoded(await EimzoFlutter.instance.scanAndSign(keyId: 'k'))['code'], 'not_initialized');
+      expect(decoded(await EimzoFlutter.instance.signQrCode(keyId: 'k', qrCode: 'q'))['code'],
+          'not_initialized');
+
+      // A host whose native side predates 2.7.
+      reply = MissingPluginException('No implementation found for method scanAndSign');
+      final json = decoded(await EimzoFlutter.instance.scanAndSign(keyId: 'k'));
+      expect(json['code'], 'sign_failed');
+      expect(json['message'], contains('No implementation'));
+    });
+  });
+
   group('Kalitlar API: kalit qo\'shish (2.6)', () {
     Map<String, dynamic> decoded(String json) => jsonDecode(json) as Map<String, dynamic>;
 

@@ -56,6 +56,8 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
             "openSignUi" -> handleOpenSignUi(call, result)
             "getKeys" -> EImzoSDK.getKeys(answerOnce(result))
             "sign" -> handleSign(call, result)
+            "scanAndSign" -> handleScanAndSign(call, result)
+            "signQrCode" -> handleSignQrCode(call, result)
             "addPfxKey" -> EImzoSDK.addPfxKey(
                 call.argument<ByteArray>("pfx") ?: ByteArray(0),
                 call.argument<String>("password").orEmpty(),
@@ -115,6 +117,35 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
             act,
             call.argument<String>("keyId").orEmpty(),
             call.argument<String>("deepLink").orEmpty(),
+            answerOnce(result),
+        )
+    }
+
+    /**
+     * «Kalitlar API» (2.7): the SDK's scanner reads a site's QR code over the
+     * host activity, then the SDK's sheet signs it with the key `keyId`, as
+     * [handleSign]. No activity is `NO_ACTIVITY`, as there.
+     */
+    private fun handleScanAndSign(call: MethodCall, result: MethodChannel.Result) {
+        val act = requireActivity(result) ?: return
+        EImzoSDK.scanAndSign(
+            act,
+            call.argument<String>("keyId").orEmpty(),
+            answerOnce(result),
+        )
+    }
+
+    /**
+     * «Kalitlar API» (2.7): signs `qrCode` — the text the app's scanner read
+     * off a site's QR code — with the key `keyId` in the SDK's own sheet, as
+     * [handleSign]. No activity is `NO_ACTIVITY`, as there.
+     */
+    private fun handleSignQrCode(call: MethodCall, result: MethodChannel.Result) {
+        val act = requireActivity(result) ?: return
+        EImzoSDK.signQrCode(
+            act,
+            call.argument<String>("keyId").orEmpty(),
+            call.argument<String>("qrCode").orEmpty(),
             answerOnce(result),
         )
     }

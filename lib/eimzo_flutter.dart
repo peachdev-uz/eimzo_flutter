@@ -361,9 +361,10 @@ class EimzoException implements Exception {
 /// initializes it on the host activity and opens it, with a sign request
 /// the app made ([EimzoSignLink]) or without one. For an integrator YT has
 /// registered for the «Kalitlar API» it also lists the user's keys
-/// ([getKeys]), signs with one of them in the SDK's own sheet ([sign]) and,
-/// since 2.6, adds a key the app hands over, with no SDK window
-/// ([addPfxKey], [addQrKey], [addIdCardKey], [addTokenKey]).
+/// ([getKeys]), signs with one of them in the SDK's own sheet ([sign]; since
+/// 2.7 also a site's QR code: [scanAndSign], [signQrCode]) and, since 2.6,
+/// adds a key the app hands over, with no SDK window ([addPfxKey],
+/// [addQrKey], [addIdCardKey], [addTokenKey]).
 class EimzoFlutter {
   EimzoFlutter._();
   static final EimzoFlutter instance = EimzoFlutter._();
@@ -550,12 +551,13 @@ class EimzoFlutter {
   ///   blocked screen is not shown.
   /// - `network` — the gateway could not be reached, or did not answer in
   ///   time.
-  /// - `invalid_request` — [deepLink] is not a valid sign request, or E-IMZO
-  ///   does not know its site.
+  /// - `invalid_request` — [deepLink] (or [signQrCode]'s `qrCode`) is not a
+  ///   valid sign request, or E-IMZO does not know its site.
   /// - `key_not_found` — no key with that `id` can be used in this
   ///   environment.
   /// - `key_expired` — the key's certificate has expired.
-  /// - `busy` — another [sign] is still open; there is one at a time.
+  /// - `busy` — another sign — [sign], [scanAndSign] or [signQrCode] — is
+  ///   still open; there is one at a time.
   /// - `sign_failed` — E-IMZO refused the signature, or anything else ended
   ///   the flow; `message` says what — E-IMZO's own answer when it refused,
   ///   `pin_blocked` when the card's or token's PIN is blocked.
@@ -572,6 +574,64 @@ class EimzoFlutter {
       _keysApi(() => _channel.invokeMethod<String>('sign', {
             'keyId': keyId,
             'deepLink': deepLink,
+          }));
+
+  // ── «Kalitlar API»: signing a site's QR code (2.7) ───────────────────────
+  //
+  // A site shows its sign request as an E-IMZO QR code; the user reads it
+  // with the phone and signs with the key from getKeys(). Either the SDK's own
+  // scanner reads it (scanAndSign), or your app's does and hands over the
+  // text (signQrCode). Then it is sign(): the same sheet with the key fixed,
+  // the same answers and codes, and one sign at a time across all three —
+  // another is `busy`. The site is on another screen, a computer as a rule,
+  // so the sheet always shows the request's hash, for the user to compare
+  // with the site's, whatever [EimzoConfig.hashDisplay] says.
+
+  /// «Kalitlar API» (2.7): opens the SDK's QR scanner over the app, reads a
+  /// site's E-IMZO QR code with it, then signs that request with the key
+  /// [keyId] from [getKeys] as [sign] does, and returns how it ended as the
+  /// native SDK's JSON, unchanged. Only for an integrator with the
+  /// permission; see [getKeys].
+  ///
+  /// ```dart
+  /// final reply = jsonDecode(await EimzoFlutter.instance.scanAndSign(keyId: id));
+  /// if (reply['status'] == 'signed') { /* the site's backend has it from E-IMZO */ }
+  /// ```
+  ///
+  /// The same checks as [sign], before anything opens: the permission, the
+  /// key here, the key not expired, no other sign open. The scanner is
+  /// [openSignUi]'s: the torch, «Kod qayerda?», and the camera permission
+  /// asked for — refused, it says so in place, with the way to the app's
+  /// settings. A code that is not a sign request is said in a banner, and
+  /// the scanner keeps looking. Closing the scanner is
+  /// `{"status":"cancelled"}`; the first sign request read closes it, and the
+  /// sign sheet opens for it — from there as [sign].
+  ///
+  /// On iOS the app's Info.plist needs `NSCameraUsageDescription`, as for
+  /// [openSignUi]'s scanner: without it the call answers `sign_failed`
+  /// rather than open the camera, which iOS would end the app for.
+  Future<String> scanAndSign({required String keyId}) =>
+      _keysApi(() => _channel.invokeMethod<String>('scanAndSign', {
+            'keyId': keyId,
+          }));
+
+  /// «Kalitlar API» (2.7): signs the sign request in a site's E-IMZO QR code
+  /// — [qrCode], the text your app's own scanner read off it — with the key
+  /// [keyId] from [getKeys], as [sign] does, and returns how it ended as the
+  /// native SDK's JSON, unchanged: the same checks in the same order, the
+  /// request's being `invalid_request` when the code is not a sign request
+  /// (a key's QR code, say). Only for an integrator with the permission; see
+  /// [getKeys].
+  ///
+  /// ```dart
+  /// final reply = jsonDecode(
+  ///   await EimzoFlutter.instance.signQrCode(keyId: id, qrCode: scannedText),
+  /// );
+  /// ```
+  Future<String> signQrCode({required String keyId, required String qrCode}) =>
+      _keysApi(() => _channel.invokeMethod<String>('signQrCode', {
+            'keyId': keyId,
+            'qrCode': qrCode,
           }));
 
   // ── «Kalitlar API»: adding a key (2.6) ───────────────────────────────────
