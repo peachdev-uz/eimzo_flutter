@@ -492,9 +492,10 @@ class EimzoFlutter {
   /// its STIR and name — and both null on a person's own key, so a key with a
   /// `tin` is a legal entity's (an ID card or USB token key added before 2.6
   /// has none until it is added again). `type` (2.5) is `pfx`
-  /// (a key file, from a file or a QR code), `id_card` or `token` (USB or
-  /// BAIK), so one holder's keys can be told apart; show a value you do not
-  /// know as a plain key, since a later version may add one. `validFrom` and
+  /// (a key file, from a file or a QR code), `id_card`, `token` (a USB
+  /// token) or `baik_token` (a BAIK token, since 2.7; `token` before), so one
+  /// holder's keys can be told apart; show a value you do not know as a plain
+  /// key, since a later version may add one. `validFrom` and
   /// `validTo` are `yyyy-MM-dd`, or null when the SDK cannot read them;
   /// `validTo` is how the app tells an expired key. No keys:
   /// `{"status":"ok","keys":[]}`.

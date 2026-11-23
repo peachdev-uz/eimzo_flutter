@@ -335,7 +335,7 @@ final keys = (reply['keys'] as List).cast<Map<String, dynamic>>();
 | `name` | The certificate holder's name — the employee's, also on a legal entity's key |
 | `tin` | Since 2.6.0: a legal entity's key's organisation's STIR; `null` on a person's own key. A key with a `tin` is a legal entity's |
 | `organization` | Since 2.6.0: a legal entity's key's organisation name; `null` on a person's own key |
-| `type` | What the key is (since 2.5.0): `pfx` — a key file, added from a file or a QR code; `id_card` — an ID card; `token` — a USB or BAIK token |
+| `type` | What the key is (since 2.5.0): `pfx` — a key file, added from a file or a QR code; `id_card` — an ID card; `token` — a USB token; `baik_token` — a BAIK token (since 2.7.0; 2.5 and 2.6 said `token` for it too) |
 | `validFrom`, `validTo` | The certificate's validity, `yyyy-MM-dd` without the time; `null` when the SDK cannot read it |
 
 One holder's ID card, token and key file come as separate entries: their

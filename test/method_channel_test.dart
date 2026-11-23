@@ -423,7 +423,7 @@ void main() {
     test('each native outcome comes back unchanged', () async {
       for (final outcome in [
         added,
-        '{"status":"exists","key":{"id":"7a3f01","pinfl":null,"name":"A","type":"token","validFrom":null,"validTo":null}}',
+        '{"status":"exists","key":{"id":"7a3f01","pinfl":null,"name":"A","type":"baik_token","validFrom":null,"validTo":null}}',
         '{"status":"error","code":"wrong_pin","message":"The PIN is wrong.","triesLeft":2}',
         '{"status":"error","code":"token_not_found","message":"No USB or BAIK token is plugged in."}',
       ]) {

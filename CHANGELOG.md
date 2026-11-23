@@ -26,6 +26,12 @@ Yangi xato kodi yo'q. `sign`, `scanAndSign` va `signQrCode` bitta joyni
 bo'lishadi (`busy`). Oynada hash doim ko'rinadi (sayt boshqa ekranda),
 `hashDisplay` qanday bo'lmasin. Misolda ikkala usulning tugmasi bor.
 
+**Kalitlar API: BAIK token endi `baik_token`.** `getKeys()` va `add…Key`
+javobidagi kalitning `type`i BAIK token uchun endi `baik_token` (2.5–2.6 da
+`token` edi); USB token avvalgidek `token`. BAIK tokenni `token` deb kutgan
+ilova `baik_token`ni ham token deb ko'rsatsin; noma'lum qiymatni oddiy kalit
+deb ko'rsatish qoidasi o'zgarmaydi.
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
