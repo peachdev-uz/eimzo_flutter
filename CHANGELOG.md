@@ -1,4 +1,15 @@
-## 2.7.0 - chiqmagan
+## 2.7.0 - 2026-11-23
+
+Ichidagi SDK'lar 2.7.0 ga yangilandi (Android `eimzo-sdk-2.7.0`, iOS
+`eimzo-ios-sdk` 2.7.0).
+
+**Litsenziya muddati o'zi uzayadi.** YT litsenziya muddatini uzaytirsa, SDK
+litsenziyaning yangi faylini gateway'dan o'zi oladi va saqlaydi: ilovani
+yangilash shart emas. Yangi fayl ilovadagi fayl kabi tekshiriladi va faqat
+o'sha litsenziyaning (o'sha ilova, imzo sertifikatlari yoki Team ID) muddatini
+uzaytiradi. Ilovadagi fayl muddati o'tgan bo'lsa, SDK avval yangisini so'raydi
+(internet kerak); yangisi bo'lmasa, avvalgidek rad etadi. Dart API
+o'zgarmagan; litsenziyasiz ilovalarga ta'sir qilmaydi.
 
 **Kalitlar API: sayt QR kodi bilan imzo** — sayt ko'rsatgan E-IMZO QR kodini
 `getKeys()` dagi kalit bilan imzolash, o'sha «Kalitlar API» ruxsati bilan:
