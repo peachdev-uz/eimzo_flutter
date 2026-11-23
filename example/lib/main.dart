@@ -85,6 +85,15 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> _keys = const [];
   String? _keyId;
 
+  /// A site's QR code text, as the app's own scanner would read it (2.7).
+  final _qrText = TextEditingController();
+
+  @override
+  void dispose() {
+    _qrText.dispose();
+    super.dispose();
+  }
+
   /// «Kalitlar API»: lists the keys the user has added in the SDK's UI.
   /// Only for an integrator YT has given the permission; otherwise the JSON
   /// says `api_not_allowed`.
@@ -110,6 +119,24 @@ class _HomePageState extends State<HomePage> {
   /// from E-IMZO to the site's backend.
   Future<void> _signWithKey(String keyId) async {
     final json = await _eimzo.sign(keyId: keyId, deepLink: _signLink);
+    if (!mounted) return;
+    setState(() => _json = json);
+  }
+
+  /// «Kalitlar API» (2.7): the SDK's scanner reads the QR code a site
+  /// shows, then its sheet signs it with the picked key — the hash always
+  /// on screen, to compare with the site's. Closing the scanner is
+  /// `cancelled`.
+  Future<void> _scanAndSign(String keyId) async {
+    final json = await _eimzo.scanAndSign(keyId: keyId);
+    if (!mounted) return;
+    setState(() => _json = json);
+  }
+
+  /// «Kalitlar API» (2.7): the text the app's own scanner read off a site's
+  /// QR code — typed in here — signed with the picked key in the SDK's sheet.
+  Future<void> _signQrText(String keyId) async {
+    final json = await _eimzo.signQrCode(keyId: keyId, qrCode: _qrText.text);
     if (!mounted) return;
     setState(() => _json = json);
   }
@@ -184,6 +211,28 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.draw),
             label: const Text('Tanlangan kalit bilan imzolash'),
             onPressed: keyId == null ? null : () => _signWithKey(keyId),
+          ),
+          const SizedBox(height: 8),
+          // 2.7: a site's QR code — the SDK's scanner reads it…
+          ElevatedButton.icon(
+            icon: const Icon(Icons.qr_code_scanner),
+            label: const Text('Sayt QR kodini skanerlab imzolash'),
+            onPressed: keyId == null ? null : () => _scanAndSign(keyId),
+          ),
+          const SizedBox(height: 8),
+          // …or the app's own scanner does, and hands over the text.
+          TextField(
+            controller: _qrText,
+            autocorrect: false,
+            enableSuggestions: false,
+            style: const TextStyle(fontFamily: 'monospace'),
+            decoration: const InputDecoration(labelText: 'QR kod matni'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.draw),
+            label: const Text('QR matnini imzolash'),
+            onPressed: keyId == null ? null : () => _signQrText(keyId),
           ),
           if (json != null) ...[
             const SizedBox(height: 16),

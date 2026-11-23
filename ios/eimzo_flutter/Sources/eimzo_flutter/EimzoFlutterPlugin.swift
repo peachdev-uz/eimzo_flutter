@@ -13,6 +13,9 @@ import CoreText
 ///   - `openSignUi(deepLink)` → void (presents `EImzoView` over Flutter UI)
 ///   - `getKeys`             → String (`EImzoAPI.getKeys`'s JSON, as it is)
 ///   - `sign(keyId, deepLink)` → String (`EImzoAPI.sign`'s JSON, as it is)
+///   - `scanAndSign(keyId)`, `signQrCode(keyId, qrCode)` → String
+///                              (2.7: `EImzoAPI`'s QR code signing, its JSON
+///                              as it is)
 ///   - `addPfxKey`, `addQrKey`, `addIdCardKey`, `addTokenKey` → String
 ///                              (`EImzoAPI`'s add methods' JSON, as it is)
 ///   - `cancelAddKey`        → void (nothing to do on iOS: the system's NFC
@@ -53,6 +56,8 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             handleGetKeys(result: result)
         case "sign":
             handleSign(call: call, result: result)
+        case "scanAndSign", "signQrCode":
+            handleQrSign(call: call, result: result)
         case "addPfxKey", "addQrKey", "addIdCardKey", "addTokenKey":
             handleAddKey(call: call, result: result)
         case "cancelAddKey":
@@ -172,6 +177,28 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
         let deepLink = args["deepLink"] as? String ?? ""
         Task { @MainActor in
             result(await EImzoAPI.sign(keyId: keyId, deepLink: deepLink, config: config))
+        }
+    }
+
+    /// «Kalitlar API» (2.7): a site's QR code, signed with the key `keyId`
+    /// in the SDK's sheet — read by the SDK's scanner (`scanAndSign`), or the
+    /// text the app's scanner read (`signQrCode`). The JSON comes back once
+    /// the scanner and the sheet have closed.
+    private func handleQrSign(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let config else {
+            result(Self.notInitialized())
+            return
+        }
+        let args = (call.arguments as? [String: Any]) ?? [:]
+        let keyId = args["keyId"] as? String ?? ""
+        let qrCode = args["qrCode"] as? String ?? ""
+        let method = call.method
+        Task { @MainActor in
+            if method == "scanAndSign" {
+                result(await EImzoAPI.scanAndSign(keyId: keyId, config: config))
+            } else {
+                result(await EImzoAPI.signQrCode(keyId: keyId, qrCode: qrCode, config: config))
+            }
         }
     }
 

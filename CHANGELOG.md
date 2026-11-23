@@ -1,3 +1,20 @@
+## 2.7.0 - chiqmagan
+
+**Kalitlar API: sayt QR kodi bilan imzo** — sayt ko'rsatgan E-IMZO QR kodini
+`getKeys()` dagi kalit bilan imzolash, o'sha «Kalitlar API» ruxsati bilan:
+
+- `scanAndSign(keyId:)` — SDK'ning o'z skaneri (chiroq, «Kod qayerda?»,
+  kamera ruxsati joyida). Imzo so'rovi bo'lmagan kod banner bilan aytiladi,
+  skaner o'qishda davom etadi; skaner yopilsa — `cancelled`. iOS'da
+  `Info.plist` da `NSCameraUsageDescription` bo'lmasa — `sign_failed`.
+- `signQrCode(keyId:, qrCode:)` — ilovaning o'z skaneri o'qigan matn; imzo
+  so'rovi bo'lmasa — `invalid_request`.
+
+Keyin hammasi `sign` dagidek: o'sha oyna, o'sha javoblar va xato kodlari.
+Yangi xato kodi yo'q. `sign`, `scanAndSign` va `signQrCode` bitta joyni
+bo'lishadi (`busy`). Oynada hash doim ko'rinadi (sayt boshqa ekranda),
+`hashDisplay` qanday bo'lmasin. Misolda ikkala usulning tugmasi bor.
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,

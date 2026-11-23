@@ -218,6 +218,46 @@ void main() {
         reason: 'iOS plagini sign ga saqlangan konfiguratsiyani bermayapti');
   });
 
+  test('every argument the QR code methods send is read on both platforms', () async {
+    // As for sign(): a key renamed on one side would reach the SDK empty, and
+    // the app would hear key_not_found or invalid_request for a fine code.
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const channel = MethodChannel('uz.peachdev/eimzo_flutter');
+    final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    final sent = <MethodCall>[];
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      sent.add(call);
+      return '{"status":"cancelled"}';
+    });
+    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+
+    await EimzoFlutter.instance.scanAndSign(keyId: 'k');
+    await EimzoFlutter.instance.signQrCode(keyId: 'k', qrCode: 'q');
+
+    final keys = {
+      for (final call in sent) ...Map<String, dynamic>.from(call.arguments as Map).keys,
+    };
+    expect(keys, containsAll(['keyId', 'qrCode']));
+    for (final key in keys) {
+      expect(kotlinSource, contains('"$key"'),
+          reason: 'Android plagini QR imzoning "$key" argumentini o\'qimaydi');
+      expect(swiftSource, contains('"$key"'),
+          reason: 'iOS plagini QR imzoning "$key" argumentini o\'qimaydi');
+    }
+  });
+
+  test('the QR code methods reach the SDK on both platforms', () {
+    // Over the plugin's activity on Android: the scanner and the sheet open over it.
+    expect(kotlinSource, matches(RegExp(r'EImzoSDK\.scanAndSign\(\s*act,')),
+        reason: 'Android plagini EImzoSDK.scanAndSign ni activity bilan chaqirmaydi');
+    expect(kotlinSource, matches(RegExp(r'EImzoSDK\.signQrCode\(\s*act,')),
+        reason: 'Android plagini EImzoSDK.signQrCode ni activity bilan chaqirmaydi');
+    for (final method in ['scanAndSign', 'signQrCode']) {
+      expect(swiftSource, matches(RegExp('EImzoAPI\\.$method\\([^)]*config: config\\)')),
+          reason: 'iOS plagini $method ga saqlangan konfiguratsiyani bermayapti');
+    }
+  });
+
   test('every argument the add methods send is read on both platforms', () async {
     // As for sign(): a key spelled differently on one side would reach the
     // SDK empty — a password that never arrives reads as wrong_password, a
