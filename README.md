@@ -136,7 +136,11 @@ Email **info@yt.uz** with, for each platform you ship:
   A debug build signed with another certificate needs its own SHA-256. If
   Google Play signs your app (Play App Signing), the copies installed from
   Play carry Google's app signing certificate: send its SHA-256, from Play
-  Console, as well.
+  Console, as well. If Play Console → App signing lists more than one app
+  signing key certificate, send the SHA-256 of each: Play's quantum-ready
+  hybrid signing uses a classical and a post-quantum key for Android 17+ and
+  another classical key for older phones. The upload key is not needed —
+  copies installed from Play are not signed with it.
 
 - **iOS** — the bundle id and your Team ID:
 

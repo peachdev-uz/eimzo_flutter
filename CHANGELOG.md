@@ -47,6 +47,12 @@ javob qaytarsa, endi karta uzoqlashgandek ishlanadi: «Karta o'qilmadi»
 oynasi, Kalitlar API'da `card_read_failed`, hisobotda `card_lost` (avval
 umumiy xato: `add_failed` va `unexpected`).
 
+**Hujjat: bir nechta app signing key (Android).** README'ning ro'yxatdan
+o'tish bo'limiga qator qo'shildi: Play Console → App signing'da bir nechta
+app signing key sertifikati bo'lsa (Play'ning «quantum-ready» gibrid imzosi:
+Android 17+ uchun oddiy va post-kvant kalit, eski telefonlar uchun yana
+bitta oddiy kalit), hammasining SHA-256'ini yuboring. Upload key kerak emas.
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
