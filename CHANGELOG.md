@@ -42,6 +42,11 @@ Kalitlar API javobi (`invalid_key`) o'zgarmagan.
 `card_lost` — 100, 101 va 104 kabi. «Karta o'qilmadi» oynasi va Kalitlar API
 javobi (`card_read_failed`) avvalgidek.
 
+**Android: ID karta bo'sh javob qaytarsa.** Karta siljib, buyruqqa bo'sh
+javob qaytarsa, endi karta uzoqlashgandek ishlanadi: «Karta o'qilmadi»
+oynasi, Kalitlar API'da `card_read_failed`, hisobotda `card_lost` (avval
+umumiy xato: `add_failed` va `unexpected`).
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
