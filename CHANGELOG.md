@@ -32,6 +32,11 @@ javobidagi kalitning `type`i BAIK token uchun endi `baik_token` (2.5–2.6 da
 ilova `baik_token`ni ham token deb ko'rsatsin; noma'lum qiymatni oddiy kalit
 deb ko'rsatish qoidasi o'zgarmaydi.
 
+**Android: PFX bo'lmagan fayl hisobotda `invalid_pfx`.** Kalit sifatida PFX
+bo'lmagan fayl tanlansa, gateway hisobotiga endi `unexpected` emas,
+`invalid_pfx` boradi, iOS'dagidek. «Faylni ochib bo'lmadi» xabari va
+Kalitlar API javobi (`invalid_key`) o'zgarmagan.
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
