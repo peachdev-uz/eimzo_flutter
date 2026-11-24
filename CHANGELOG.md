@@ -37,6 +37,11 @@ bo'lmagan fayl tanlansa, gateway hisobotiga endi `unexpected` emas,
 `invalid_pfx` boradi, iOS'dagidek. «Faylni ochib bo'lmadi» xabari va
 Kalitlar API javobi (`invalid_key`) o'zgarmagan.
 
+**iOS: ID karta siljisa, hisobotda `card_lost`.** Core NFC 102
+(`readerTransceiveErrorTagResponseError`) endi `unexpected` emas,
+`card_lost` — 100, 101 va 104 kabi. «Karta o'qilmadi» oynasi va Kalitlar API
+javobi (`card_read_failed`) avvalgidek.
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
