@@ -53,6 +53,13 @@ app signing key sertifikati bo'lsa (Play'ning «quantum-ready» gibrid imzosi:
 Android 17+ uchun oddiy va post-kvant kalit, eski telefonlar uchun yana
 bitta oddiy kalit), hammasining SHA-256'ini yuboring. Upload key kerak emas.
 
+**iOS: kalit qo'shishda iOS 16 dagi crash.** iOS 16 da (iPhone 8, iOS 16.7)
+fayl yoki QR kalitining paroli tasdiqlangan zahoti ilova yopilardi, kalit esa
+saqlanib qolardi: SDK bir oynani yopib, o'rniga boshqasini darhol ochardi,
+iOS 16 esa yopilayotgan oyna ustidan ochilgan oynada exception tashlaydi. Endi
+«Kalit qo'shilmoqda» va noto'g'ri parol xabari o'sha oynada chiqadi, boshqa
+oynalar esa avvalgisi yopilgandan keyin ochiladi. Dart API o'zgarmagan.
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
