@@ -60,6 +60,14 @@ iOS 16 esa yopilayotgan oyna ustidan ochilgan oynada exception tashlaydi. Endi
 «Kalit qo'shilmoqda» va noto'g'ri parol xabari o'sha oynada chiqadi, boshqa
 oynalar esa avvalgisi yopilgandan keyin ochiladi. Dart API o'zgarmagan.
 
+**iOS: saqlangan parollar ilova o'chirilgach qolmaydi.** iOS ilova
+o'chirilganda Keychain'ni o'chirmaydi: kalitlar ketardi, saqlangan parol va
+PIN'lar qolardi, qayta o'rnatilgach o'sha kalit qo'shilsa, «Parolni saqlash»
+o'chiq bo'lsa ham eski paroli qaytardi. Endi parolsiz saqlangan kalitning
+eski paroli o'chiriladi, ishga tushgach esa yo'q kalitlarning parollari
+tozalanadi. SDK yangilanganda kalitlar va parollar joyida qoladi. Android'da
+bu muammo yo'q edi.
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
