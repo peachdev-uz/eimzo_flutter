@@ -26,6 +26,23 @@ Yangi xato kodi yo'q. `sign`, `scanAndSign` va `signQrCode` bitta joyni
 bo'lishadi (`busy`). Oynada hash doim ko'rinadi (sayt boshqa ekranda),
 `hashDisplay` qanday bo'lmasin. Misolda ikkala usulning tugmasi bor.
 
+**Kalitlar API: SDK oynasisiz imzo** — `signDirect(keyId:, deepLink:,
+password:)` ilova yasagan so'rovni `getKeys()` dagi kalit bilan SDK oynasini
+ochmasdan imzolaydi, o'sha «Kalitlar API» ruxsati bilan. Nima
+imzolanayotganini ilova o'zi ko'rsatadi va roziligini o'zi oladi; parol
+yoki PIN ilova kodidan o'tadi (kalit qo'shishdagidek, integrator shartnoma
+bo'yicha javob beradi). `password` berilmasa, kalit bilan saqlangan parol
+ishlatiladi, u ham bo'lmasa — `password_required` (yangi kod). Berilgan
+parol saqlanmaydi; saqlangan parol rad etilsa, unutiladi. Barcha kalit
+turlari: ID karta — Android'da ilova ustida 60 soniya kutiladi
+(`cancelSignDirect()` to'xtatadi), iOS'da tizimning NFC oynasi; token
+ulangan bo'lishi kerak; PIN qoidalari kalit qo'shishdagidek. Xatolar —
+`sign` ning kodlari va `wrong_password`, `wrong_pin` (`triesLeft`),
+`pin_blocked`, `nfc_unavailable`, `card_read_failed`, `token_not_found`.
+`sign`, `scanAndSign`, `signQrCode` bilan bitta joy (`busy`). Faqat ilova
+yasagan so'rov uchun. `sign` o'zgarmagan. Misolda «Oynasiz imzolash»
+tugmasi bor.
+
 **Kalitlar API: BAIK token endi `baik_token`.** `getKeys()` va `add…Key`
 javobidagi kalitning `type`i BAIK token uchun endi `baik_token` (2.5–2.6 da
 `token` edi); USB token avvalgidek `token`. BAIK tokenni `token` deb kutgan

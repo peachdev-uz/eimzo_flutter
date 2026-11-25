@@ -290,7 +290,10 @@ without opening the full UI:
   a key your app hands over, with no SDK window; see
   [Adding a key](#adding-a-key-26);
 - since 2.7, `scanAndSign(keyId:)` and `signQrCode(keyId:, qrCode:)` — sign
-  a site's QR code; see [Signing a site's QR code](#signing-a-sites-qr-code-27).
+  a site's QR code; see [Signing a site's QR code](#signing-a-sites-qr-code-27);
+- since 2.7, `signDirect(keyId:, deepLink:, password:)` — sign with no SDK
+  window, the password from your app or the saved one; see
+  [Signing with no SDK window](#signing-with-no-sdk-window-27).
 
 All of them return the native SDK's JSON as a `String`, once, and never
 throw. The JSON and the codes are the same as in the Android (`EImzoSDK`)
@@ -414,7 +417,7 @@ never gets it: after `signed`, ask your backend for the document's state.
 | `invalid_request` | `deepLink` (or `signQrCode`'s `qrCode`) is not a sign request, or E-IMZO does not know its site |
 | `key_not_found` | No key with this `id` can sign in this environment |
 | `key_expired` | The key's certificate has expired |
-| `busy` | Another sign — `sign`, `scanAndSign` or `signQrCode` — is still open |
+| `busy` | Another sign — `sign`, `scanAndSign`, `signQrCode` or `signDirect` — is still open |
 | `sign_failed` | E-IMZO refused the signature, or anything else ended the flow. When E-IMZO refused, `message` is its own answer; a blocked card or token PIN is `pin_blocked`. On iOS, `scanAndSign` without `NSCameraUsageDescription` in Info.plist |
 
 `message` is for the developer: English, except E-IMZO's own answer, which
@@ -469,6 +472,54 @@ only to requests your app makes itself (`sign`, `openSignUi(deepLink:)`).
   expiry, `busy`. Pass the code's text as your scanner read it.
 
 To the YT gateway these are ordinary Keys API signatures.
+
+#### Signing with no SDK window (2.7)
+
+`signDirect` signs a request your app made with a key from `getKeys()`, and
+shows nothing of the SDK's: no sheet, no password field, no «Imzolandi».
+
+```dart
+final link = EimzoSignLink.create(siteId: siteId, documentId: documentId, hash: hash);
+
+// Your app asked for the password on its own screen.
+final reply = jsonDecode(await EimzoFlutter.instance
+    .signDirect(keyId: keyId, deepLink: link, password: password)) as Map<String, dynamic>;
+
+// Or the password saved with the key.
+await EimzoFlutter.instance.signDirect(keyId: keyId, deepLink: link);
+```
+
+- **Who answers for it.** The user does not see the document in the SDK:
+  your app shows what is signed and takes their consent on its own screen.
+  The password or PIN passes through your app's code too. Your company
+  answers for both under its contract with YT, as for the add methods. The
+  permission is the same «Kalitlar API».
+- **The password.** `password` is the key file's password, or the PIN of an
+  ID card or a token. Without it the SDK signs with the one saved with the
+  key (`savePassword`/`savePin`, or saved in the SDK's screens); with none
+  saved the answer is `password_required`. A password given is never saved.
+  A saved one the key, the card or the token refuses is forgotten, as the
+  SDK's sheet does.
+- **The PIN** follows the add methods' rules: an ID card's and a USB token's
+  is exactly eight digits, or the answer is `wrong_pin` with nothing sent; a
+  BAIK token's must not be blank.
+- **An ID card.** Android: the SDK waits up to 60 seconds with NFC reader
+  mode over your app, showing nothing — tell the user to hold the card to
+  the phone yourself; `cancelSignDirect()` ends the wait (`cancelled`). iOS:
+  the system's NFC sheet comes up; its Cancel is `cancelled`.
+- **A token** must be plugged in, or the answer is `token_not_found`.
+- **Only a request your app made.** Sign a site's QR code with
+  `signQrCode`/`scanAndSign`: they show the site and the hash to compare.
+- Checks, in order, before anything is read or sent: the permission, the
+  request, the key, its expiry, a password or PIN (`password_required`,
+  `wrong_pin`), no other sign open (`busy`, shared with `sign`,
+  `scanAndSign` and `signQrCode`), the token. The answer is `signed`,
+  `cancelled` (an ID card only) or an error: `sign`'s codes, the add
+  methods' `wrong_password`, `wrong_pin` (with `triesLeft`), `pin_blocked`,
+  `nfc_unavailable`, `card_read_failed` (also: not this key's card) and
+  `token_not_found` (also: not this key's token), and `password_required`.
+- **Never retry a PIN in a loop.** Each wrong one costs one of the card's or
+  the token's attempts, and the last blocks it.
 
 #### Adding a key (2.6)
 
@@ -544,7 +595,8 @@ Good to know:
 - **Saving.** `savePassword` / `savePin` are false by default: the SDK keeps
   nothing, and `sign` asks for the password or PIN in its sheet. With true,
   the SDK keeps it encrypted and `sign` signs with this key without asking —
-  as the SDK's «Parolni saqlash» does. Ask the user first.
+  as the SDK's «Parolni saqlash» does — and `signDirect` signs with it when
+  given none. Ask the user first.
 - **Checks.** The key is added for the configured `environment`. A key
   file's or key QR code's certificate is checked with E-IMZO, so it needs
   the network; an ID card's or token's is read off the card.
@@ -759,6 +811,13 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
   does. Never throw — see
   [Signing a site's QR code](#signing-a-sites-qr-code-27).
 
+- **`EimzoFlutter.instance.signDirect({required String keyId, required String deepLink, String? password})`** → `Future<String>`
+  «Kalitlar API» (2.7): signs a request made with `EimzoSignLink.create`
+  with the key `keyId` and `password` — or, without it, the one saved with
+  the key — with no SDK window, and returns `signed`, `cancelled` (an ID
+  card) or an error as JSON. Never throws — see
+  [Signing with no SDK window](#signing-with-no-sdk-window-27).
+
 - **`addPfxKey({required Uint8List pfx, required String password, bool savePassword = false})`**,
   **`addQrKey({required String qrCode, required String password, bool savePassword = false})`**,
   **`addIdCardKey({required String pin, bool savePin = false})`**,
@@ -769,6 +828,9 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
 
 - **`EimzoFlutter.instance.cancelAddKey()`** → `Future<void>`
   Android: ends `addIdCardKey`'s wait for the card. Nothing on iOS.
+
+- **`EimzoFlutter.instance.cancelSignDirect()`** → `Future<void>`
+  Android: ends `signDirect`'s wait for an ID card. Nothing on iOS.
 
 **Removed in 2.3:** `getInitialDeeplink()`, `onNewDeeplink()` and
 `launchDeeplink()`. The plugin no longer takes `eimzo://` links from

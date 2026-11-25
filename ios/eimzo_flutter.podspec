@@ -47,7 +47,7 @@ Pod::Spec.new do |s|
   # 2.5.0: dizayn sozlamalari (appearance, til, hash); getKeys'da kalit turi.
   # 2.6.0: kalit qo'shish (addPfxKey, addQrKey, addIdCardKey, addTokenKey); getKeys'da tin va organization.
   # 2.6.1: QR skaner va katta kalit fayli crash'lari tuzatildi.
-  # 2.7.0: Kalitlar API'da sayt QR kodi bilan imzo (scanAndSign, signQrCode); litsenziya muddati o'zi uzayadi.
+  # 2.7.0: Kalitlar API'da sayt QR kodi bilan imzo (scanAndSign, signQrCode) va oynasiz imzo (signDirect); litsenziya muddati o'zi uzayadi.
   EIMZO_SDK_VERSION = '2.7.0'
   EIMZO_SDK_URL  = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/EimzoSDK.xcframework.zip"
   PFX2QR_URL     = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/Pfx2qr.xcframework.zip"
