@@ -73,6 +73,16 @@ qatorga bo'linib, pastdan kesilardi: endi bir qatorda, katta shriftda esa
 tugmalar ustma-ust turadi. «Kalit qo'shilmoqda» oynasidagi aylana o'ng va
 pastdan kesilardi — endi butun.
 
+**iOS: QR skaneridan keyin SDK ekranlari qorong'i qolmaydi.** QR orqali kalit
+qo'shishda skaner yopilgach (✕ bilan yoki kalit o'qilgach) telefon yorug'
+rejimda bo'lsa ham SDK ekranlari — Home, «Kalit qo'shish» oynasi, parol
+oynasi va uning klaviaturasi — SDK yopilib qayta ochilguncha qorong'i
+qolardi. Endi qorong'i rejim faqat skanerning o'z oynasiga qo'yiladi: skaner
+va «Kod qayerda?» avvalgidek qorong'i, yopilgach har bir ekran telefon
+rejimida yoki ilova `themeMode` bilan bergan rejimda. `scanAndSign`
+skanerining status bar yozuvlari ham endi oq. Dart API o'zgarmagan.
+Android'da bu muammo yo'q edi.
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
