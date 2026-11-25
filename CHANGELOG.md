@@ -49,6 +49,13 @@ javobidagi kalitning `type`i BAIK token uchun endi `baik_token` (2.5–2.6 da
 ilova `baik_token`ni ham token deb ko'rsatsin; noma'lum qiymatni oddiy kalit
 deb ko'rsatish qoidasi o'zgarmaydi.
 
+**Android: E-IMZO javobida `message` bo'lmasa imzo xato ko'rinmaydi.**
+Android SDK `pki.send_pkcs7` javobida `message` yo'q yoki `null` bo'lsa uni
+o'qiyotib yiqilar, E-IMZO qabul qilgan imzo ham «noma'lum xato» bo'lib
+ko'rinardi. Endi `send.success` — imzolandi, rad etish — E-IMZO so'zlari
+bilan, holatsiz javob — noma'lum. Dart API o'zgarmagan, iOS'da o'zgarish
+yo'q.
+
 **Android: PFX bo'lmagan fayl hisobotda `invalid_pfx`.** Kalit sifatida PFX
 bo'lmagan fayl tanlansa, gateway hisobotiga endi `unexpected` emas,
 `invalid_pfx` boradi, iOS'dagidek. «Faylni ochib bo'lmadi» xabari va
