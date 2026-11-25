@@ -33,12 +33,12 @@ let package = Package(
         .binaryTarget(
             name: "EimzoSDK",
             url: "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/2.7.0/EimzoSDK.xcframework.zip",
-            checksum: "25059be154e0090ecb63f04870becc05c50af4bcb5ea84a4bdabb5836bc40d10"
+            checksum: "21d294600ef39f5a1ed49af12a8a88d7bdfa50b79544f5b466ae1fdd790bf406"
         ),
         .binaryTarget(
             name: "Pfx2qr",
             url: "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/2.7.0/Pfx2qr.xcframework.zip",
-            checksum: "5aac9a7822a6c9431ba599b6bb11e371f8a46b32958735a17d9d8868eb8fb25c"
+            checksum: "35550d0e1673e73c7685cda4f728126fc29d52b9c8689bb0546301d6ead79142"
         ),
         .target(
             name: "eimzo_flutter",
