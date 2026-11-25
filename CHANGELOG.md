@@ -68,6 +68,11 @@ eski paroli o'chiriladi, ishga tushgach esa yo'q kalitlarning parollari
 tozalanadi. SDK yangilanganda kalitlar va parollar joyida qoladi. Android'da
 bu muammo yo'q edi.
 
+**Android: kalit qo'shish oynalari.** Parol oynasida «Bekor qilish» ikki
+qatorga bo'linib, pastdan kesilardi: endi bir qatorda, katta shriftda esa
+tugmalar ustma-ust turadi. «Kalit qo'shilmoqda» oynasidagi aylana o'ng va
+pastdan kesilardi — endi butun.
+
 ## 2.6.1 - 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.** Plaginning Dart API'si o'zgarmagan,
