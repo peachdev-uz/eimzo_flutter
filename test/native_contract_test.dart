@@ -258,6 +258,48 @@ void main() {
     }
   });
 
+  test('every argument signDirect sends is read on both platforms', () async {
+    // A password that never arrives would sign with the saved one — or
+    // answer password_required — for a password the user did type.
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const channel = MethodChannel('uz.peachdev/eimzo_flutter');
+    final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    final sent = <MethodCall>[];
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      sent.add(call);
+      return '{"status":"cancelled"}';
+    });
+    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+
+    await EimzoFlutter.instance.signDirect(keyId: 'k', deepLink: 'l', password: 'p');
+
+    final keys = {
+      for (final call in sent) ...Map<String, dynamic>.from(call.arguments as Map).keys,
+    };
+    expect(keys, {'keyId', 'deepLink', 'password'});
+    for (final key in keys) {
+      expect(kotlinSource, contains('"$key"'),
+          reason: 'Android plagini oynasiz imzoning "$key" argumentini o\'qimaydi');
+      expect(swiftSource, contains('"$key"'),
+          reason: 'iOS plagini oynasiz imzoning "$key" argumentini o\'qimaydi');
+    }
+  });
+
+  test('signDirect reaches the SDK on both platforms', () {
+    // Over the plugin's activity on Android: an ID card is waited for on it.
+    expect(kotlinSource, matches(RegExp(r'EImzoSDK\.signDirect\(\s*act,')),
+        reason: 'Android plagini EImzoSDK.signDirect ni activity bilan chaqirmaydi');
+    expect(kotlinSource, contains('EImzoSDK.cancelSignDirect('),
+        reason: 'Android plagini EImzoSDK.cancelSignDirect ni chaqirmaydi');
+    // The password as given — absent stays absent, never an empty string.
+    expect(kotlinSource, contains('call.argument<String>("password"),'),
+        reason: 'Android plagini parolsiz chaqiruvni bo\'sh parolga aylantiryapti');
+    expect(swiftSource, contains('args["password"] as? String\n'),
+        reason: 'iOS plagini parolsiz chaqiruvni bo\'sh parolga aylantiryapti');
+    expect(swiftSource, matches(RegExp(r'EImzoAPI\.signDirect\([^)]*config: config\)')),
+        reason: 'iOS plagini signDirect ga saqlangan konfiguratsiyani bermayapti');
+  });
+
   test('every argument the add methods send is read on both platforms', () async {
     // As for sign(): a key spelled differently on one side would reach the
     // SDK empty — a password that never arrives reads as wrong_password, a

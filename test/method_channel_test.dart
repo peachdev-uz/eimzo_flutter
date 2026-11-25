@@ -476,6 +476,72 @@ void main() {
     });
   });
 
+  group('Kalitlar API: oynasiz imzo (2.7)', () {
+    Map<String, dynamic> decoded(String json) => jsonDecode(json) as Map<String, dynamic>;
+
+    test('signDirect passes the key id, the link and the password as they are', () async {
+      reply = '{"status":"signed"}';
+
+      final json = await EimzoFlutter.instance
+          .signDirect(keyId: '7a3f01', deepLink: 'eimzo://sign?qc=abc', password: ' parol 1 ');
+
+      expect(calls.single.method, 'signDirect');
+      expect(argsOf(calls.single),
+          {'keyId': '7a3f01', 'deepLink': 'eimzo://sign?qc=abc', 'password': ' parol 1 '});
+      expect(json, '{"status":"signed"}');
+    });
+
+    test('signDirect without a password sends none: the saved one signs', () async {
+      // Not "sends null" — omitted, as the licence is: each side reads the
+      // key's absence as "use the saved one".
+      reply = '{"status":"signed"}';
+
+      await EimzoFlutter.instance.signDirect(keyId: 'k', deepLink: 'l');
+
+      expect(argsOf(calls.single), {'keyId': 'k', 'deepLink': 'l'});
+      expect(argsOf(calls.single).containsKey('password'), isFalse);
+    });
+
+    test('signDirect returns each native outcome unchanged', () async {
+      for (final outcome in [
+        '{"status":"signed"}',
+        '{"status":"cancelled"}',
+        '{"status":"error","code":"password_required","message":"No password was given, and none is saved for this key."}',
+        '{"status":"error","code":"wrong_pin","message":"The PIN is wrong.","triesLeft":2}',
+        '{"status":"error","code":"busy","message":"Another sign() is still open."}',
+      ]) {
+        reply = outcome;
+        expect(await EimzoFlutter.instance.signDirect(keyId: 'k', deepLink: 'l', password: 'p'), outcome);
+      }
+    });
+
+    test('signDirect\'s plugin failures come in sign\'s shape', () async {
+      reply = PlatformException(code: 'NO_ACTIVITY', message: 'Activity not attached');
+      expect(await EimzoFlutter.instance.signDirect(keyId: 'k', deepLink: 'l'),
+          '{"status":"error","code":"sign_failed","message":"no_activity"}');
+
+      reply = PlatformException(code: 'NOT_INITIALIZED', message: 'init has not been called yet.');
+      expect(decoded(await EimzoFlutter.instance.signDirect(keyId: 'k', deepLink: 'l'))['code'],
+          'not_initialized');
+
+      // A host whose native side predates 2.7.
+      reply = MissingPluginException('No implementation found for method signDirect');
+      expect(decoded(await EimzoFlutter.instance.signDirect(keyId: 'k', deepLink: 'l'))['code'],
+          'sign_failed');
+    });
+
+    test('cancelSignDirect asks the native side and never throws', () async {
+      reply = null;
+      await EimzoFlutter.instance.cancelSignDirect();
+      expect(calls.single.method, 'cancelSignDirect');
+
+      reply = PlatformException(code: 'error');
+      await EimzoFlutter.instance.cancelSignDirect();
+      reply = MissingPluginException();
+      await EimzoFlutter.instance.cancelSignDirect();
+    });
+  });
+
   group('errors', () {
     test('a PlatformException surfaces as EimzoException', () async {
       reply = PlatformException(code: 'NO_VC', message: 'No root controller');

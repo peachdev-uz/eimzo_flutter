@@ -58,6 +58,7 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
             "sign" -> handleSign(call, result)
             "scanAndSign" -> handleScanAndSign(call, result)
             "signQrCode" -> handleSignQrCode(call, result)
+            "signDirect" -> handleSignDirect(call, result)
             "addPfxKey" -> EImzoSDK.addPfxKey(
                 call.argument<ByteArray>("pfx") ?: ByteArray(0),
                 call.argument<String>("password").orEmpty(),
@@ -78,6 +79,10 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
             )
             "cancelAddKey" -> {
                 EImzoSDK.cancelAddKey()
+                result.success(null)
+            }
+            "cancelSignDirect" -> {
+                EImzoSDK.cancelSignDirect()
                 result.success(null)
             }
             else -> result.notImplemented()
@@ -146,6 +151,25 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
             act,
             call.argument<String>("keyId").orEmpty(),
             call.argument<String>("qrCode").orEmpty(),
+            answerOnce(result),
+        )
+    }
+
+    /**
+     * «Kalitlar API» (2.7): signs `deepLink` with the key `keyId` and
+     * `password` — the key's password, or the card's or the token's PIN;
+     * absent for the one saved with the key — with no SDK window. An ID card
+     * is waited for with NFC reader mode over the host activity, up to 60
+     * seconds; `cancelSignDirect` ends the wait, and so does the activity
+     * going away. No activity is `NO_ACTIVITY`, as for [handleSign].
+     */
+    private fun handleSignDirect(call: MethodCall, result: MethodChannel.Result) {
+        val act = requireActivity(result) ?: return
+        EImzoSDK.signDirect(
+            act,
+            call.argument<String>("keyId").orEmpty(),
+            call.argument<String>("deepLink").orEmpty(),
+            call.argument<String>("password"),
             answerOnce(result),
         )
     }

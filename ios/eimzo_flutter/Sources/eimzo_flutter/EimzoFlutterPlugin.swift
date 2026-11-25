@@ -16,10 +16,12 @@ import CoreText
 ///   - `scanAndSign(keyId)`, `signQrCode(keyId, qrCode)` → String
 ///                              (2.7: `EImzoAPI`'s QR code signing, its JSON
 ///                              as it is)
+///   - `signDirect(keyId, deepLink, password?)` → String (2.7:
+///                              `EImzoAPI.signDirect`'s JSON, as it is)
 ///   - `addPfxKey`, `addQrKey`, `addIdCardKey`, `addTokenKey` → String
 ///                              (`EImzoAPI`'s add methods' JSON, as it is)
-///   - `cancelAddKey`        → void (nothing to do on iOS: the system's NFC
-///                              sheet has its own Cancel)
+///   - `cancelAddKey`, `cancelSignDirect` → void (nothing to do on iOS:
+///                              the system's NFC sheet has its own Cancel)
 ///
 /// The plugin does not listen for URLs. `eimzo://` is the E-IMZO app's
 /// scheme, and a host that takes it from outside would open its SDK for any
@@ -58,11 +60,13 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             handleSign(call: call, result: result)
         case "scanAndSign", "signQrCode":
             handleQrSign(call: call, result: result)
+        case "signDirect":
+            handleSignDirect(call: call, result: result)
         case "addPfxKey", "addQrKey", "addIdCardKey", "addTokenKey":
             handleAddKey(call: call, result: result)
-        case "cancelAddKey":
+        case "cancelAddKey", "cancelSignDirect":
             // The system's NFC sheet is the only wait on iOS, and its own
-            // Cancel ends `addIdCardKey` as `cancelled`.
+            // Cancel ends `addIdCardKey` and `signDirect` as `cancelled`.
             result(nil)
         default:
             result(FlutterMethodNotImplemented)
@@ -199,6 +203,24 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(await EImzoAPI.signQrCode(keyId: keyId, qrCode: qrCode, config: config))
             }
+        }
+    }
+
+    /// «Kalitlar API» (2.7): signs `deepLink` with the key `keyId` and
+    /// `password` — the key's password, or the card's or the token's PIN;
+    /// absent for the one saved with the key — with no SDK screen
+    /// (`EImzoAPI.signDirect`). An ID card brings up the system's NFC sheet.
+    private func handleSignDirect(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let config else {
+            result(Self.notInitialized())
+            return
+        }
+        let args = (call.arguments as? [String: Any]) ?? [:]
+        let keyId = args["keyId"] as? String ?? ""
+        let deepLink = args["deepLink"] as? String ?? ""
+        let password = args["password"] as? String
+        Task { @MainActor in
+            result(await EImzoAPI.signDirect(keyId: keyId, deepLink: deepLink, password: password, config: config))
         }
     }
 

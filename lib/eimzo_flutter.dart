@@ -362,9 +362,10 @@ class EimzoException implements Exception {
 /// the app made ([EimzoSignLink]) or without one. For an integrator YT has
 /// registered for the «Kalitlar API» it also lists the user's keys
 /// ([getKeys]), signs with one of them in the SDK's own sheet ([sign]; since
-/// 2.7 also a site's QR code: [scanAndSign], [signQrCode]) and, since 2.6,
-/// adds a key the app hands over, with no SDK window ([addPfxKey],
-/// [addQrKey], [addIdCardKey], [addTokenKey]).
+/// 2.7 also a site's QR code: [scanAndSign], [signQrCode]) or, since 2.7,
+/// with no SDK window ([signDirect]) and, since 2.6, adds a key the app hands
+/// over, with no SDK window ([addPfxKey], [addQrKey], [addIdCardKey],
+/// [addTokenKey]).
 class EimzoFlutter {
   EimzoFlutter._();
   static final EimzoFlutter instance = EimzoFlutter._();
@@ -635,6 +636,96 @@ class EimzoFlutter {
             'qrCode': qrCode,
           }));
 
+  // ── «Kalitlar API»: signing with no SDK window (2.7) ─────────────────────
+  //
+  // signDirect() signs a request the app made with the key the app chose,
+  // and shows nothing of the SDK's: no sheet, no password field, no
+  // «Imzolandi». Your app shows the user what is signed and takes their
+  // consent on its own screen, and hands over the password or PIN — or lets
+  // the SDK use the one saved with the key. The password, the PIN and the
+  // consent pass through your app, and your company answers for them under
+  // its contract with YT, as for the add methods. Only a request the app
+  // made: a site's QR code is signed in the sheet ([signQrCode],
+  // [scanAndSign]), which shows the site and the hash to compare.
+
+  /// «Kalitlar API» (2.7): signs [deepLink] — a sign request made with
+  /// [EimzoSignLink.create] — with the key [keyId] from [getKeys], with no
+  /// SDK window, and returns how it ended as the native SDK's JSON,
+  /// unchanged. Only for an integrator with the permission; see [getKeys].
+  ///
+  /// ```dart
+  /// final reply = jsonDecode(await EimzoFlutter.instance.signDirect(
+  ///   keyId: id, deepLink: link, password: passwordFromYourOwnField,
+  /// ));
+  /// if (reply['status'] == 'signed') { /* your backend has it from E-IMZO */ }
+  /// ```
+  ///
+  /// [password] is the key file's password, or the PIN of an ID card or a
+  /// token. Without it the SDK signs with the one saved with the key — added
+  /// with `savePassword`/`savePin`, or saved in the SDK's screens; with none
+  /// saved the answer is `password_required`. A password given is used as it
+  /// is and never saved. A saved one the key, the card or the token refuses
+  /// is forgotten, as the SDK's sheet does.
+  ///
+  /// The SDK checks first and answers without reading or sending anything
+  /// when a check fails: the permission, the request, the key here, the key
+  /// not expired, a password or PIN (`password_required`; `wrong_pin`,
+  /// "nothing was sent", for an ID card's or a USB token's PIN that is not
+  /// eight digits 0–9, or a blank BAIK PIN — as the add methods), no other
+  /// sign open (`busy`, shared with [sign], [signQrCode] and [scanAndSign]),
+  /// a token plugged in (`token_not_found`).
+  ///
+  /// Then it signs as the sheet does, and the signature goes to E-IMZO
+  /// through the YT gateway, which hands the document to your backend:
+  ///
+  /// - a key file: on the phone;
+  /// - an ID card — Android: the SDK waits up to 60 seconds with NFC reader
+  ///   mode over the app, showing nothing: tell the user to hold the card to
+  ///   the phone yourself; [cancelSignDirect] ends the wait. iOS: the
+  ///   system's NFC sheet comes up, with the SDK's words — the one thing that
+  ///   shows; its Cancel ends the call as `cancelled`;
+  /// - a USB or BAIK token: where it is plugged in; Android may first ask the
+  ///   user to let the app use it.
+  ///
+  /// - `{"status":"signed"}` — E-IMZO accepted the signature.
+  /// - `{"status":"cancelled"}` — the ID card wait or sheet ended without a
+  ///   card.
+  /// - `{"status":"error","code":"…","message":"…"}` — [sign]'s codes, and:
+  ///   `password_required`; `wrong_password`; `wrong_pin`, with
+  ///   `"triesLeft"` when the card or the token says; `pin_blocked`;
+  ///   `nfc_unavailable`; `card_read_failed` — the card moved away, none in
+  ///   time, or not this key's card; `token_not_found` — none plugged in,
+  ///   pulled out, access declined, busy, or not this key's token; `network`
+  ///   — trying again may help. `key_expired` and `sign_failed` (E-IMZO's
+  ///   words in `message`) are E-IMZO's verdict on the signature.
+  ///
+  /// The SDK never tries a PIN twice: each wrong one costs one of the card's
+  /// or the token's attempts, and the last blocks it — ask the user again
+  /// rather than retrying. It never throws.
+  Future<String> signDirect({
+    required String keyId,
+    required String deepLink,
+    String? password,
+  }) =>
+      _keysApi(() => _channel.invokeMethod<String>('signDirect', {
+            'keyId': keyId,
+            'deepLink': deepLink,
+            if (password != null) 'password': password,
+          }));
+
+  /// Android: ends [signDirect]'s wait for an ID card, which then returns
+  /// `{"status":"cancelled"}`; a card already being read signs to the end.
+  /// iOS: nothing — the system's NFC sheet has its own Cancel.
+  Future<void> cancelSignDirect() async {
+    try {
+      await _channel.invokeMethod<void>('cancelSignDirect');
+    } on PlatformException {
+      // Nothing waiting is nothing to cancel.
+    } on MissingPluginException {
+      // A native side from before 2.7 has no wait to end.
+    }
+  }
+
   // ── «Kalitlar API»: adding a key (2.6) ───────────────────────────────────
   //
   // The app hands the SDK a key file, a key QR code, an ID card or a token
@@ -665,8 +756,9 @@ class EimzoFlutter {
   ///
   /// With [savePassword] the SDK keeps the password, encrypted, and [sign]
   /// then signs with this key without asking for it — as the SDK's «Parolni
-  /// saqlash» does; ask the user first. False by default: nothing is kept,
-  /// and [sign] asks in its sheet.
+  /// saqlash» does — and [signDirect] (2.7) signs with it when given none;
+  /// ask the user first. False by default: nothing is kept, and [sign] asks
+  /// in its sheet.
   ///
   /// The certificate is checked with E-IMZO through the YT gateway, so this
   /// needs the network. The key is added for the configured
@@ -730,7 +822,8 @@ class EimzoFlutter {
   /// - `card_read_failed` — the card left the phone before it was read, or
   ///   none came in time.
   ///
-  /// With [savePin] the SDK keeps the PIN for [sign]; false by default.
+  /// With [savePin] the SDK keeps the PIN for [sign] and [signDirect]; false
+  /// by default.
   Future<String> addIdCardKey({required String pin, bool savePin = false}) =>
       _keysApi(
           () => _channel.invokeMethod<String>('addIdCardKey', {
@@ -773,7 +866,7 @@ class EimzoFlutter {
   /// failure of the plugin itself — no native side, no activity, no config —
   /// comes back in the API's own error shape rather than as an exception, so
   /// an app reads one thing whatever happened: [failed] — `sign_failed` for
-  /// getKeys and sign, `add_failed` for the adds.
+  /// getKeys and the signs, `add_failed` for the adds.
   static Future<String> _keysApi(Future<String?> Function() call,
       {String failed = 'sign_failed'}) async {
     try {

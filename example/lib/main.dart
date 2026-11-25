@@ -88,9 +88,14 @@ class _HomePageState extends State<HomePage> {
   /// A site's QR code text, as the app's own scanner would read it (2.7).
   final _qrText = TextEditingController();
 
+  /// The picked key's password or PIN for `signDirect` (2.7), typed in this
+  /// app; empty uses the one saved with the key.
+  final _password = TextEditingController();
+
   @override
   void dispose() {
     _qrText.dispose();
+    _password.dispose();
     super.dispose();
   }
 
@@ -119,6 +124,22 @@ class _HomePageState extends State<HomePage> {
   /// from E-IMZO to the site's backend.
   Future<void> _signWithKey(String keyId) async {
     final json = await _eimzo.sign(keyId: keyId, deepLink: _signLink);
+    if (!mounted) return;
+    setState(() => _json = json);
+  }
+
+  /// «Kalitlar API» (2.7): signs [_signLink] with the picked key and the
+  /// password or PIN typed here — left empty, the one saved with the key —
+  /// with no SDK window. The SDK shows nothing (on iOS, the system's NFC
+  /// sheet for an ID card), so a real app shows the user what is signed and
+  /// asks first; on Android it tells the user to hold the card to the phone.
+  Future<void> _signDirect(String keyId) async {
+    final password = _password.text;
+    final json = await _eimzo.signDirect(
+      keyId: keyId,
+      deepLink: _signLink,
+      password: password.isEmpty ? null : password,
+    );
     if (!mounted) return;
     setState(() => _json = json);
   }
@@ -211,6 +232,22 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.draw),
             label: const Text('Tanlangan kalit bilan imzolash'),
             onPressed: keyId == null ? null : () => _signWithKey(keyId),
+          ),
+          const SizedBox(height: 8),
+          // 2.7: the same request with no SDK window — the password or PIN
+          // is typed here (empty: the one saved with the key).
+          TextField(
+            controller: _password,
+            obscureText: true,
+            autocorrect: false,
+            enableSuggestions: false,
+            decoration: const InputDecoration(labelText: "Parol yoki PIN (bo'sh — saqlangani)"),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.draw_outlined),
+            label: const Text('Oynasiz imzolash'),
+            onPressed: keyId == null ? null : () => _signDirect(keyId),
           ),
           const SizedBox(height: 8),
           // 2.7: a site's QR code — the SDK's scanner reads it…
