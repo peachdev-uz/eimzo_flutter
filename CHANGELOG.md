@@ -1,4 +1,4 @@
-## 2.7.0 - 2026-11-23
+## 2.7.0 - 2026-11-25
 
 Ichidagi SDK'lar 2.7.0 ga yangilandi (Android `eimzo-sdk-2.7.0`, iOS
 `eimzo-ios-sdk` 2.7.0).

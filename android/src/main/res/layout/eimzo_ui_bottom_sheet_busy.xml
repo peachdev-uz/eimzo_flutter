@@ -25,11 +25,16 @@
         android:layout_marginTop="32dp"
         android:importantForAccessibility="noHideDescendants">
 
+        <!-- No inset: Material adds its 4dp on each side of indicatorSize,
+             and a 112dp drawing in this 104dp frame came out cut off on
+             the right. -->
         <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:indeterminate="true"
             app:indicatorColor="@color/eimzo_ui_accent"
+            app:indicatorInset="0dp"
             app:indicatorSize="104dp"
             app:trackColor="@color/eimzo_ui_accent_12"
             app:trackThickness="4dp" />
