@@ -1,4 +1,29 @@
-## Keyingi versiya (chiqmagan)
+## 2.8.0 - 2026-11-26
+
+Ichidagi SDK'lar 2.8.0 ga yangilandi (Android `eimzo-sdk-2.8.0`, iOS
+`eimzo-ios-sdk` 2.8.0).
+
+**SDK'da Go yo'q.** PFX kalit fayli endi Go kutubxonasi bilan emas, SDK'ning
+o'zida o'qiladi: Android'da Kotlin, iOS'da Swift. Fayldan chiqadigan kalit Go
+bergani bilan baytma-bayt bir xil, shuning uchun saqlangan kalitlar va
+imzolash o'zgarmaydi; xato kodlari ham o'sha (`wrong_password`,
+`invalid_pfx`). Dart API o'zgarmagan.
+
+- **Android:** plagindan `libgojni.so` (to'rt ABI) va `pfx2qr.jar` olib
+  tashlandi, SDK AAR'i 12.9 MB dan ~3 MB ga tushdi. Ilovangizda
+  `libgojni.so` uchun `pickFirst` yoki `go.**` uchun R8 qoidasi bo'lsa,
+  olib tashlashingiz mumkin; qolsa ham zarar qilmaydi.
+- **Tuzatildi (Android):** o'zida boshqa Go kutubxonasi bor ilova (masalan
+  `fast_rsa` paketi) SDK oynasi ochilgach bir necha soniyada izsiz yopilardi
+  (SIGSEGV): bitta Android jarayonida ikkita Go runtime ishlay olmaydi. Endi
+  bunday bo'lmaydi.
+- **iOS:** `pod install` endi bitta `EimzoSDK.xcframework` yuklaydi
+  (`Pfx2qr.xcframework` yo'q), SwiftPM'da ham bitta binary target. Hech
+  narsa qilish shart emas.
+- Go rad etgan, lekin to'g'ri PFX fayllar endi ochiladi: BER kodlash,
+  shifrlanmagan keyBag, ikkitadan ko'p konteyner, parolda BMP'dan tashqari
+  belgi (masalan emoji). XchA egri chizig'idagi kalit `invalid_pfx` bilan
+  rad etiladi (Go unda yiqilardi).
 
 **Kalitlar API: kalitni o'chirish** — `deleteKey(keyId:)` `getKeys()` dagi
 kalitni telefondagi SDK'dan SDK oynasini ochmasdan o'chiradi, o'sha

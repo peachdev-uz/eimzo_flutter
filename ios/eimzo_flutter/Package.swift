@@ -22,29 +22,24 @@ let package = Package(
         .package(name: "FlutterFramework", path: "../FlutterFramework")
     ],
     targets: [
-        // Closed-source EimzoSDK + Pfx2qr binaries, pulled from the public
-        // GitHub release — the same artifacts the podspec's prepare_command
-        // fetches. SPM downloads and caches them at package-resolution time, so
-        // no equivalent of prepare_command is needed here.
+        // Closed-source EimzoSDK binary, pulled from the public GitHub
+        // release — the same artifact the podspec's prepare_command fetches.
+        // SPM downloads and caches it at package-resolution time, so no
+        // equivalent of prepare_command is needed here. Up to 2.7.0 Go's
+        // Pfx2qr came with it; since 2.8.0 there is one binary.
         //
-        // Checksums are computed with `swift package compute-checksum <zip>`.
-        // When the native iOS SDK rolls, bump the version in BOTH URLs AND
-        // recompute BOTH checksums (also update EIMZO_SDK_VERSION in the podspec).
+        // The checksum is computed with `swift package compute-checksum <zip>`.
+        // When the native iOS SDK rolls, bump the version in the URL AND
+        // recompute the checksum (also update EIMZO_SDK_VERSION in the podspec).
         .binaryTarget(
             name: "EimzoSDK",
-            url: "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/2.7.0/EimzoSDK.xcframework.zip",
-            checksum: "21d294600ef39f5a1ed49af12a8a88d7bdfa50b79544f5b466ae1fdd790bf406"
-        ),
-        .binaryTarget(
-            name: "Pfx2qr",
-            url: "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/2.7.0/Pfx2qr.xcframework.zip",
-            checksum: "35550d0e1673e73c7685cda4f728126fc29d52b9c8689bb0546301d6ead79142"
+            url: "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/2.8.0/EimzoSDK.xcframework.zip",
+            checksum: "781de40d7485fa7c18bd74a2456c033350c93da403e4af00e4571b262a513b7f"
         ),
         .target(
             name: "eimzo_flutter",
             dependencies: [
                 "EimzoSDK",
-                "Pfx2qr",
                 .product(name: "FlutterFramework", package: "FlutterFramework")
             ]
         )

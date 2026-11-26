@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'eimzo_flutter'
-  s.version          = '2.7.0'
+  s.version          = '2.8.0'
   s.summary          = 'Flutter plugin wrapping the E-IMZO Mobile SDK (iOS).'
   s.description      = <<-DESC
     Flutter plugin wrapping the official E-IMZO Mobile SDK for Uzbekistan
@@ -19,13 +19,14 @@ Pod::Spec.new do |s|
   s.platform = :ios, '16.0'
   s.swift_version = '5.9'
 
-  # Pull the pre-built xcframeworks from the public GitHub release on every
-  # `pod install`. Keeps the pub.dev package small (no 24 MB of binaries
-  # checked in) and lets us roll the SDK independently of the plugin.
+  # Pull the pre-built xcframework from the public GitHub release on every
+  # `pod install`. Keeps the pub.dev package small (no binaries checked in)
+  # and lets us roll the SDK independently of the plugin.
   #
-  # 1.1.5+ ships TWO sibling xcframeworks instead of one nested one —
-  # App Store rejects nested frameworks (errors 90205/90206/90035).
-  # Both go into App.app/Frameworks/ at the top level.
+  # 1.1.5–2.7.0 shipped TWO sibling xcframeworks (EimzoSDK + Go's Pfx2qr)
+  # instead of one nested one — App Store rejects nested frameworks (errors
+  # 90205/90206/90035). Since 2.8.0 there is one: the PFX converter is Swift
+  # inside EimzoSDK, and the SDK carries no Go.
   # 2.2.0 da iOS binari ham yangilandi: BAIK token.
   # 2.3.0-dev.1 da iOS binari ham yangilandi: gateway rejimi va kalit turi.
   # 2.3.0-dev.2: xatolar va crash'lar gateway'ga yuboriladi.
@@ -48,18 +49,18 @@ Pod::Spec.new do |s|
   # 2.6.0: kalit qo'shish (addPfxKey, addQrKey, addIdCardKey, addTokenKey); getKeys'da tin va organization.
   # 2.6.1: QR skaner va katta kalit fayli crash'lari tuzatildi.
   # 2.7.0: Kalitlar API'da sayt QR kodi bilan imzo (scanAndSign, signQrCode) va oynasiz imzo (signDirect); litsenziya muddati o'zi uzayadi.
-  EIMZO_SDK_VERSION = '2.7.0'
+  # 2.8.0: PFX Swift'da o'qiladi, Pfx2qr.xcframework yo'q (bitta zip); Kalitlar API'da kalitni o'chirish (deleteKey).
+  EIMZO_SDK_VERSION = '2.8.0'
   EIMZO_SDK_URL  = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/EimzoSDK.xcframework.zip"
-  PFX2QR_URL     = "https://github.com/peachdev-uz/eimzo-ios-sdk/releases/download/#{EIMZO_SDK_VERSION}/Pfx2qr.xcframework.zip"
 
   s.prepare_command = <<-CMD
     set -e
     # Detect a stale pre-1.1.5 EimzoSDK that has Pfx2qr nested inside —
-    # that layout is rejected by App Store. Wipe and re-download both.
+    # that layout is rejected by App Store. Wipe and re-download it.
     if [ -d EimzoSDK.xcframework ] && \
        find EimzoSDK.xcframework -path '*/EimzoSDK.framework/Frameworks/Pfx2qr.framework' -maxdepth 5 | grep -q .; then
       echo ">> Removing stale nested EimzoSDK.xcframework (pre-1.1.5)..."
-      rm -rf EimzoSDK.xcframework Pfx2qr.xcframework
+      rm -rf EimzoSDK.xcframework
     fi
     if [ ! -d EimzoSDK.xcframework ]; then
       echo ">> Downloading EimzoSDK #{EIMZO_SDK_VERSION}..."
@@ -67,15 +68,9 @@ Pod::Spec.new do |s|
       unzip -q EimzoSDK.xcframework.zip
       rm EimzoSDK.xcframework.zip
     fi
-    if [ ! -d Pfx2qr.xcframework ]; then
-      echo ">> Downloading Pfx2qr #{EIMZO_SDK_VERSION}..."
-      curl -sSL -o Pfx2qr.xcframework.zip "#{PFX2QR_URL}"
-      unzip -q Pfx2qr.xcframework.zip
-      rm Pfx2qr.xcframework.zip
-    fi
   CMD
 
-  s.vendored_frameworks = 'EimzoSDK.xcframework', 'Pfx2qr.xcframework'
+  s.vendored_frameworks = 'EimzoSDK.xcframework'
 
   # Disable bitcode (Apple removed bitcode support in Xcode 14; our xcframework
   # is built without it).

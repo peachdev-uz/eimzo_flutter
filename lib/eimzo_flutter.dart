@@ -365,7 +365,7 @@ class EimzoException implements Exception {
 /// 2.7 also a site's QR code: [scanAndSign], [signQrCode]) or, since 2.7,
 /// with no SDK window ([signDirect]) and, since 2.6, adds a key the app hands
 /// over, with no SDK window ([addPfxKey], [addQrKey], [addIdCardKey],
-/// [addTokenKey]) — and deletes one ([deleteKey]).
+/// [addTokenKey]) — and, since 2.8, deletes one ([deleteKey]).
 class EimzoFlutter {
   EimzoFlutter._();
   static final EimzoFlutter instance = EimzoFlutter._();
@@ -862,7 +862,7 @@ class EimzoFlutter {
     }
   }
 
-  // ── «Kalitlar API»: deleting a key ───────────────────────────────────────
+  // ── «Kalitlar API»: deleting a key (2.8) ─────────────────────────────────
   //
   // deleteKey() takes a key off the SDK on this phone, as the SDK's key list
   // does once its user has confirmed — but with no SDK window: your app asks
@@ -870,10 +870,10 @@ class EimzoFlutter {
   // under its contract with YT, as for the add methods. Same permission as
   // getKeys() and sign().
 
-  /// «Kalitlar API»: deletes the key [keyId] from [getKeys] from the SDK on
-  /// this phone, with no SDK window, and returns how it ended as the native
-  /// SDK's JSON, unchanged. Only for an integrator with the permission; see
-  /// [getKeys].
+  /// «Kalitlar API» (2.8): deletes the key [keyId] from [getKeys] from the
+  /// SDK on this phone, with no SDK window, and returns how it ended as the
+  /// native SDK's JSON, unchanged. Only for an integrator with the
+  /// permission; see [getKeys].
   ///
   /// ```dart
   /// // Once the user has said yes on your own screen.

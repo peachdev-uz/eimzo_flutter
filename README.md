@@ -1,6 +1,6 @@
 # eimzo_flutter
 
-Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.7.0` bundled inside on Android, `EimzoSDK` 2.7.0 on iOS) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it and opens it — with a sign request the app makes itself, or without one.
+Thin Flutter plugin that bootstraps the official [E-IMZO Mobile SDK](https://github.com/peachdev-uz/eimzo-mobile-sdk) (`eimzo-sdk-2.8.0` bundled inside on Android, `EimzoSDK` 2.8.0 on iOS) on the host activity. All signing and key management lives in the native UI; the Flutter side initializes it and opens it — with a sign request the app makes itself, or without one.
 
 Every app signs through the YT gateway and has to be registered with YT
 first — see [Registration](#8-registration).
@@ -17,7 +17,7 @@ first — see [Registration](#8-registration).
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^2.7.0
+  eimzo_flutter: ^2.8.0
 ```
 
 Coming from 2.2? See [Upgrading from 2.2](#upgrading-from-22).
@@ -193,7 +193,7 @@ registered.
 
 ## Upgrading from 2.2
 
-`^2.2.1` resolves to 2.7.0 on the next `flutter pub upgrade`, so pin
+`^2.2.1` resolves to 2.8.0 on the next `flutter pub upgrade`, so pin
 `eimzo_flutter: 2.2.1` until the app is registered. An app that ships a
 licence: write to **info@yt.uz** first and keep 2.2 until YT confirms — see
 [Apps that already ship a licence](#apps-that-already-ship-a-licence).
@@ -294,8 +294,8 @@ without opening the full UI:
 - since 2.7, `signDirect(keyId:, deepLink:, password:)` — sign with no SDK
   window, the password from your app or the saved one; see
   [Signing with no SDK window](#signing-with-no-sdk-window-27);
-- `deleteKey(keyId:)` — delete a key from the SDK, with no SDK window; see
-  [Deleting a key](#deleting-a-key).
+- since 2.8, `deleteKey(keyId:)` — delete a key from the SDK, with no SDK
+  window; see [Deleting a key](#deleting-a-key-28).
 
 All of them return the native SDK's JSON as a `String`, once, and never
 throw. The JSON and the codes are the same as in the Android (`EImzoSDK`)
@@ -619,7 +619,7 @@ Good to know:
 
 `api_not_allowed`, `not_initialized`, `blocked` and `network` as above.
 
-#### Deleting a key
+#### Deleting a key (2.8)
 
 `deleteKey(keyId:)` deletes a key from `getKeys()` from the SDK on this
 phone — as the SDK's own key list does once its user has confirmed, but with
@@ -880,9 +880,9 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
   Android: ends `signDirect`'s wait for an ID card. Nothing on iOS.
 
 - **`EimzoFlutter.instance.deleteKey({required String keyId})`** → `Future<String>`
-  «Kalitlar API»: deletes the key `keyId` from the SDK on this phone, with
-  no SDK window, and returns `deleted` with the key, or an error, as JSON.
-  Never throws — see [Deleting a key](#deleting-a-key).
+  «Kalitlar API» (2.8): deletes the key `keyId` from the SDK on this phone,
+  with no SDK window, and returns `deleted` with the key, or an error, as
+  JSON. Never throws — see [Deleting a key](#deleting-a-key-28).
 
 **Removed in 2.3:** `getInitialDeeplink()`, `onNewDeeplink()` and
 `launchDeeplink()`. The plugin no longer takes `eimzo://` links from
