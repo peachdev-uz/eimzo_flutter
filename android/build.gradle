@@ -45,7 +45,7 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 
     // Bundled E-IMZO native SDK + transitive native libraries (classes
-    // extracted from the AAR + bundled pfx2qr / FT-reader / applet JARs).
+    // extracted from the AAR + bundled FT-reader / applet JARs; no Go library).
     // Resources (res/, jniLibs/, manifest entries) are merged into this
     // plugin's src/main/ at extraction time.
     api fileTree(dir: 'libs', include: ['*.jar'])
