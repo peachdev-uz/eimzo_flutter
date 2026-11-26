@@ -22,6 +22,7 @@ import CoreText
 ///                              (`EImzoAPI`'s add methods' JSON, as it is)
 ///   - `cancelAddKey`, `cancelSignDirect` → void (nothing to do on iOS:
 ///                              the system's NFC sheet has its own Cancel)
+///   - `deleteKey(keyId)`    → String (`EImzoAPI.deleteKey`'s JSON, as it is)
 ///
 /// The plugin does not listen for URLs. `eimzo://` is the E-IMZO app's
 /// scheme, and a host that takes it from outside would open its SDK for any
@@ -64,6 +65,8 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             handleSignDirect(call: call, result: result)
         case "addPfxKey", "addQrKey", "addIdCardKey", "addTokenKey":
             handleAddKey(call: call, result: result)
+        case "deleteKey":
+            handleDeleteKey(call: call, result: result)
         case "cancelAddKey", "cancelSignDirect":
             // The system's NFC sheet is the only wait on iOS, and its own
             // Cancel ends `addIdCardKey` and `signDirect` as `cancelled`.
@@ -253,6 +256,20 @@ public class EimzoFlutterPlugin: NSObject, FlutterPlugin {
             default:
                 result(await EImzoAPI.addTokenKey(pin: pin, savePin: savePin, config: config))
             }
+        }
+    }
+
+    /// «Kalitlar API»: deletes the key `keyId` from the SDK, with no SDK
+    /// screen (`EImzoAPI.deleteKey`) — the app has asked its user first.
+    private func handleDeleteKey(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let config else {
+            result(Self.notInitialized())
+            return
+        }
+        let args = (call.arguments as? [String: Any]) ?? [:]
+        let keyId = args["keyId"] as? String ?? ""
+        Task { @MainActor in
+            result(await EImzoAPI.deleteKey(keyId: keyId, config: config))
         }
     }
 
