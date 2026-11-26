@@ -1,5 +1,5 @@
 PODS:
-  - eimzo_flutter (2.7.0):
+  - eimzo_flutter (2.8.0):
     - Flutter
   - Flutter (1.0.0)
 
@@ -14,7 +14,7 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  eimzo_flutter: f2e1dee794dd2e4dc67f63dfaf937f25ce878fcf
+  eimzo_flutter: 03e759b6c6c38a1348fd416f3134b480c4834f71
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
 
 PODFILE CHECKSUM: 12a1aa51bbd5f3f448475444c89678a96d4734cd
