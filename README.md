@@ -293,7 +293,9 @@ without opening the full UI:
   a site's QR code; see [Signing a site's QR code](#signing-a-sites-qr-code-27);
 - since 2.7, `signDirect(keyId:, deepLink:, password:)` — sign with no SDK
   window, the password from your app or the saved one; see
-  [Signing with no SDK window](#signing-with-no-sdk-window-27).
+  [Signing with no SDK window](#signing-with-no-sdk-window-27);
+- `deleteKey(keyId:)` — delete a key from the SDK, with no SDK window; see
+  [Deleting a key](#deleting-a-key).
 
 All of them return the native SDK's JSON as a `String`, once, and never
 throw. The JSON and the codes are the same as in the Android (`EImzoSDK`)
@@ -427,7 +429,8 @@ users your own text for the `code`.
 A failure in the plugin itself comes back in the same shape, not as an
 exception: with no Android activity to open the sheet over, `sign` answers
 `sign_failed` with the message `no_activity`; any other platform error is
-`sign_failed` with that error's message (`add_failed` for the add methods).
+`sign_failed` with that error's message (`add_failed` for the add methods,
+`delete_failed` for `deleteKey`).
 
 #### Signing a site's QR code (2.7)
 
@@ -613,6 +616,50 @@ Good to know:
 | `token_not_found` | No token plugged in, pulled out, USB access declined, or the token busy |
 | `busy` | Another key is being added |
 | `add_failed` | Anything else; `message` says what — e.g. the key was added in the other environment |
+
+`api_not_allowed`, `not_initialized`, `blocked` and `network` as above.
+
+#### Deleting a key
+
+`deleteKey(keyId:)` deletes a key from `getKeys()` from the SDK on this
+phone — as the SDK's own key list does once its user has confirmed, but with
+no SDK window. The SDK asks nothing: ask your user first, on your own
+screen. Your company answers for that under its contract with YT, as for the
+add methods.
+
+```dart
+// Once the user has said yes on your own screen.
+final reply = jsonDecode(await EimzoFlutter.instance.deleteKey(keyId: keyId))
+    as Map<String, dynamic>;
+if (reply['status'] == 'deleted') {
+  await refreshKeys(); // getKeys() again
+} else if (reply['code'] == 'busy') {
+  // A sign with this key is still open: try again once it has answered.
+}
+```
+
+- **What goes:** the key's record in the SDK and the password or PIN saved
+  with it — the same for a key file, an ID card, a USB or a BAIK token. The
+  card or the token is not touched, and not needed; the certificate is not
+  revoked. The key can be added again later, from its file, QR code, card or
+  token.
+- **The default key:** when the deleted key was the default, another
+  becomes the default by the SDK's own rule, as after a deletion in its key
+  list, and `getKeys()` lists that one first.
+- **Nothing goes to the gateway** but the permission check: the deletion is
+  the phone's alone.
+
+The answer:
+
+- `{"status":"deleted","key":{…}}` — the key is gone; `key` is the deleted
+  key as `getKeys()` listed it.
+- `{"status":"error","code":"…","message":"…"}`.
+
+| `code` | When |
+|---|---|
+| `key_not_found` | No key with this `id` among those `getKeys()` lists — one added in the other environment included |
+| `busy` | A sign with this key — `sign`, `scanAndSign`, `signQrCode` or `signDirect` — is still open; try again once it has answered |
+| `delete_failed` | The SDK's key store could not be read or would not let the key go; `message` says what. Also a failure of the plugin itself |
 
 `api_not_allowed`, `not_initialized`, `blocked` and `network` as above.
 
@@ -831,6 +878,11 @@ ID card, USB token, BAIK token). It never stores what was signed or by whom.
 
 - **`EimzoFlutter.instance.cancelSignDirect()`** → `Future<void>`
   Android: ends `signDirect`'s wait for an ID card. Nothing on iOS.
+
+- **`EimzoFlutter.instance.deleteKey({required String keyId})`** → `Future<String>`
+  «Kalitlar API»: deletes the key `keyId` from the SDK on this phone, with
+  no SDK window, and returns `deleted` with the key, or an error, as JSON.
+  Never throws — see [Deleting a key](#deleting-a-key).
 
 **Removed in 2.3:** `getInitialDeeplink()`, `onNewDeeplink()` and
 `launchDeeplink()`. The plugin no longer takes `eimzo://` links from

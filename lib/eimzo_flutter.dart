@@ -365,7 +365,7 @@ class EimzoException implements Exception {
 /// 2.7 also a site's QR code: [scanAndSign], [signQrCode]) or, since 2.7,
 /// with no SDK window ([signDirect]) and, since 2.6, adds a key the app hands
 /// over, with no SDK window ([addPfxKey], [addQrKey], [addIdCardKey],
-/// [addTokenKey]).
+/// [addTokenKey]) — and deletes one ([deleteKey]).
 class EimzoFlutter {
   EimzoFlutter._();
   static final EimzoFlutter instance = EimzoFlutter._();
@@ -862,11 +862,57 @@ class EimzoFlutter {
     }
   }
 
+  // ── «Kalitlar API»: deleting a key ───────────────────────────────────────
+  //
+  // deleteKey() takes a key off the SDK on this phone, as the SDK's key list
+  // does once its user has confirmed — but with no SDK window: your app asks
+  // the user first, on its own screen, and your company answers for that
+  // under its contract with YT, as for the add methods. Same permission as
+  // getKeys() and sign().
+
+  /// «Kalitlar API»: deletes the key [keyId] from [getKeys] from the SDK on
+  /// this phone, with no SDK window, and returns how it ended as the native
+  /// SDK's JSON, unchanged. Only for an integrator with the permission; see
+  /// [getKeys].
+  ///
+  /// ```dart
+  /// // Once the user has said yes on your own screen.
+  /// final reply = jsonDecode(await EimzoFlutter.instance.deleteKey(keyId: id));
+  /// if (reply['status'] == 'deleted') { /* list the keys again with getKeys() */ }
+  /// ```
+  ///
+  /// The SDK asks nothing: ask your user first. What goes is the key's record
+  /// in the SDK with the password or PIN saved with it — of every kind of key
+  /// alike. An ID card or a token is not touched, and not needed; the
+  /// certificate is not revoked, and the key can be added again from its
+  /// file, QR code, card or token. When the key was the default, another
+  /// becomes the default by the SDK's own rule, and [getKeys] lists that one
+  /// first.
+  ///
+  /// The SDK checks first and answers with nothing deleted when a check
+  /// fails: the permission, the key here, no sign open with this key.
+  /// Nothing goes to the gateway but the permission check.
+  ///
+  /// - `{"status":"deleted","key":{…}}` — the key as [getKeys] listed it.
+  /// - `{"status":"error","code":"…","message":"…"}` — `api_not_allowed`,
+  ///   `not_initialized`, `blocked`, `network` (as for [getKeys]);
+  ///   `key_not_found` — no key with that `id` among those [getKeys] lists,
+  ///   one added in the other environment included; `busy` — a sign with this
+  ///   key ([sign], [signQrCode], [scanAndSign] or [signDirect]) is still
+  ///   open: wait for its answer; `delete_failed` — the SDK's key store could
+  ///   not be read or would not let the key go, or the plugin itself failed.
+  ///
+  /// It never throws.
+  Future<String> deleteKey({required String keyId}) =>
+      _keysApi(() => _channel.invokeMethod<String>('deleteKey', {'keyId': keyId}),
+          failed: 'delete_failed');
+
   /// Runs a «Kalitlar API» call and gives back the native JSON as it is. A
   /// failure of the plugin itself — no native side, no activity, no config —
   /// comes back in the API's own error shape rather than as an exception, so
   /// an app reads one thing whatever happened: [failed] — `sign_failed` for
-  /// getKeys and the signs, `add_failed` for the adds.
+  /// getKeys and the signs, `add_failed` for the adds, `delete_failed` for
+  /// [deleteKey].
   static Future<String> _keysApi(Future<String?> Function() call,
       {String failed = 'sign_failed'}) async {
     try {

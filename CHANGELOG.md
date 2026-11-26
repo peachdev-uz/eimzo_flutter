@@ -1,3 +1,21 @@
+## Keyingi versiya (chiqmagan)
+
+**Kalitlar API: kalitni o'chirish** — `deleteKey(keyId:)` `getKeys()` dagi
+kalitni telefondagi SDK'dan SDK oynasini ochmasdan o'chiradi, o'sha
+«Kalitlar API» ruxsati bilan. SDK hech narsa so'ramaydi: foydalanuvchidan
+ilova o'zi so'raydi (kalit qo'shishdagidek, integrator shartnoma bo'yicha
+javob beradi). Kalit yozuvi va unga saqlangan parol yoki PIN o'chadi —
+barcha kalit turlarida bir xil; ID karta yoki tokenning o'ziga tegilmaydi,
+ular kerak ham emas; sertifikat bekor qilinmaydi, kalitni qayta qo'shish
+mumkin. Asosiy kalit o'chirilsa, SDK ro'yxatidagi qoida bo'yicha boshqasi
+asosiy bo'ladi va `getKeys()` uni birinchi beradi. Javob
+`{"status":"deleted","key":{…}}` — o'chgan kalit `getKeys()` shaklida.
+Xatolar: `key_not_found` (ro'yxatda yo'q, boshqa muhitniki ham), `busy`
+(shu kalit bilan imzo ochiq), `delete_failed` (yangi kod: kalitlar omborini
+o'qib yoki o'zgartirib bo'lmadi; plaginning o'z xatosi ham), hamda
+`api_not_allowed`, `not_initialized`, `blocked`, `network`. Gateway'ga faqat
+ruxsat tekshiruvi boradi. Misolda «Tanlangan kalitni o'chirish» tugmasi bor.
+
 ## 2.7.0 - 2026-11-25
 
 Ichidagi SDK'lar 2.7.0 ga yangilandi (Android `eimzo-sdk-2.7.0`, iOS

@@ -162,6 +162,36 @@ class _HomePageState extends State<HomePage> {
     setState(() => _json = json);
   }
 
+  /// «Kalitlar API»: deletes the picked key from the SDK on this phone. The
+  /// SDK shows nothing and asks nothing, so the app asks first — here a
+  /// plain dialog. The key can be added again later; an ID card or a token
+  /// is not touched.
+  Future<void> _deleteKey(String keyId) async {
+    final key = _keys.firstWhere((k) => k['id'] == keyId);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Kalitni o'chirish"),
+        content: Text("«${key['name']}» kaliti telefondan o'chirilsinmi? Uni keyin qayta qo'shish mumkin."),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Bekor qilish')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text("O'chirish")),
+        ],
+      ),
+    );
+    if (yes != true) return;
+    final json = await _eimzo.deleteKey(keyId: keyId);
+    final deleted = (jsonDecode(json) as Map<String, dynamic>)['status'] == 'deleted';
+    if (!mounted) return;
+    setState(() {
+      _json = json;
+      if (deleted) {
+        _keys = [for (final k in _keys) if (k['id'] != keyId) k];
+        _keyId = _keys.isEmpty ? null : _keys.first['id'] as String;
+      }
+    });
+  }
+
   /// `validTo` is how an app tells an expired key; the list includes them.
   static String _label(Map<String, dynamic> key) {
     final validTo = key['validTo'] as String?;
@@ -270,6 +300,13 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.draw),
             label: const Text('QR matnini imzolash'),
             onPressed: keyId == null ? null : () => _signQrText(keyId),
+          ),
+          const SizedBox(height: 8),
+          // The picked key off the phone, once the user has said yes here.
+          ElevatedButton.icon(
+            icon: const Icon(Icons.delete_outline),
+            label: const Text("Tanlangan kalitni o'chirish"),
+            onPressed: keyId == null ? null : () => _deleteKey(keyId),
           ),
           if (json != null) ...[
             const SizedBox(height: 16),

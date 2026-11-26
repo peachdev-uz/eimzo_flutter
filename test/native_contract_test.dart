@@ -300,6 +300,30 @@ void main() {
         reason: 'iOS plagini signDirect ga saqlangan konfiguratsiyani bermayapti');
   });
 
+  test('deleteKey reaches the SDK on both platforms, with its key id', () async {
+    // A key id that never arrives would answer key_not_found for a key that
+    // is there — and the user would see it stay.
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const channel = MethodChannel('uz.peachdev/eimzo_flutter');
+    final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    final sent = <MethodCall>[];
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      sent.add(call);
+      return '{"status":"deleted","key":{}}';
+    });
+    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+
+    await EimzoFlutter.instance.deleteKey(keyId: 'k');
+
+    expect(Map<String, dynamic>.from(sent.single.arguments as Map).keys, {'keyId'});
+    expect(kotlinSource, matches(RegExp(r'EImzoSDK\.deleteKey\(\s*call\.argument<String>\("keyId"\)')),
+        reason: 'Android plagini EImzoSDK.deleteKey ga keyId ni bermayapti');
+    expect(swiftSource, contains('"keyId"'),
+        reason: 'iOS plagini kalitni o\'chirishning "keyId" argumentini o\'qimaydi');
+    expect(swiftSource, matches(RegExp(r'EImzoAPI\.deleteKey\([^)]*config: config\)')),
+        reason: 'iOS plagini deleteKey ga saqlangan konfiguratsiyani bermayapti');
+  });
+
   test('every argument the add methods send is read on both platforms', () async {
     // As for sign(): a key spelled differently on one side would reach the
     // SDK empty — a password that never arrives reads as wrong_password, a

@@ -77,6 +77,10 @@ class EimzoFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activ
                 call.argument<Boolean>("savePin") ?: false,
                 answerOnce(result),
             )
+            "deleteKey" -> EImzoSDK.deleteKey(
+                call.argument<String>("keyId").orEmpty(),
+                answerOnce(result),
+            )
             "cancelAddKey" -> {
                 EImzoSDK.cancelAddKey()
                 result.success(null)

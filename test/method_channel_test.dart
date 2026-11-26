@@ -542,6 +542,50 @@ void main() {
     });
   });
 
+  group('Kalitlar API: kalitni o\'chirish', () {
+    Map<String, dynamic> decoded(String json) => jsonDecode(json) as Map<String, dynamic>;
+
+    test('deleteKey passes the key id as it is, and nothing else', () async {
+      reply = '{"status":"deleted","key":{"id":" 7a3f01","pinfl":null,"name":"VALI","tin":null,'
+          '"organization":null,"type":"id_card","validFrom":"2025-03-01","validTo":"2027-03-01"}}';
+
+      final json = await EimzoFlutter.instance.deleteKey(keyId: ' 7a3f01');
+
+      expect(calls.single.method, 'deleteKey');
+      expect(argsOf(calls.single), {'keyId': ' 7a3f01'});
+      expect(json, reply);
+    });
+
+    test('deleteKey returns each native outcome unchanged', () async {
+      for (final outcome in [
+        '{"status":"deleted","key":{"id":"k"}}',
+        '{"status":"error","code":"key_not_found","message":"No key with this id is stored for this environment."}',
+        '{"status":"error","code":"busy","message":"A sign with this key is still open."}',
+        '{"status":"error","code":"delete_failed","message":"Deleting the key failed (IOException)."}',
+        '{"status":"error","code":"api_not_allowed","message":"…"}',
+      ]) {
+        reply = outcome;
+        expect(await EimzoFlutter.instance.deleteKey(keyId: 'k'), outcome);
+      }
+    });
+
+    test('deleteKey\'s plugin failures come as delete_failed, never thrown', () async {
+      reply = PlatformException(code: 'error', message: 'boom');
+      expect(await EimzoFlutter.instance.deleteKey(keyId: 'k'),
+          '{"status":"error","code":"delete_failed","message":"boom"}');
+
+      reply = PlatformException(code: 'NOT_INITIALIZED', message: 'init has not been called yet.');
+      expect(decoded(await EimzoFlutter.instance.deleteKey(keyId: 'k'))['code'], 'not_initialized');
+
+      // A host whose native side predates deleteKey.
+      reply = MissingPluginException('No implementation found for method deleteKey');
+      expect(decoded(await EimzoFlutter.instance.deleteKey(keyId: 'k'))['code'], 'delete_failed');
+
+      reply = null;
+      expect(decoded(await EimzoFlutter.instance.deleteKey(keyId: 'k'))['code'], 'delete_failed');
+    });
+  });
+
   group('errors', () {
     test('a PlatformException surfaces as EimzoException', () async {
       reply = PlatformException(code: 'NO_VC', message: 'No root controller');
